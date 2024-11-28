@@ -2,20 +2,23 @@
 
 Includes:
 
-- [Ignite boilerplate](https://github.com/infinitered/ignite)
-- [React Native](https://reactnative.dev/)
-- [Expo](https://expo.dev/)
-- [React Navigation](https://reactnavigation.org/)
-- [MobX State Tree](https://mobx-state-tree.js.org/intro/welcome)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Tailwindcss](https://tailwindcss.com/)
-- [React Native Reusables](https://rnr-docs.vercel.app/getting-started/introduction/)
-- [Shadcn](https://ui.shadcn.com/)
-- [Jest](https://jestjs.io/)
-- [Maestro](https://maestro.mobile.dev/)
-- [Reactotron](https://github.com/infinitered/reactotron)
+- [Ignite boilerplate](https://github.com/infinitered/ignite) (project boilerplate)
+- [React Native](https://reactnative.dev/) (dev framework)
+- [Expo](https://expo.dev/) (android integration)
+- [React Navigation](https://reactnavigation.org/) (navigation library)
+- [MobX State Tree](https://mobx-state-tree.js.org/intro/welcome) (state management)
+- [TypeScript](https://www.typescriptlang.org/) (types)
+- [Tailwindcss](https://tailwindcss.com/) (css)
+- [React Native Reusables](https://rnr-docs.vercel.app/getting-started/introduction/) (shadcn compatible with react native)
+- [Shadcn](https://ui.shadcn.com/) (prebuilt components)
+- [Lucide](https://lucide.dev/) (icons)
+- [Jest](https://jestjs.io/) (unit testing)
+- [Maestro](https://maestro.mobile.dev/) (e2e testing)
+- [Reactotron](https://github.com/infinitered/reactotron) (react native debug tool)
 
-## Quick Start
+<br/>
+
+## Development
 
 Project structure:
 
@@ -36,7 +39,7 @@ root
 │   ├── lib
 │   ├── models
 │   ├── services
-│   ├── utils
+│   └── utils
 ├── test
 │   ├── __snapshots__
 │   ├── mockFile.ts
@@ -48,7 +51,9 @@ root
 └── package.json
 ```
 
-### Root directory
+<br/>
+
+### `root` Directory
 
 **.maestro** - Maestro e2e tests.
 
@@ -66,7 +71,9 @@ root
 
 **types** - Shared or global types that are used across multiple modules and not tied to a specific feature.
 
-### @/app directory
+<br/>
+
+### `src` Directory
 
 **app** -
 This is were all the screens/routes and \_layouts live.
@@ -98,21 +105,35 @@ Any services that interface with the outside world will live here (think REST AP
 **utils** -
 This is a great place to put miscellaneous helpers and utilities. Things like date helpers, formatters, etc. are often found here. However, it should only be used for things that are truly shared across your application. If a helper or utility is only used by a specific component or model, consider co-locating your helper with that component or model.
 
-## Development
+<br/>
 
-Install [Android Studio](https://reactnative.dev/docs/set-up-your-environment)
+<br/>
 
-Install dependencies: `npm install --force`
+## Get Started
 
-Run web app: `npm run web`
+1. Install [Android Studio](https://reactnative.dev/docs/set-up-your-environment)
+2. Install dependencies: `npm install --force`
+3. Run web app: `npm run web` or `npm run android`
+4. Post installation: `npm run postinstall`
 
-Run android emulator: `npm run android`
+<br/>
 
-Post installation: `npm run postinstall`
+## Debug Tips
 
-Use components from [RNR](https://rnr-docs.vercel.app/getting-started/introduction/)
+1. Install Android Studio: https://reactnative.dev/docs/set-up-your-environment
+2. Delete `.expo`
+3. Delete `android`
+4. Delete `node_modules`
+5. `npm cache clean --force`
+6. `npm run install --force`
+7. `npm run postinstall`
+8. `npm run adb`
+9. `npm run android`
+10. Test starting the emulator manually: `C:\Users<user>\AppData\Local\Android\Sdk/emulator/emulator -avd Medium_Phone_API_3`
 
-## TODO:
+<br/>
+
+## TODO
 
 - Add database
 - Add Github workflow
