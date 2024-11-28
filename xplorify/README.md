@@ -68,37 +68,39 @@ root
 
 ### @/app directory
 
-**app**
+**app** -
 This is were all the screens/routes and \_layouts live.
 
-**components**
+**components** -
 This is where your reusable components live which help you build your screens.
 
-**components/ui**
+**components/ui** -
 This is where RNR (Shadcn) components are stored.
 
-**config**
+**config** -
 This contains configuration for your app that might vary depending if you're running in development or production.
 
-**devtools**
+**devtools** -
 This is where setup and configuration of devtools like Reactotron occurs.
 
-**lib**
+**lib** -
 This is for RNR (Shadcn) components utils.
 
-**lib/icons**
+**lib/icons** -
 This is where Lucide icons live.
 
-**models**
+**models** -
 This is where your app's models will live. Each model has a directory which will contain the `mobx-state-tree` model file, test file, and any other supporting files like actions, types, etc.
 
-**services**
+**services** -
 Any services that interface with the outside world will live here (think REST APIs, Push Notifications, etc.).
 
-**utils**
+**utils** -
 This is a great place to put miscellaneous helpers and utilities. Things like date helpers, formatters, etc. are often found here. However, it should only be used for things that are truly shared across your application. If a helper or utility is only used by a specific component or model, consider co-locating your helper with that component or model.
 
 ## Development
+
+Install [Android Studio](https://reactnative.dev/docs/set-up-your-environment)
 
 Install dependencies: `npm install --force`
 
