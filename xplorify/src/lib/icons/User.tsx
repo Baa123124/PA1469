@@ -1,4 +1,4 @@
-import { User } from "lucide-react-native"
+import { User as UserLucide } from "lucide-react-native"
 import { iconWithClassName } from "./iconWithClassName"
-iconWithClassName(User)
+const User = iconWithClassName(UserLucide)
 export { User }

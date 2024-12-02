@@ -1,4 +1,4 @@
-import { MapPin } from "lucide-react-native"
+import { MapPin as MapPinLucide } from "lucide-react-native"
 import { iconWithClassName } from "./iconWithClassName"
-iconWithClassName(MapPin)
+const MapPin = iconWithClassName(MapPinLucide)
 export { MapPin }

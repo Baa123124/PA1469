@@ -6,6 +6,8 @@ Includes:
 - [React Native](https://reactnative.dev/) (dev framework)
 - [Expo](https://expo.dev/) (android integration)
 - [React Navigation](https://reactnavigation.org/) (navigation library)
+- [React Hook Form](https://react-hook-form.com/) (forms)
+- [Zod](https://zod.dev/) (schema validation)
 - [MobX State Tree](https://mobx-state-tree.js.org/intro/welcome) (state management)
 - [TypeScript](https://www.typescriptlang.org/) (types)
 - [Tailwindcss](https://tailwindcss.com/) (css)
@@ -27,6 +29,7 @@ root
 ├── .maestro
 │   └── e2e.yaml
 ├── assets
+│   ├── icons (png)
 │   └── images
 ├── ignite
 ├── patches
@@ -34,9 +37,11 @@ root
 ├── src
 │   ├── app
 │   ├── components
+│   │   └── ui (rnr/shadcn)
 │   ├── config
 │   ├── devtools
 │   ├── lib
+│   │   └── icons (lucide)
 │   ├── models
 │   ├── services
 │   └── utils
@@ -59,7 +64,7 @@ root
 
 **android** - Native Android / Android Studio project files for manual workflows.
 
-**assets** - Images (icons live in src/lib/icons).
+**assets** - Images and png icons (lucide icons live in `src/lib/icons`).
 
 **ignite** - All things ignite, including [generator templates](https://github.com/infinitered/ignite/blob/master/docs/boilerplate/ignite.md).
 
@@ -113,23 +118,25 @@ This is a great place to put miscellaneous helpers and utilities. Things like da
 
 1. Install [Android Studio](https://reactnative.dev/docs/set-up-your-environment)
 2. Install dependencies: `npm install --force`
-3. Run web app: `npm run web` or `npm run android`
-4. Post installation: `npm run postinstall`
+3. Post installation: `npm run postinstall`
+4. Start app: `npm run start`, `npm run web` or `npm run android`
+5. Alternatively, start with cleared cache: `npm run start:clear`
 
 <br/>
 
 ## Debug Tips
 
-1. Install Android Studio: https://reactnative.dev/docs/set-up-your-environment
-2. Delete `.expo`
-3. Delete `android`
-4. Delete `node_modules`
-5. `npm cache clean --force`
-6. `npm run install --force`
-7. `npm run postinstall`
-8. `npm run adb`
-9. `npm run android`
-10. Test starting the emulator manually: `C:\Users<user>\AppData\Local\Android\Sdk/emulator/emulator -avd Medium_Phone_API_3`
+1. Install [Android Studio](https://reactnative.dev/docs/set-up-your-environment)
+2. Make sure you are using openjdk version 22 or below
+3. Delete `.expo`
+4. Delete `android`
+5. Delete `node_modules`
+6. `npm cache clean --force`
+7. `npm run install --force`
+8. `npm run postinstall`
+9. `npm run adb`
+10. `npm run android`
+11. Test starting the emulator manually: `C:\Users\<user>\AppData\Local\Android\Sdk/emulator/emulator -avd Medium_Phone_API_3`
 
 <br/>
 
@@ -137,3 +144,5 @@ This is a great place to put miscellaneous helpers and utilities. Things like da
 
 - Add database
 - Add Github workflow
+- Add xplorify app icon and splash screen
+- Add xplorify colors

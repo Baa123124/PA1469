@@ -21,7 +21,7 @@ export function ThemeToggle() {
       {({ pressed }) => (
         <View className={cn("pt-0.5 justify-center items-start p-4", pressed && "opacity-70")}>
           {isDarkColorScheme ? (
-            <MoonStar className="text-foreground" size={23} strokeWidth={1.25} />
+            <MoonStar className="text-foreground" size={24} strokeWidth={1.25} />
           ) : (
             <Sun className="text-foreground" size={24} strokeWidth={1.25} />
           )}

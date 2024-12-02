@@ -1,5 +1,8 @@
-import { Redirect } from "expo-router"
+import { Href, Redirect } from "expo-router"
 
 export default function Index() {
-  return <Redirect href="/map" />
+  // TODO: change this to actual auth session
+  const authSession = false
+
+  return <Redirect href={authSession ? "/map" : ("/login" as Href)} />
 }

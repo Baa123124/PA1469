@@ -1,4 +1,4 @@
-import { Bookmark } from "lucide-react-native"
+import { Bookmark as LucideBookmark } from "lucide-react-native"
 import { iconWithClassName } from "./iconWithClassName"
-iconWithClassName(Bookmark)
+const Bookmark = iconWithClassName(LucideBookmark)
 export { Bookmark }
