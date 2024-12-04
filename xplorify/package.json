@@ -20,6 +20,7 @@
     "build:android:dev": "eas build --profile development:device --platform android --local",
     "build:android:prod": "eas build --profile production --platform android --local",
     "start": "npx expo start",
+    "start:clear": "npx expo start --clear",
     "android": "npx expo run:android",
     "web": "npx expo start --web",
     "bundle:web": "npx expo export --platform web",
@@ -29,12 +30,15 @@
   "dependencies": {
     "@expo-google-fonts/space-grotesk": "^0.2.2",
     "@expo/metro-runtime": "~3.2.1",
+    "@hookform/resolvers": "^3.9.1",
     "@react-native-async-storage/async-storage": "^2.1.0",
     "@react-navigation/bottom-tabs": "^6.3.2",
     "@react-navigation/native-stack": "^6.0.2",
     "@rn-primitives/avatar": "^1.1.0",
+    "@rn-primitives/label": "^1.1.0",
     "@rn-primitives/portal": "^1.1.0",
     "@rn-primitives/progress": "^1.1.0",
+    "@rn-primitives/separator": "^1.1.0",
     "@rn-primitives/slot": "^1.1.0",
     "@rn-primitives/tooltip": "^1.1.0",
     "@rn-primitives/types": "^1.1.0",
@@ -61,6 +65,7 @@
     "nativewind": "^4.1.23",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hook-form": "^7.53.2",
     "react-native": "0.74.5",
     "react-native-drawer-layout": "4.0.0-alpha.9",
     "react-native-gesture-handler": "~2.16.1",
@@ -73,7 +78,8 @@
     "react-native-web": "~0.19.6",
     "tailwind-merge": "^2.5.5",
     "tailwindcss": "^3.4.15",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
