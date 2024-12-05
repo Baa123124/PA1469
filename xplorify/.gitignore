@@ -101,3 +101,6 @@ web-build/
 
 # Yarn
 .yarn/*
+
+# Android
+android/*
