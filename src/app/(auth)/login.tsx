@@ -8,16 +8,15 @@ import { Link, router } from "expo-router"
 import { View } from "react-native"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { AuthSchema, authSchema } from "./schema"
 import { useColorScheme } from "@/lib/useColorScheme"
 import { useEffect } from "react"
+import { authSchema, AuthSchema } from "./(data)/schema"
 
 export default function LoginScreen() {
   const { isDarkColorScheme } = useColorScheme()
   // TODO: change this to actual auth session
   const authSession = false
 
-  // TODO: Add logo-dark image
   const logo = {
     web: isDarkColorScheme
       ? "../../../assets/images/logo-dark.png"

@@ -1,16 +1,17 @@
-import { Button } from "./ui/button"
 import React, { useState } from "react"
 import { LucideProps } from "lucide-react-native"
-import { Platform, Pressable } from "react-native"
+import { Platform } from "react-native"
 import { Href, router } from "expo-router"
+import { Button } from "@/components/ui/button"
 
-type TabBarButtonProps = React.ComponentPropsWithoutRef<typeof Pressable> & {
-  Icon: React.FC<LucideProps>
+type TabBarButtonProps = {
+  icon: React.FC<LucideProps>
   focused?: boolean
-  route: Href
+  href: Href
 }
 
-export function TabBarButton({ Icon, focused, route, ...props }: TabBarButtonProps) {
+export function TabBarButton({ icon, focused, href }: TabBarButtonProps) {
+  const Icon = icon
   const [iconText, setIconText] = useState("text-foreground")
   const [btnBg, setBtnBg] = useState("")
 
@@ -24,7 +25,7 @@ export function TabBarButton({ Icon, focused, route, ...props }: TabBarButtonPro
         ${focused ? "bg-primary/10" : ""}
         ${btnBg}
       `}
-      onPress={() => router.push(route)}
+      onPress={() => router.push(href)}
       onHoverIn={() => setIconText("text-primary")}
       onHoverOut={() => setIconText("text-foreground")}
       onTouchStart={() => {
@@ -35,19 +36,16 @@ export function TabBarButton({ Icon, focused, route, ...props }: TabBarButtonPro
         setBtnBg("")
         setIconText("text-foreground")
       }}
-      {...props}
     >
       <Icon
         size={24}
         className={`
-          w-6
-          h-6
           active:text-primary
           ${focused ? "text-primary" : ""}
           ${iconText}
         `}
         strokeWidth={1.25}
-        {...(Platform.OS !== "web" ? { onPress: () => router.push(route) } : {})}
+        {...(Platform.OS !== "web" ? { onPress: () => router.push(href) } : {})}
       />
     </Button>
   )

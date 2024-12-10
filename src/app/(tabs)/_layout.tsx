@@ -3,7 +3,7 @@ import { Bookmark } from "@/lib/icons/Bookmark"
 import { MapPin } from "@/lib/icons/MapPin"
 import { User } from "@/lib/icons/User"
 import { BottomTabBar } from "@react-navigation/bottom-tabs"
-import { TabBarButton } from "@/components/TabBarButton"
+import { TabBarButton } from "./(components)/TabBarButton"
 
 export default function TabLayout() {
   return (
@@ -19,7 +19,7 @@ export default function TabLayout() {
         name="caches/index"
         options={{
           tabBarIcon: ({ focused }) => (
-            <TabBarButton Icon={Bookmark} focused={focused} route={"/caches"} />
+            <TabBarButton icon={Bookmark} focused={focused} href={"/caches"} />
           ),
         }}
       />
@@ -27,7 +27,7 @@ export default function TabLayout() {
         name="map/index"
         options={{
           tabBarIcon: ({ focused }) => (
-            <TabBarButton Icon={MapPin} focused={focused} route={"/map"} />
+            <TabBarButton icon={MapPin} focused={focused} href={"/map"} />
           ),
         }}
       />
@@ -35,7 +35,7 @@ export default function TabLayout() {
         name="profile/index"
         options={{
           tabBarIcon: ({ focused }) => (
-            <TabBarButton Icon={User} focused={focused} route={"/profile"} />
+            <TabBarButton icon={User} focused={focused} href={"/profile"} />
           ),
         }}
       />

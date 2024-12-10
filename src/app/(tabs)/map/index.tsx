@@ -17,6 +17,8 @@ import { Text } from "@/components/ui/text"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { ThemeToggle } from "@/components/ThemeToggle"
 import { useSafeAreaInsetsStyle } from "@/utils/useSafeAreaInsetsStyle"
+import { Settings } from "@/lib/icons/Settings"
+import { Link } from "expo-router"
 
 const GITHUB_AVATAR_URI =
   "https://i.pinimg.com/originals/ef/a2/8d/efa28d18a04e7fa40ed49eeb0ab660db.jpg"
@@ -30,7 +32,14 @@ export default function MapScreen() {
 
   return (
     <View className="flex-1 bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
-      <ThemeToggle />
+      <View className="flex-row justify-between p-2">
+        <ThemeToggle />
+        <Link href="/settings" asChild>
+          <Button variant="ghost" size="icon">
+            <Settings size={16} strokeWidth={1.25} />
+          </Button>
+        </Link>
+      </View>
 
       <View className="flex-1 justify-center items-center gap-5 p-6">
         <Card className="w-full max-w-sm p-6 rounded-2xl">
