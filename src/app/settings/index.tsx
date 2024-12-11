@@ -13,8 +13,8 @@ import { SquarePen } from "@/lib/icons/SquarePen"
 import { useSafeAreaInsetsStyle } from "@/utils/useSafeAreaInsetsStyle"
 import { useState } from "react"
 import { View } from "react-native"
-import { SettingsLabel, SettingsView } from "./(components)/SettingsView"
 import { TopNav } from "@/components/TopNav"
+import { Settings, SettingsGroup, SettingsLabel } from "./(components)/Settings"
 
 // TODO: Change dummyUser to actual user
 
@@ -24,7 +24,7 @@ export default function SettingsScreen() {
 
   return (
     <View className="flex-1 bg-secondary/30 gap-8" style={useSafeAreaInsetsStyle(["top"])}>
-      <TopNav>
+      <TopNav className="justify-between">
         <Button variant="ghost" className="flex-row gap-2 items-center">
           <LogOut size={16} className="text-destructive" strokeWidth={1.25} />
           <Text className="text-destructive">Log out</Text>
@@ -52,8 +52,8 @@ export default function SettingsScreen() {
         </Button>
       </View>
 
-      <View className="gap-8">
-        <SettingsView name="Map">
+      <Settings>
+        <SettingsGroup name="Map">
           <SettingsLabel
             icon={ArrowUpDown}
             name="Cache range"
@@ -65,9 +65,9 @@ export default function SettingsScreen() {
             name="Discovery mode"
             switchProps={{ checked: discoveryMode, onCheckedChange: setDiscoveryMode }}
           />
-        </SettingsView>
+        </SettingsGroup>
 
-        <SettingsView name="Preferences">
+        <SettingsGroup name="Preferences">
           <SettingsLabel
             icon={Bell}
             name="Notifications"
@@ -78,14 +78,15 @@ export default function SettingsScreen() {
             name="Theme"
             text={dummyUser.theme}
             className="capitalize"
+            href={"/settings/theme"}
           />
-        </SettingsView>
+        </SettingsGroup>
 
-        <SettingsView name="Account">
-          <SettingsLabel icon={Mail} name="Email" text={dummyUser.email} />
-          <SettingsLabel icon={LockKeyhole} name="Password" text="" />
-        </SettingsView>
-      </View>
+        <SettingsGroup name="Account">
+          <SettingsLabel icon={Mail} name="Email" text={dummyUser.email} href={"/settings/email"} />
+          <SettingsLabel icon={LockKeyhole} name="Password" text="" href={"/settings/password"} />
+        </SettingsGroup>
+      </Settings>
     </View>
   )
 }

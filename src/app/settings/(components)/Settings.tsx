@@ -8,6 +8,34 @@ import { Button } from "@/components/ui/button"
 import { Text } from "@/components/ui/text"
 import { Switch } from "@/components/ui/switch"
 
+type SettingsProps = {
+  className?: string
+  children: React.ReactNode
+}
+
+function Settings({ className, children }: SettingsProps) {
+  return <View className={cn("gap-8", className)}>{children}</View>
+}
+
+type SettingsGroupProps = {
+  className?: string
+  name: string
+  children: React.ReactNode
+}
+
+function SettingsGroup({ className, name, children }: SettingsGroupProps) {
+  return (
+    <View className={cn("gap-2 items-center", className)}>
+      <Text
+        className={`text-primary text-sm font-semibold w-full ${Platform.OS === "web" ? "pl-6" : "pl-5"}`}
+      >
+        {name}
+      </Text>
+      <View className="w-full">{children}</View>
+    </View>
+  )
+}
+
 type SettingsLabelProps = {
   className?: string
   icon: React.FC<LucideProps>
@@ -31,7 +59,7 @@ function SettingsLabel({ className, icon, name, text, href, switchProps }: Setti
           <Text>{name}</Text>
         </View>
         <View className="flex-row gap-2 items-center">
-          <Text className="text-muted-foreground text-sm group-active:text-muted-foreground">
+          <Text className="text-muted-foreground text-sm font-normal group-active:text-muted-foreground">
             {text}
           </Text>
           <ChevronRight size={16} strokeWidth={1.25} className="text-muted-foreground" />
@@ -53,23 +81,4 @@ function SettingsLabel({ className, icon, name, text, href, switchProps }: Setti
   )
 }
 
-type SettingsViewProps = {
-  className?: string
-  name: string
-  children: React.ReactNode
-}
-
-function SettingsView({ className, name, children }: SettingsViewProps) {
-  return (
-    <View className={cn("gap-2 items-center", className)}>
-      <Text
-        className={`text-primary text-sm font-semibold w-full ${Platform.OS === "web" ? "pl-6" : "pl-5"}`}
-      >
-        {name}
-      </Text>
-      <View className="w-full">{children}</View>
-    </View>
-  )
-}
-
-export { SettingsView, SettingsLabel }
+export { Settings, SettingsGroup, SettingsLabel }

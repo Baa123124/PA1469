@@ -10,7 +10,8 @@ import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useColorScheme } from "@/lib/useColorScheme"
 import { useEffect } from "react"
-import { authSchema, AuthSchema } from "./(data)/schema"
+import { authSchema, AuthSchema } from "@/lib/authSchemas"
+import { Form, FormField, FormFieldError, FormSubmit } from "@/components/Form"
 
 export default function LoginScreen() {
   const { isDarkColorScheme } = useColorScheme()
@@ -53,21 +54,15 @@ export default function LoginScreen() {
 
   return (
     <View className="flex-1 bg-secondary/30 items-center" style={useSafeAreaInsetsStyle(["top"])}>
-      <View className="gap-4 w-full pt-32">
-        <View className="items-center pb-2">
-          <AutoImage
-            webSource={logo.web}
-            nativeSource={logo.native}
-            alt="logo"
-            maxHeight={96}
-            className="mb-4"
-          />
+      <View className="gap-4 w-full pt-28">
+        <View className="items-center gap-4 pb-4">
+          <AutoImage webSource={logo.web} nativeSource={logo.native} alt="logo" maxHeight={96} />
           <Text className="text-2xl font-bold">Welcome back!</Text>
         </View>
 
         <View className="mx-auto w-full max-w-sm rounded-md bg-background px-6 py-12 shadow">
-          <View className="grid gap-4">
-            <View className="grid w-full max-w-sm gap-1.5">
+          <Form>
+            <FormField>
               <Label nativeID="email">Email</Label>
               <Controller
                 control={control}
@@ -84,51 +79,46 @@ export default function LoginScreen() {
                   />
                 )}
               />
-              {errors.email && (
-                <Text className="text-destructive text-sm">{errors.email.message}</Text>
-              )}
-            </View>
-            <View>
-              <View className="grid w-full max-w-sm gap-1.5">
-                <View className="flex-row items-center justify-between">
-                  <Label nativeID="password">Password</Label>
-                  <Button
-                    variant="link"
-                    className="font-medium text-sm !px-0 !py-0 !h-[20px]"
-                    onPress={() => {
-                      // TODO: Add forgot password
-                    }}
-                  >
-                    <Text>Forgot password?</Text>
-                  </Button>
-                </View>
-                <Controller
-                  control={control}
-                  name="password"
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <Input
-                      aria-labelledby="password"
-                      secureTextEntry
-                      onBlur={onBlur}
-                      onChangeText={onChange}
-                      value={value}
-                      placeholder="Enter your password"
-                      className="w-full"
-                    />
-                  )}
-                />
-                {errors.password && (
-                  <Text className="text-destructive text-sm">{errors.password.message}</Text>
-                )}
-              </View>
-            </View>
+              {errors.email && <FormFieldError>{errors.email.message}</FormFieldError>}
+            </FormField>
 
-            <Button onPress={handleSubmit(onSubmit)} className="mt-2 w-full">
+            <FormField>
+              <View className="flex-row items-center justify-between">
+                <Label nativeID="password">Password</Label>
+                <Button
+                  variant="link"
+                  className="font-medium text-sm !px-0 !py-0 !h-[20px]"
+                  onPress={() => {
+                    // TODO: Add forgot password
+                  }}
+                >
+                  <Text>Forgot password?</Text>
+                </Button>
+              </View>
+              <Controller
+                control={control}
+                name="password"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input
+                    aria-labelledby="password"
+                    secureTextEntry
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    value={value}
+                    placeholder="Enter your password"
+                    className="w-full"
+                  />
+                )}
+              />
+              {errors.password && <FormFieldError>{errors.password.message}</FormFieldError>}
+            </FormField>
+
+            <FormSubmit onPress={handleSubmit(onSubmit)}>
               <Text>Log in</Text>
-            </Button>
+            </FormSubmit>
             <Button
               variant="outline"
-              className="w-full flex flex-row items-center justify-center"
+              className="w-full flex flex-row items-center justify-center max-w-sm"
               onPress={() => {
                 // TODO: Add Google authentication
                 router.replace("/map")
@@ -142,7 +132,7 @@ export default function LoginScreen() {
               />
               <Text>Sign up with Google</Text>
             </Button>
-          </View>
+          </Form>
         </View>
 
         <View className="flex-row items-center justify-center">

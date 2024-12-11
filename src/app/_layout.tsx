@@ -1,7 +1,7 @@
 import "../../global.css"
 import { useInitialRootStore } from "@/models"
 import { loadDateFnsLocale } from "@/utils/formatDate"
-import { NAV_THEME } from "@/lib/constants"
+import { lightTheme, darkTheme } from "@/lib/constants"
 import { useColorScheme } from "@/lib/useColorScheme"
 import { setAndroidNavigationBar } from "@/lib/android-navigation-bar"
 
@@ -13,7 +13,6 @@ import { Platform } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { StatusBar } from "expo-status-bar"
 import { PortalHost } from "@rn-primitives/portal"
-import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
 
 SplashScreen.preventAutoHideAsync()
@@ -23,15 +22,6 @@ if (__DEV__) {
   // include this in our production bundle, so we are using `if (__DEV__)`
   // to only execute this in development.
   require("src/devtools/ReactotronConfig.ts")
-}
-
-const LIGHT_THEME: Theme = {
-  ...DefaultTheme,
-  colors: NAV_THEME.light,
-}
-const DARK_THEME: Theme = {
-  ...DarkTheme,
-  colors: NAV_THEME.dark,
 }
 
 export {
@@ -85,14 +75,12 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+    <ThemeProvider value={isDarkColorScheme ? darkTheme : lightTheme}>
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
         <KeyboardProvider>
           <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <Slot />
-            <PortalHost />
-          </GestureHandlerRootView>
+          <Slot />
+          <PortalHost />
         </KeyboardProvider>
       </SafeAreaProvider>
     </ThemeProvider>

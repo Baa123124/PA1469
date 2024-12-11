@@ -1,31 +1,31 @@
-import { Platform, View } from "react-native"
+import { TextProps, View, ViewProps } from "react-native"
 import { Button } from "./ui/button"
-import { router } from "expo-router"
 import { ArrowLeft } from "@/lib/icons/ArrowLeft"
 import { cn } from "@/lib/utils"
+import { goBack } from "@/lib/goBack"
+import * as React from "react"
+import { TextRef, ViewRef } from "@rn-primitives/types"
+import { Text } from "./ui/text"
 
-type TopNavProps = {
-  className?: string
-  children?: React.ReactNode
-}
+const TopNav = React.forwardRef<ViewRef, ViewProps>(({ className, children, ...props }, ref) => (
+  <View ref={ref} className={cn("flex-row items-center p-2 gap-4", className)} {...props}>
+    <Button
+      variant="ghost"
+      size="icon"
+      onPress={() => {
+        goBack()
+      }}
+    >
+      <ArrowLeft size={16} strokeWidth={1.25} />
+    </Button>
+    {children}
+  </View>
+))
+TopNav.displayName = "TopNav"
 
-export function TopNav({ className, children }: TopNavProps) {
-  return (
-    <View className={cn("flex-row justify-between items-center p-2", className)}>
-      <Button
-        variant="ghost"
-        size="icon"
-        onPress={() => {
-          if (Platform.OS === "web") {
-            window.history.back()
-          } else {
-            router.back()
-          }
-        }}
-      >
-        <ArrowLeft size={16} strokeWidth={1.25} />
-      </Button>
-      {children}
-    </View>
-  )
-}
+const TopNavRoute = React.forwardRef<TextRef, TextProps>(({ className, ...props }, ref) => (
+  <Text ref={ref} className={cn("font-semibold text-xl", className)} {...props} />
+))
+TopNavRoute.displayName = "TopNavRoute"
+
+export { TopNav, TopNavRoute }
