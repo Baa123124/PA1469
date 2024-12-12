@@ -14,7 +14,8 @@ import { useSafeAreaInsetsStyle } from "@/utils/useSafeAreaInsetsStyle"
 import { useState } from "react"
 import { View } from "react-native"
 import { TopNav } from "@/components/TopNav"
-import { Settings, SettingsGroup, SettingsLabel } from "./(components)/Settings"
+import { Settings, SettingsGroup, SettingsField } from "./(components)/Settings"
+import { Link } from "expo-router"
 
 // TODO: Change dummyUser to actual user
 
@@ -46,45 +47,65 @@ export default function SettingsScreen() {
           <Text className="text-2xl font-bold">{dummyUser.displayName}</Text>
           <Text className="text-muted-foreground text-sm">{dummyUser.email}</Text>
         </View>
-        <Button className="flex-row gap-2">
-          <SquarePen size={16} strokeWidth={1.25} className="text-primary-foreground" />
-          <Text>Edit profile</Text>
-        </Button>
+        <Link href="/settings/profile" asChild>
+          <Button className="flex-row gap-2">
+            <SquarePen size={16} strokeWidth={1.25} className="text-primary-foreground" />
+            <Text>Edit profile</Text>
+          </Button>
+        </Link>
       </View>
 
       <Settings>
         <SettingsGroup name="Map">
-          <SettingsLabel
+          <SettingsField
             icon={ArrowUpDown}
             name="Cache range"
-            text={`${dummyUser.cacheRangeMin} km - ${dummyUser.cacheRangeMax} km`}
-            href={"/settings/cache-range"}
+            type="link"
+            value={`${dummyUser.cacheRangeMin} km - ${dummyUser.cacheRangeMax} km`}
+            href="/settings/cache-range"
           />
-          <SettingsLabel
+          <SettingsField
             icon={Compass}
             name="Discovery mode"
-            switchProps={{ checked: discoveryMode, onCheckedChange: setDiscoveryMode }}
+            type="switch"
+            checked={discoveryMode}
+            setChecked={setDiscoveryMode}
           />
         </SettingsGroup>
 
         <SettingsGroup name="Preferences">
-          <SettingsLabel
+          <SettingsField
             icon={Bell}
             name="Notifications"
-            switchProps={{ checked: notifications, onCheckedChange: setNotifications }}
+            type="switch"
+            checked={notifications}
+            setChecked={setNotifications}
           />
-          <SettingsLabel
+          <SettingsField
             icon={Palette}
             name="Theme"
-            text={dummyUser.theme}
+            type="link"
+            value={dummyUser.theme}
             className="capitalize"
-            href={"/settings/theme"}
+            href="/settings/theme"
           />
         </SettingsGroup>
 
         <SettingsGroup name="Account">
-          <SettingsLabel icon={Mail} name="Email" text={dummyUser.email} href={"/settings/email"} />
-          <SettingsLabel icon={LockKeyhole} name="Password" text="" href={"/settings/password"} />
+          <SettingsField
+            icon={Mail}
+            name="Email"
+            type="link"
+            value={dummyUser.email}
+            href="/settings/email"
+          />
+          <SettingsField
+            icon={LockKeyhole}
+            name="Password"
+            type="link"
+            value=""
+            href="/settings/password"
+          />
         </SettingsGroup>
       </Settings>
     </View>

@@ -1,31 +1,26 @@
-import React, { useState } from "react"
+import * as React from "react"
 import { LucideProps } from "lucide-react-native"
-import { Platform, View } from "react-native"
+import { Platform, View, ViewProps } from "react-native"
 import { ChevronRight } from "@/lib/icons/ChevronRight"
 import { cn } from "@/lib/utils"
 import { Href, Link } from "expo-router"
-import { Button } from "@/components/ui/button"
+import { Button, ButtonProps, ButtonRef } from "@/components/ui/button"
 import { Text } from "@/components/ui/text"
 import { Switch } from "@/components/ui/switch"
+import { ViewRef } from "@rn-primitives/types"
 
-type SettingsProps = {
-  className?: string
-  children: React.ReactNode
-}
+const Settings = React.forwardRef<ViewRef, ViewProps>(({ className, ...props }, ref) => (
+  <View ref={ref} className={cn("gap-8", className)} {...props} />
+))
+Settings.displayName = "Settings"
 
-function Settings({ className, children }: SettingsProps) {
-  return <View className={cn("gap-8", className)}>{children}</View>
-}
-
-type SettingsGroupProps = {
-  className?: string
+type SettingsGroupProps = ViewProps & {
   name: string
-  children: React.ReactNode
 }
 
-function SettingsGroup({ className, name, children }: SettingsGroupProps) {
-  return (
-    <View className={cn("gap-2 items-center", className)}>
+const SettingsGroup = React.forwardRef<ViewRef, SettingsGroupProps>(
+  ({ className, name, children, ...props }, ref) => (
+    <View ref={ref} className={cn("gap-2 items-center", className)} {...props}>
       <Text
         className={`text-primary text-sm font-semibold w-full ${Platform.OS === "web" ? "pl-6" : "pl-5"}`}
       >
@@ -33,52 +28,85 @@ function SettingsGroup({ className, name, children }: SettingsGroupProps) {
       </Text>
       <View className="w-full">{children}</View>
     </View>
-  )
-}
+  ),
+)
+SettingsGroup.displayName = "SettingsGroup"
 
-type SettingsLabelProps = {
-  className?: string
+type BaseSettingsFieldProps = ButtonProps & {
   icon: React.FC<LucideProps>
   name: string
-  text?: string
-  href?: Href | string
-  switchProps?: React.ComponentPropsWithoutRef<typeof Switch>
+  type?: "link" | "switch"
 }
+type LinkSettingsFieldProps = BaseSettingsFieldProps & {
+  type?: "link"
+  value?: string
+  href: Href
+  checked?: never
+  setChecked?: never
+}
+type SwitchSettingsFieldProps = BaseSettingsFieldProps & {
+  type: "switch"
+  value?: never
+  href?: never
+  checked: boolean
+  setChecked: React.Dispatch<React.SetStateAction<boolean>>
+}
+type SettingsFieldProps = LinkSettingsFieldProps | SwitchSettingsFieldProps
 
-function SettingsLabel({ className, icon, name, text, href, switchProps }: SettingsLabelProps) {
-  const Icon = icon
-  const _href = (href as Href) ?? "/"
-  const isText = text !== undefined
-  const [checked, setChecked] = useState(switchProps?.checked ?? false)
+const SettingsField = React.forwardRef<ButtonRef, SettingsFieldProps>(
+  ({ className, icon, name, type = "link", value = "", ...props }, ref) => {
+    const Icon = icon
 
-  return isText ? (
-    <Link href={_href} asChild>
-      <Button variant="ghost" className={cn("flex-row justify-between w-full px-6", className)}>
+    if (type === "link") {
+      const { href } = props as LinkSettingsFieldProps
+      return (
+        <Link href={href} asChild>
+          <Button
+            ref={ref}
+            variant="ghost"
+            className={cn("flex-row justify-between w-full px-6", className)}
+            {...props}
+          >
+            <View className="flex-row gap-2 items-center">
+              <Icon size={16} strokeWidth={1.25} />
+              <Text>{name}</Text>
+            </View>
+            <View className="flex-row gap-2 items-center">
+              <Text className="text-muted-foreground text-sm font-normal group-active:text-muted-foreground">
+                {value}
+              </Text>
+              <ChevronRight size={16} strokeWidth={1.25} className="text-muted-foreground" />
+            </View>
+          </Button>
+        </Link>
+      )
+    }
+
+    const { checked, setChecked } = props as SwitchSettingsFieldProps
+    return (
+      <Button
+        ref={ref}
+        variant="ghost"
+        className={cn("flex-row justify-between w-full px-6", className)}
+        onPress={() => setChecked(!checked)}
+        {...props}
+      >
         <View className="flex-row gap-2 items-center">
           <Icon size={16} strokeWidth={1.25} />
           <Text>{name}</Text>
         </View>
-        <View className="flex-row gap-2 items-center">
-          <Text className="text-muted-foreground text-sm font-normal group-active:text-muted-foreground">
-            {text}
-          </Text>
-          <ChevronRight size={16} strokeWidth={1.25} className="text-muted-foreground" />
-        </View>
+        <Switch checked={checked} onCheckedChange={setChecked} />
       </Button>
-    </Link>
-  ) : (
-    <Button
-      variant="ghost"
-      className={cn("flex-row justify-between w-full px-6", className)}
-      onPress={() => setChecked(!checked)}
-    >
-      <View className="flex-row gap-2 items-center">
-        <Icon size={16} strokeWidth={1.25} />
-        <Text>{name}</Text>
-      </View>
-      <Switch checked={checked} onCheckedChange={setChecked} />
-    </Button>
-  )
-}
+    )
+  },
+)
+SettingsField.displayName = "SettingsField"
 
-export { Settings, SettingsGroup, SettingsLabel }
+export { Settings, SettingsGroup, SettingsField }
+export {
+  type SettingsGroupProps,
+  type SettingsFieldProps,
+  type BaseSettingsFieldProps,
+  type LinkSettingsFieldProps,
+  type SwitchSettingsFieldProps,
+}

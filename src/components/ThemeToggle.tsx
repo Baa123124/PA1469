@@ -3,12 +3,14 @@ import { setAndroidNavigationBar } from "@/lib/android-navigation-bar"
 import { MoonStar } from "@/lib/icons/MoonStar"
 import { Sun } from "@/lib/icons/Sun"
 import { useColorScheme } from "@/lib/useColorScheme"
-import { Button } from "./ui/button"
+import { Button, ButtonProps, ButtonRef } from "./ui/button"
+import * as React from "react"
 
-export function ThemeToggle() {
+const ThemeToggle = React.forwardRef<ButtonRef, ButtonProps>(({ ...props }, ref) => {
   const { isDarkColorScheme, setColorScheme } = useColorScheme()
   return (
     <Button
+      ref={ref}
       variant="ghost"
       size="icon"
       onPress={() => {
@@ -17,6 +19,7 @@ export function ThemeToggle() {
         setAndroidNavigationBar(newTheme)
         AsyncStorage.setItem("theme", newTheme)
       }}
+      {...props}
     >
       {isDarkColorScheme ? (
         <MoonStar size={16} strokeWidth={1.25} />
@@ -25,4 +28,7 @@ export function ThemeToggle() {
       )}
     </Button>
   )
-}
+})
+ThemeToggle.displayName = "ThemeToggle"
+
+export { ThemeToggle }
