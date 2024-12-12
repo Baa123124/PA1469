@@ -4,26 +4,27 @@ import { useSafeAreaInsetsStyle } from "@/utils/useSafeAreaInsetsStyle"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import { View } from "react-native"
-import { ChangeEmailSchema, changeEmailSchema } from "./(data)/schemas"
+import { ChangePasswordSchema, changePasswordSchema } from "./(data)/schemas"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { goBack } from "@/utils/goBack"
 import { Form, FormField, FormFieldError, FormSubmit } from "@/components/Form"
 
-export default function EmailSettingsScreen() {
+export default function PasswordSettingsScreen() {
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(changeEmailSchema),
+    resolver: zodResolver(changePasswordSchema),
     defaultValues: {
-      newEmail: "",
-      confirmEmail: "",
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
     },
   })
 
-  function onSubmit(formData: ChangeEmailSchema) {
+  function onSubmit(formData: ChangePasswordSchema) {
     console.log(formData)
     // TODO: Send confirmation email
     goBack() // if valid go back to previous screen
@@ -34,48 +35,72 @@ export default function EmailSettingsScreen() {
   return (
     <View className="flex-1 bg-secondary/30 gap-8" style={useSafeAreaInsetsStyle(["top"])}>
       <TopNav>
-        <TopNavRoute>Email</TopNavRoute>
+        <TopNavRoute>Password</TopNavRoute>
       </TopNav>
 
       <Form>
         <FormField>
-          <Label nativeID="newEmail">New email</Label>
+          <Label nativeID="currentPassword">Current password</Label>
           <Controller
             control={control}
-            name="newEmail"
+            name="currentPassword"
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
-                aria-labelledby="newEmail"
-                inputMode="email"
+                aria-labelledby="currentPassword"
+                secureTextEntry
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
-                placeholder="Enter your new email"
+                placeholder="Enter your current password"
                 className="w-full"
               />
             )}
           />
-          {errors.newEmail && <FormFieldError>{errors.newEmail.message}</FormFieldError>}
+          {errors.currentPassword && (
+            <FormFieldError>{errors.currentPassword.message}</FormFieldError>
+          )}
         </FormField>
 
         <FormField>
-          <Label nativeID="confirmEmail">Confirm email</Label>
+          <Label nativeID="newPassword">New password</Label>
           <Controller
             control={control}
-            name="confirmEmail"
+            name="newPassword"
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
-                aria-labelledby="confirmEmail"
-                inputMode="email"
+                aria-labelledby="newPassword"
+                secureTextEntry
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
-                placeholder="Confirm your new email"
+                placeholder="Enter your new password"
                 className="w-full"
               />
             )}
           />
-          {errors.confirmEmail && <FormFieldError>{errors.confirmEmail.message}</FormFieldError>}
+          {errors.newPassword && <FormFieldError>{errors.newPassword.message}</FormFieldError>}
+        </FormField>
+
+        <FormField>
+          <Label nativeID="confirmPassword">Confirm password</Label>
+          <Controller
+            control={control}
+            name="confirmPassword"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                aria-labelledby="confirmPassword"
+                secureTextEntry
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                placeholder="Confirm your new password"
+                className="w-full"
+              />
+            )}
+          />
+          {errors.confirmPassword && (
+            <FormFieldError>{errors.confirmPassword.message}</FormFieldError>
+          )}
         </FormField>
 
         <FormSubmit onPress={handleSubmit(onSubmit)}>

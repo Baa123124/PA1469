@@ -11,7 +11,7 @@ const Form = React.forwardRef<ViewRef, ViewProps>(({ className, ...props }, ref)
 Form.displayName = "Form"
 
 const FormField = React.forwardRef<ViewRef, ViewProps>(({ className, ...props }, ref) => (
-  <View ref={ref} className={cn("w-full max-w-sm gap-1.5", className)} {...props} />
+  <View ref={ref} className={cn("w-full max-w-sm gap-1.5 pb-2", className)} {...props} />
 ))
 FormField.displayName = "FormField"
 
@@ -21,7 +21,7 @@ const FormFieldError = React.forwardRef<TextRef, TextProps>(({ className, ...pro
 FormField.displayName = "FormFieldError"
 
 const FormSubmit = React.forwardRef<ButtonRef, ButtonProps>(({ className, ...props }, ref) => (
-  <Button ref={ref} className={cn("mt-2 w-full max-w-sm", className)} {...props} />
+  <Button ref={ref} className={cn("w-full max-w-sm", className)} {...props} />
 ))
 FormSubmit.displayName = "FormSubmit"
 

@@ -54,7 +54,13 @@
         }
       ],
       "expo-font",
-      "expo-router"
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Xplorify to access your photos"
+        }
+      ]
     ],
     "experiments": {
       "tsconfigPaths": true,

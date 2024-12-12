@@ -80,7 +80,8 @@
     "tailwind-merge": "^2.5.5",
     "tailwindcss": "^3.4.15",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "expo-image-picker": "~15.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
