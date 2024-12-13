@@ -22,6 +22,27 @@ const changePasswordSchema = z
     path: ["confirmPassword"],
   })
 
+// ? Could restrict width and height as well, leaving this optional for now
+const avatarSchema = z.object({
+  uri: z.string().url({ message: "Invalid URL." }),
+  mimeType: z.string().refine((type) => ["image/jpeg", "image/png", "image/webp"].includes(type), {
+    message: "Invalid type. Allowed types are: png, jpeg, webp",
+  }),
+  width: z.number().optional(),
+  height: z.number().optional(),
+  fileSize: z.number().max(2 * 1024 * 1024, { message: "File size must be at most 2 MB" }),
+})
+
+const bannerSchema = z.object({
+  uri: z.string().url({ message: "Invalid URL." }),
+  mimeType: z.string().refine((type) => ["image/jpeg", "image/png", "image/webp"].includes(type), {
+    message: "Invalid type. Allowed types are: png, jpeg, webp",
+  }),
+  width: z.number().optional(),
+  height: z.number().optional(),
+  fileSize: z.number().max(5 * 1024 * 1024, { message: "File size must be at most 5 MB" }),
+})
+
 const profileSchema = z.object({
   displayName: z
     .string()
@@ -31,11 +52,13 @@ const profileSchema = z.object({
     .string()
     .max(200, { message: "Description must be at most 200 characters long" })
     .optional(),
-  avatar: z.string().url().optional(),
-  banner: z.string().url().optional(),
+  avatar: avatarSchema,
+  banner: bannerSchema,
 })
 
-export { changeEmailSchema, changePasswordSchema, profileSchema }
+export { changeEmailSchema, changePasswordSchema, profileSchema, avatarSchema, bannerSchema }
 export type ChangeEmailSchema = z.infer<typeof changeEmailSchema>
 export type ChangePasswordSchema = z.infer<typeof changePasswordSchema>
 export type ProfileSchema = z.infer<typeof profileSchema>
+export type AvatarSchema = z.infer<typeof avatarSchema>
+export type BannerSchema = z.infer<typeof bannerSchema>

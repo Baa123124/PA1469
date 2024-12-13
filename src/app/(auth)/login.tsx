@@ -79,7 +79,7 @@ export default function LoginScreen() {
                   />
                 )}
               />
-              {errors.email && <FormFieldError>{errors.email.message}</FormFieldError>}
+              <FormFieldError errors={errors.email} />
             </FormField>
 
             <FormField>
@@ -110,7 +110,7 @@ export default function LoginScreen() {
                   />
                 )}
               />
-              {errors.password && <FormFieldError>{errors.password.message}</FormFieldError>}
+              <FormFieldError errors={errors.password} />
             </FormField>
 
             <FormSubmit onPress={handleSubmit(onSubmit)}>

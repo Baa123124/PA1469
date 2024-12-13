@@ -1,27 +1,40 @@
 import * as React from "react"
 import { Button, ButtonProps, ButtonRef } from "./button"
-import { ImagePickerOptions, launchImageLibraryAsync, MediaTypeOptions } from "expo-image-picker"
+import {
+  ImagePickerAsset,
+  ImagePickerOptions,
+  launchImageLibraryAsync,
+  MediaTypeOptions,
+} from "expo-image-picker"
 
 type ImagePickerProps = ButtonProps & {
-  image: string | null
-  setImage: React.Dispatch<React.SetStateAction<string | null>>
-  imagePickerOptions?: ImagePickerOptions
+  image: ImagePickerAsset | null
+  setImage: React.Dispatch<React.SetStateAction<ImagePickerAsset | null>>
+  options?: ImagePickerOptions
 }
 
 /**
  * @see [Documentation]{@link https://docs.expo.dev/versions/latest/sdk/imagepicker}
  */
 const ImagePicker = React.forwardRef<ButtonRef, ImagePickerProps>(
-  ({ image, setImage, imagePickerOptions, ...props }, ref) => {
+  ({ image, setImage, options, ...props }, ref) => {
     const pickImage = async () => {
       // No permissions request is necessary for launching the image library
       let result = await launchImageLibraryAsync({
         mediaTypes: MediaTypeOptions.Images,
-        ...imagePickerOptions,
+        ...options,
       })
 
       if (!result.canceled) {
-        setImage(result.assets[0].uri)
+        const asset = result.assets[0]
+
+        if (!asset.fileSize) {
+          const img = await fetch(asset.uri)
+          const blob = await img.blob()
+          asset.fileSize = blob.size
+        }
+
+        setImage(asset)
       }
     }
 

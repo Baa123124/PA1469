@@ -4,6 +4,7 @@ import { type TextProps, View, type ViewProps } from "react-native"
 import { cn } from "@/lib/utils"
 import { Button, ButtonProps, ButtonRef } from "./ui/button"
 import { Text } from "./ui/text"
+import { FieldError, FieldErrors, FieldErrorsImpl, Merge } from "react-hook-form"
 
 const Form = React.forwardRef<ViewRef, ViewProps>(({ className, ...props }, ref) => (
   <View ref={ref} className={cn("items-center justify-center gap-4", className)} {...props} />
@@ -15,9 +16,41 @@ const FormField = React.forwardRef<ViewRef, ViewProps>(({ className, ...props },
 ))
 FormField.displayName = "FormField"
 
-const FormFieldError = React.forwardRef<TextRef, TextProps>(({ className, ...props }, ref) => (
-  <Text ref={ref} className={cn("text-sm text-destructive", className)} {...props} />
-))
+type FormFieldErrorProps = TextProps & {
+  errors: Merge<FieldError, FieldErrorsImpl<any>> | FieldError | undefined
+}
+const FormFieldError = React.forwardRef<TextRef, FormFieldErrorProps>(
+  ({ className, errors, ...props }, ref) => {
+    if (!errors) {
+      return null
+    }
+
+    if (errors.message) {
+      return (
+        <Text ref={ref} className={cn("text-sm text-destructive", className)} {...props}>
+          {errors.message as string}
+        </Text>
+      )
+    }
+
+    return Object.entries(errors).map(([key, value]) => {
+      const errorMessage = typeof value?.message === "string" ? value.message : null
+      if (errorMessage) {
+        return (
+          <Text
+            ref={ref}
+            className={cn("text-sm text-destructive", className)}
+            {...props}
+            key={key}
+          >
+            {errorMessage}
+          </Text>
+        )
+      }
+      return null
+    })
+  },
+)
 FormField.displayName = "FormFieldError"
 
 const FormSubmit = React.forwardRef<ButtonRef, ButtonProps>(({ className, ...props }, ref) => (
@@ -26,3 +59,4 @@ const FormSubmit = React.forwardRef<ButtonRef, ButtonProps>(({ className, ...pro
 FormSubmit.displayName = "FormSubmit"
 
 export { Form, FormField, FormFieldError, FormSubmit }
+export type { FormFieldErrorProps }

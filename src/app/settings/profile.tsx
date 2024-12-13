@@ -58,12 +58,12 @@ export default function ProfileSettingsScreen() {
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
-                placeholder="Enter your new display name"
+                placeholder="Enter display name"
                 className="w-full"
               />
             )}
           />
-          {errors.displayName && <FormFieldError>{errors.displayName.message}</FormFieldError>}
+          <FormFieldError errors={errors.displayName} />
         </FormField>
 
         <FormField>
@@ -77,12 +77,12 @@ export default function ProfileSettingsScreen() {
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
-                placeholder="Enter your new description"
+                placeholder="Enter description"
                 className="w-full"
               />
             )}
           />
-          {errors.description && <FormFieldError>{errors.description.message}</FormFieldError>}
+          <FormFieldError errors={errors.description} />
         </FormField>
 
         <FormField>
@@ -107,13 +107,13 @@ export default function ProfileSettingsScreen() {
                   className="mx-auto !h-[96px] !px-0 !py-0"
                   image={value}
                   setImage={onChange}
+                  options={{
+                    allowsEditing: true,
+                    aspect: [1, 1],
+                  }}
                 >
                   <Avatar alt="profile avatar" className="mx-auto !h-[96px] !w-[96px]">
-                    <AvatarImage
-                      source={{
-                        uri: value,
-                      }}
-                    />
+                    <AvatarImage source={value} />
                     <AvatarFallback>
                       <Text>Avatar</Text>
                     </AvatarFallback>
@@ -122,7 +122,7 @@ export default function ProfileSettingsScreen() {
               </FormField>
             )}
           />
-          {errors.avatar && <FormFieldError>{errors.avatar.message}</FormFieldError>}
+          <FormFieldError errors={errors.avatar} />
         </FormField>
 
         <FormField>
@@ -147,9 +147,13 @@ export default function ProfileSettingsScreen() {
                   className="mx-auto !h-[192px] !px-0 !py-0"
                   image={value}
                   setImage={onChange}
+                  options={{
+                    allowsEditing: true,
+                    aspect: [2, 1],
+                  }}
                 >
                   <AutoImage
-                    source={{ uri: value }}
+                    source={value}
                     aria-labelledby="banner"
                     className="!max-h-[192px] max-w-sm"
                   />
@@ -157,7 +161,7 @@ export default function ProfileSettingsScreen() {
               </FormField>
             )}
           />
-          {errors.banner && <FormFieldError>{errors.banner.message}</FormFieldError>}
+          <FormFieldError errors={errors.banner} />
         </FormField>
 
         <FormSubmit onPress={handleSubmit(onSubmit)}>
