@@ -47,8 +47,8 @@ export default function SignupScreen() {
   }
 
   return (
-    <View className="flex-1 bg-secondary/30 items-center" style={useSafeAreaInsetsStyle(["top"])}>
-      <View className="gap-4 w-full pt-28">
+    <View className="flex-1 items-center bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
+      <View className="w-full gap-4 pt-28">
         <View className="items-center gap-4 pb-4">
           <AutoImage webSource={logo.web} nativeSource={logo.native} alt="logo" maxHeight={96} />
           <Text className="text-2xl font-bold">Create an account</Text>
@@ -101,7 +101,7 @@ export default function SignupScreen() {
             </FormSubmit>
             <Button
               variant="outline"
-              className="w-full flex flex-row items-center justify-center max-w-sm"
+              className="flex w-full max-w-sm flex-row items-center justify-center"
               onPress={() => {
                 // TODO: Add Google authentication
                 router.replace("/map")
@@ -120,9 +120,9 @@ export default function SignupScreen() {
 
         <View>
           <View className="flex-row items-center justify-center">
-            <Text className="text-muted-foreground text-sm">Already have an account?</Text>
+            <Text className="text-sm text-muted-foreground">Already have an account?</Text>
             <Link href="/login" asChild>
-              <Button variant="link" className="font-medium !px-2">
+              <Button variant="link" className="!px-2 font-medium">
                 <Text>Log in</Text>
               </Button>
             </Link>

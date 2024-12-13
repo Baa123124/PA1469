@@ -8,7 +8,7 @@ import { TextRef, ViewRef } from "@rn-primitives/types"
 import { Text } from "./ui/text"
 
 const TopNav = React.forwardRef<ViewRef, ViewProps>(({ className, children, ...props }, ref) => (
-  <View ref={ref} className={cn("flex-row items-center p-2 gap-4", className)} {...props}>
+  <View ref={ref} className={cn("flex-row items-center gap-4 p-2", className)} {...props}>
     <Button
       variant="ghost"
       size="icon"
@@ -24,7 +24,7 @@ const TopNav = React.forwardRef<ViewRef, ViewProps>(({ className, children, ...p
 TopNav.displayName = "TopNav"
 
 const TopNavRoute = React.forwardRef<TextRef, TextProps>(({ className, ...props }, ref) => (
-  <Text ref={ref} className={cn("font-semibold text-xl", className)} {...props} />
+  <Text ref={ref} className={cn("text-xl font-semibold", className)} {...props} />
 ))
 TopNavRoute.displayName = "TopNavRoute"
 

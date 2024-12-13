@@ -40,7 +40,7 @@ export default function ProfileSettingsScreen() {
   }
 
   return (
-    <View className="flex-1 bg-secondary/30 gap-8" style={useSafeAreaInsetsStyle(["top"])}>
+    <View className="flex-1 gap-8 bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
       <TopNav>
         <TopNavRoute>Profile</TopNavRoute>
       </TopNav>
@@ -91,11 +91,11 @@ export default function ProfileSettingsScreen() {
             name="avatar"
             render={({ field: { onChange, value } }) => (
               <FormField>
-                <View className="flex-row justify-between items-center">
+                <View className="flex-row items-center justify-between">
                   <Label nativeID="avatar">Avatar</Label>
                   <ImagePicker
                     variant="link"
-                    className="!px-0 !py-0 !h-[20px]"
+                    className="!h-[20px] !px-0 !py-0"
                     image={value}
                     setImage={onChange}
                   >
@@ -104,11 +104,11 @@ export default function ProfileSettingsScreen() {
                 </View>
                 <ImagePicker
                   variant="ghost"
-                  className="!h-[96px] mx-auto !px-0 !py-0"
+                  className="mx-auto !h-[96px] !px-0 !py-0"
                   image={value}
                   setImage={onChange}
                 >
-                  <Avatar alt="profile avatar" className="!w-[96px] !h-[96px] mx-auto">
+                  <Avatar alt="profile avatar" className="mx-auto !h-[96px] !w-[96px]">
                     <AvatarImage
                       source={{
                         uri: value,
@@ -131,11 +131,11 @@ export default function ProfileSettingsScreen() {
             name="banner"
             render={({ field: { onChange, value } }) => (
               <FormField>
-                <View className="flex-row justify-between items-center">
+                <View className="flex-row items-center justify-between">
                   <Label nativeID="banner">Banner</Label>
                   <ImagePicker
                     variant="link"
-                    className="!px-0 !py-0 !h-[20px]"
+                    className="!h-[20px] !px-0 !py-0"
                     image={value}
                     setImage={onChange}
                   >
@@ -144,14 +144,14 @@ export default function ProfileSettingsScreen() {
                 </View>
                 <ImagePicker
                   variant="ghost"
-                  className="!h-[192px] mx-auto !px-0 !py-0"
+                  className="mx-auto !h-[192px] !px-0 !py-0"
                   image={value}
                   setImage={onChange}
                 >
                   <AutoImage
                     source={{ uri: value }}
                     aria-labelledby="banner"
-                    className="max-w-sm !max-h-[192px]"
+                    className="!max-h-[192px] max-w-sm"
                   />
                 </ImagePicker>
               </FormField>

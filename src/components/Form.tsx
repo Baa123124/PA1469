@@ -16,7 +16,7 @@ const FormField = React.forwardRef<ViewRef, ViewProps>(({ className, ...props },
 FormField.displayName = "FormField"
 
 const FormFieldError = React.forwardRef<TextRef, TextProps>(({ className, ...props }, ref) => (
-  <Text ref={ref} className={cn("text-destructive text-sm", className)} {...props} />
+  <Text ref={ref} className={cn("text-sm text-destructive", className)} {...props} />
 ))
 FormField.displayName = "FormFieldError"
 

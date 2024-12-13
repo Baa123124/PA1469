@@ -53,8 +53,8 @@ export default function LoginScreen() {
   }
 
   return (
-    <View className="flex-1 bg-secondary/30 items-center" style={useSafeAreaInsetsStyle(["top"])}>
-      <View className="gap-4 w-full pt-28">
+    <View className="flex-1 items-center bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
+      <View className="w-full gap-4 pt-28">
         <View className="items-center gap-4 pb-4">
           <AutoImage webSource={logo.web} nativeSource={logo.native} alt="logo" maxHeight={96} />
           <Text className="text-2xl font-bold">Welcome back!</Text>
@@ -87,7 +87,7 @@ export default function LoginScreen() {
                 <Label nativeID="password">Password</Label>
                 <Button
                   variant="link"
-                  className="font-medium text-sm !px-0 !py-0 !h-[20px]"
+                  className="!h-[20px] !px-0 !py-0 text-sm font-medium"
                   onPress={() => {
                     // TODO: Add forgot password
                   }}
@@ -118,7 +118,7 @@ export default function LoginScreen() {
             </FormSubmit>
             <Button
               variant="outline"
-              className="w-full flex flex-row items-center justify-center max-w-sm"
+              className="flex w-full max-w-sm flex-row items-center justify-center"
               onPress={() => {
                 // TODO: Add Google authentication
                 router.replace("/map")
@@ -136,9 +136,9 @@ export default function LoginScreen() {
         </View>
 
         <View className="flex-row items-center justify-center">
-          <Text className="text-muted-foreground text-sm">Don't have an account?</Text>
+          <Text className="text-sm text-muted-foreground">Don't have an account?</Text>
           <Link href="/signup" asChild>
-            <Button variant="link" className="font-medium !px-2">
+            <Button variant="link" className="!px-2 font-medium">
               <Text>Sign up</Text>
             </Button>
           </Link>

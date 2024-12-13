@@ -20,9 +20,9 @@ type SettingsGroupProps = ViewProps & {
 
 const SettingsGroup = React.forwardRef<ViewRef, SettingsGroupProps>(
   ({ className, name, children, ...props }, ref) => (
-    <View ref={ref} className={cn("gap-2 items-center", className)} {...props}>
+    <View ref={ref} className={cn("items-center gap-2", className)} {...props}>
       <Text
-        className={`text-primary text-sm font-semibold w-full ${Platform.OS === "web" ? "pl-6" : "pl-5"}`}
+        className={`w-full text-sm font-semibold text-primary ${Platform.OS === "web" ? "pl-6" : "pl-5"}`}
       >
         {name}
       </Text>
@@ -64,15 +64,15 @@ const SettingsField = React.forwardRef<ButtonRef, SettingsFieldProps>(
           <Button
             ref={ref}
             variant="ghost"
-            className={cn("flex-row justify-between w-full px-6", className)}
+            className={cn("w-full flex-row justify-between px-6", className)}
             {...props}
           >
-            <View className="flex-row gap-2 items-center">
+            <View className="flex-row items-center gap-2">
               <Icon size={16} strokeWidth={1.25} />
               <Text>{name}</Text>
             </View>
-            <View className="flex-row gap-2 items-center">
-              <Text className="text-muted-foreground text-sm font-normal group-active:text-muted-foreground">
+            <View className="flex-row items-center gap-2">
+              <Text className="text-sm font-normal text-muted-foreground group-active:text-muted-foreground">
                 {value}
               </Text>
               <ChevronRight size={16} strokeWidth={1.25} className="text-muted-foreground" />
@@ -87,11 +87,11 @@ const SettingsField = React.forwardRef<ButtonRef, SettingsFieldProps>(
       <Button
         ref={ref}
         variant="ghost"
-        className={cn("flex-row justify-between w-full px-6", className)}
+        className={cn("w-full flex-row justify-between px-6", className)}
         onPress={() => setChecked(!checked)}
         {...props}
       >
-        <View className="flex-row gap-2 items-center">
+        <View className="flex-row items-center gap-2">
           <Icon size={16} strokeWidth={1.25} />
           <Text>{name}</Text>
         </View>

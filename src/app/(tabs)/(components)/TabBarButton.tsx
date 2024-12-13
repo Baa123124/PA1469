@@ -20,13 +20,7 @@ const TabBarButton = React.forwardRef<ButtonRef, TabBarButtonProps>(
       <Button
         ref={ref}
         variant="ghost"
-        className={`
-        rounded-full
-        web:hover:bg-primary/10
-        active:bg-primary/10
-        ${focused ? "bg-primary/10" : ""}
-        ${btnBg}
-      `}
+        className={`rounded-full active:bg-primary/10 web:hover:bg-primary/10 ${focused ? "bg-primary/10" : ""} ${btnBg} `}
         onPress={() => router.push(href)}
         onHoverIn={() => setIconText("text-primary")}
         onHoverOut={() => setIconText("text-foreground")}
@@ -42,11 +36,7 @@ const TabBarButton = React.forwardRef<ButtonRef, TabBarButtonProps>(
       >
         <Icon
           size={24}
-          className={`
-          active:text-primary
-          ${focused ? "text-primary" : ""}
-          ${iconText}
-        `}
+          className={`active:text-primary ${focused ? "text-primary" : ""} ${iconText} `}
           strokeWidth={1.25}
           {...(Platform.OS !== "web" ? { onPress: () => router.push(href) } : {})}
         />

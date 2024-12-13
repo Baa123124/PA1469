@@ -32,7 +32,7 @@ export default function EmailSettingsScreen() {
   }
 
   return (
-    <View className="flex-1 bg-secondary/30 gap-8" style={useSafeAreaInsetsStyle(["top"])}>
+    <View className="flex-1 gap-8 bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
       <TopNav>
         <TopNavRoute>Email</TopNavRoute>
       </TopNav>
