@@ -22,8 +22,8 @@ const dummyUser = {
   banner: dummyBanner,
   notifications: false,
   theme: "light",
-  cacheRangeMin: 2,
-  cacheRangeMax: 10,
+  minCacheRange: 0,
+  maxCacheRange: 10,
   discoveryMode: false,
 }
 

@@ -46,16 +46,19 @@ export default function EmailSettingsScreen() {
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
                 aria-labelledby="newEmail"
-                inputMode="email"
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
                 placeholder="Enter your new email"
                 className="w-full"
+                inputMode="email"
+                keyboardType="email-address"
+                autoCorrect={false}
+                autoComplete="email"
               />
             )}
           />
-          {errors.newEmail && <FormFieldError>{errors.newEmail.message}</FormFieldError>}
+          <FormFieldError errors={errors.newEmail} />
         </FormField>
 
         <FormField>
@@ -66,16 +69,19 @@ export default function EmailSettingsScreen() {
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
                 aria-labelledby="confirmEmail"
-                inputMode="email"
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
                 placeholder="Confirm your new email"
                 className="w-full"
+                inputMode="email"
+                keyboardType="email-address"
+                autoCorrect={false}
+                autoComplete="email"
               />
             )}
           />
-          {errors.confirmEmail && <FormFieldError>{errors.confirmEmail.message}</FormFieldError>}
+          <FormFieldError errors={errors.confirmEmail} />
         </FormField>
 
         <FormSubmit onPress={handleSubmit(onSubmit)}>

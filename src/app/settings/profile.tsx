@@ -54,12 +54,13 @@ export default function ProfileSettingsScreen() {
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
                 aria-labelledby="displayName"
-                inputMode="text"
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
                 placeholder="Enter display name"
                 className="w-full"
+                inputMode="text"
+                maxLength={20}
               />
             )}
           />
@@ -79,6 +80,8 @@ export default function ProfileSettingsScreen() {
                 value={value}
                 placeholder="Enter description"
                 className="w-full"
+                inputMode="text"
+                maxLength={200}
               />
             )}
           />

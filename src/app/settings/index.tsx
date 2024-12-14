@@ -57,7 +57,7 @@ export default function SettingsScreen() {
             icon={ArrowUpDown}
             name="Cache range"
             type="link"
-            value={`${dummyUser.cacheRangeMin} km - ${dummyUser.cacheRangeMax} km`}
+            value={`${dummyUser.minCacheRange} km - ${dummyUser.maxCacheRange} km`}
             href="/settings/cache-range"
           />
           <SettingsField
@@ -65,7 +65,10 @@ export default function SettingsScreen() {
             name="Discovery mode"
             type="switch"
             checked={discoveryMode}
-            setChecked={setDiscoveryMode}
+            onCheckedChange={(checked) => {
+              setDiscoveryMode(checked)
+              // TODO: Update user settings
+            }}
           />
         </SettingsGroup>
 
@@ -75,7 +78,11 @@ export default function SettingsScreen() {
             name="Notifications"
             type="switch"
             checked={notifications}
-            setChecked={setNotifications}
+            onCheckedChange={(checked) => {
+              setNotifications(checked)
+              // TODO: Update user settings
+              // ? Could potentially have a separate page to toggle individual notifications
+            }}
           />
           <SettingsField
             icon={Palette}

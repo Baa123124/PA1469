@@ -56,9 +56,33 @@ const profileSchema = z.object({
   banner: bannerSchema,
 })
 
-export { changeEmailSchema, changePasswordSchema, profileSchema, avatarSchema, bannerSchema }
+const cacheRange = z
+  .object({
+    minRange: z.coerce
+      .number()
+      .min(0, { message: "Min range must be at least 0 km" })
+      .max(10, { message: "Max range must be at most 10 km" }),
+    maxRange: z.coerce
+      .number()
+      .min(1, { message: "Max range must be at least 1 km" })
+      .max(10, { message: "Max range must be at most 10 km" }),
+  })
+  .refine((data) => data.minRange <= data.maxRange, {
+    message: "Max range must be greater than or equal to min range",
+    path: ["maxRange"],
+  })
+
+export {
+  changeEmailSchema,
+  changePasswordSchema,
+  profileSchema,
+  avatarSchema,
+  bannerSchema,
+  cacheRange,
+}
 export type ChangeEmailSchema = z.infer<typeof changeEmailSchema>
 export type ChangePasswordSchema = z.infer<typeof changePasswordSchema>
 export type ProfileSchema = z.infer<typeof profileSchema>
 export type AvatarSchema = z.infer<typeof avatarSchema>
 export type BannerSchema = z.infer<typeof bannerSchema>
+export type CacheRange = z.infer<typeof cacheRange>

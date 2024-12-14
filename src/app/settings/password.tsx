@@ -47,18 +47,18 @@ export default function PasswordSettingsScreen() {
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
                 aria-labelledby="currentPassword"
-                secureTextEntry
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
                 placeholder="Enter your current password"
                 className="w-full"
+                secureTextEntry
+                autoCorrect={false}
+                maxLength={20}
               />
             )}
           />
-          {errors.currentPassword && (
-            <FormFieldError>{errors.currentPassword.message}</FormFieldError>
-          )}
+          <FormFieldError errors={errors.currentPassword} />
         </FormField>
 
         <FormField>
@@ -69,16 +69,18 @@ export default function PasswordSettingsScreen() {
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
                 aria-labelledby="newPassword"
-                secureTextEntry
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
                 placeholder="Enter your new password"
                 className="w-full"
+                secureTextEntry
+                autoCorrect={false}
+                maxLength={20}
               />
             )}
           />
-          {errors.newPassword && <FormFieldError>{errors.newPassword.message}</FormFieldError>}
+          <FormFieldError errors={errors.newPassword} />
         </FormField>
 
         <FormField>
@@ -89,18 +91,18 @@ export default function PasswordSettingsScreen() {
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
                 aria-labelledby="confirmPassword"
-                secureTextEntry
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
                 placeholder="Confirm your new password"
                 className="w-full"
+                secureTextEntry
+                autoCorrect={false}
+                maxLength={20}
               />
             )}
           />
-          {errors.confirmPassword && (
-            <FormFieldError>{errors.confirmPassword.message}</FormFieldError>
-          )}
+          <FormFieldError errors={errors.confirmPassword} />
         </FormField>
 
         <FormSubmit onPress={handleSubmit(onSubmit)}>

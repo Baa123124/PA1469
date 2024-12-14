@@ -42,14 +42,14 @@ type LinkSettingsFieldProps = BaseSettingsFieldProps & {
   value?: string
   href: Href
   checked?: never
-  setChecked?: never
+  onCheckedChange?: never
 }
 type SwitchSettingsFieldProps = BaseSettingsFieldProps & {
   type: "switch"
   value?: never
   href?: never
   checked: boolean
-  setChecked: React.Dispatch<React.SetStateAction<boolean>>
+  onCheckedChange: (checked: boolean) => void
 }
 type SettingsFieldProps = LinkSettingsFieldProps | SwitchSettingsFieldProps
 
@@ -82,20 +82,20 @@ const SettingsField = React.forwardRef<ButtonRef, SettingsFieldProps>(
       )
     }
 
-    const { checked, setChecked } = props as SwitchSettingsFieldProps
+    const { checked, onCheckedChange } = props as SwitchSettingsFieldProps
     return (
       <Button
         ref={ref}
         variant="ghost"
         className={cn("w-full flex-row justify-between px-6", className)}
-        onPress={() => setChecked(!checked)}
+        onPress={() => onCheckedChange(!checked)}
         {...props}
       >
         <View className="flex-row items-center gap-2">
           <Icon size={16} strokeWidth={1.25} />
           <Text>{name}</Text>
         </View>
-        <Switch checked={checked} onCheckedChange={setChecked} />
+        <Switch checked={checked} onCheckedChange={onCheckedChange} />
       </Button>
     )
   },

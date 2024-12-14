@@ -12,7 +12,7 @@ const Form = React.forwardRef<ViewRef, ViewProps>(({ className, ...props }, ref)
 Form.displayName = "Form"
 
 const FormField = React.forwardRef<ViewRef, ViewProps>(({ className, ...props }, ref) => (
-  <View ref={ref} className={cn("w-full max-w-sm gap-1.5 pb-2", className)} {...props} />
+  <View ref={ref} className={cn("w-full max-w-sm gap-2 pb-2", className)} {...props} />
 ))
 FormField.displayName = "FormField"
 

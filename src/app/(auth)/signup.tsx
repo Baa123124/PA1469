@@ -64,12 +64,15 @@ export default function SignupScreen() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <Input
                     aria-labelledby="email"
-                    inputMode="email"
                     onBlur={onBlur}
                     onChangeText={onChange}
                     value={value}
                     placeholder="Enter your email"
                     className="w-full"
+                    inputMode="email"
+                    keyboardType="email-address"
+                    autoCorrect={false}
+                    autoComplete="email"
                   />
                 )}
               />
@@ -84,12 +87,14 @@ export default function SignupScreen() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <Input
                     aria-labelledby="password"
-                    secureTextEntry
                     onBlur={onBlur}
                     onChangeText={onChange}
                     value={value}
                     placeholder="Enter your password"
                     className="w-full"
+                    secureTextEntry
+                    autoCorrect={false}
+                    maxLength={20}
                   />
                 )}
               />

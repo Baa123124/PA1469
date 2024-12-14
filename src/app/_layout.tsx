@@ -14,6 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { StatusBar } from "expo-status-bar"
 import { PortalHost } from "@rn-primitives/portal"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
 
 SplashScreen.preventAutoHideAsync()
 
@@ -77,11 +78,13 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={isDarkColorScheme ? darkTheme : lightTheme}>
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-        <KeyboardProvider>
-          <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-          <Slot />
-          <PortalHost />
-        </KeyboardProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <KeyboardProvider>
+            <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+            <Slot />
+            <PortalHost />
+          </KeyboardProvider>
+        </GestureHandlerRootView>
       </SafeAreaProvider>
     </ThemeProvider>
   )
