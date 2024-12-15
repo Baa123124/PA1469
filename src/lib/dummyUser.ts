@@ -14,17 +14,31 @@ const dummyBanner = {
   width: 4000,
 }
 
-const dummyUser = {
+const dummyUser: DummyUser = {
   email: "john.doe@example.com",
   displayName: "John Doe",
   description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
   avatar: dummyAvatar,
   banner: dummyBanner,
-  notifications: false,
-  theme: "light",
+  notifications: true,
+  theme: "system",
   minCacheRange: 0,
   maxCacheRange: 10,
   discoveryMode: false,
 }
 
+type DummyUser = {
+  email: string
+  displayName: string
+  description: string
+  avatar: typeof dummyAvatar
+  banner: typeof dummyBanner
+  notifications: boolean
+  theme: "light" | "dark" | "system"
+  minCacheRange: number
+  maxCacheRange: number
+  discoveryMode: boolean
+}
+
 export { dummyUser, dummyAvatar, dummyBanner }
+export type { DummyUser }

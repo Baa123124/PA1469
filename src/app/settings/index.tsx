@@ -88,8 +88,7 @@ export default function SettingsScreen() {
             icon={Palette}
             name="Theme"
             type="link"
-            value={dummyUser.theme}
-            className="capitalize"
+            value={dummyUser.theme.charAt(0).toUpperCase() + dummyUser.theme.slice(1)}
             href="/settings/theme"
           />
         </SettingsGroup>

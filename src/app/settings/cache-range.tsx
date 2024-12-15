@@ -4,7 +4,7 @@ import { useSafeAreaInsetsStyle } from "@/utils/useSafeAreaInsetsStyle"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import { View } from "react-native"
-import { cacheRange } from "./(data)/schemas"
+import { cacheRangeSchema } from "./(data)/schemas"
 import { Label } from "@/components/ui/label"
 import { goBack } from "@/utils/goBack"
 import { Form, FormField, FormFieldError, FormSubmit } from "@/components/Form"
@@ -31,7 +31,7 @@ export default function CacheRangeSettingsScreen() {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(cacheRange),
+    resolver: zodResolver(cacheRangeSchema),
     defaultValues: {
       minRange: dummyUser.minCacheRange.toString(),
       maxRange: dummyUser.maxCacheRange.toString(),

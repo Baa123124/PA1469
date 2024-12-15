@@ -56,7 +56,7 @@ const profileSchema = z.object({
   banner: bannerSchema,
 })
 
-const cacheRange = z
+const cacheRangeSchema = z
   .object({
     minRange: z.coerce
       .number()
@@ -72,17 +72,23 @@ const cacheRange = z
     path: ["maxRange"],
   })
 
+const themeSchema = z.object({
+  theme: z.enum(["light", "dark", "system"]),
+})
+
 export {
   changeEmailSchema,
   changePasswordSchema,
   profileSchema,
   avatarSchema,
   bannerSchema,
-  cacheRange,
+  cacheRangeSchema,
+  themeSchema,
 }
 export type ChangeEmailSchema = z.infer<typeof changeEmailSchema>
 export type ChangePasswordSchema = z.infer<typeof changePasswordSchema>
 export type ProfileSchema = z.infer<typeof profileSchema>
 export type AvatarSchema = z.infer<typeof avatarSchema>
 export type BannerSchema = z.infer<typeof bannerSchema>
-export type CacheRange = z.infer<typeof cacheRange>
+export type CacheRangeSchema = z.infer<typeof cacheRangeSchema>
+export type ThemeSchema = z.infer<typeof themeSchema>

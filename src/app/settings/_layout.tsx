@@ -5,8 +5,8 @@ export default function SettingsLayout() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />
       <Stack.Screen name="profile" />
-      {/* <Stack.Screen name="cache-range" /> */}
-      {/* <Stack.Screen name="theme" /> */}
+      <Stack.Screen name="cache-range" />
+      <Stack.Screen name="theme" />
       <Stack.Screen name="email" />
       <Stack.Screen name="password" />
     </Stack>
