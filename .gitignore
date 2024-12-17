@@ -74,6 +74,9 @@ bin/Exponent.app
 /ios
 expo-env.d.ts
 
+# Firebase
+google-services.json
+
 # Metro
 .metro-health-check*
 

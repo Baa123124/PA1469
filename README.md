@@ -17,6 +17,7 @@ Includes:
 - [Jest](https://jestjs.io/) (unit testing)
 - [Maestro](https://maestro.mobile.dev/) (e2e testing)
 - [Reactotron](https://github.com/infinitered/reactotron) (react native debug tool)
+- [React Native Firebase](https://rnfirebase.io/) (Backend as a service used for authentication purposes)
 
 <br/>
 
@@ -124,6 +125,27 @@ This is a great place to put miscellaneous helpers and utilities. Things like da
 
 <br/>
 
+## Firebase Authentication Setup for Android
+
+1. Go to the [Firebase Console](https://console.firebase.google.com/) and **create a new Firebase project**.
+2. Register an Android app with the following:
+   - **Android package name**: `com.xplorify`
+   - **App nickname**: `Xplorify`
+   - Generate a **Debug signing certificate SHA-1**:
+     ```bash
+     cd android
+     gradlew signingReport
+     ```
+     Copy the SHA-1 key and paste it into Firebase.
+3. Download the google-services.json and place it into the root of this project.
+4. Enable google signin and email signin. Copy web client id from Google and paste into a .env in root as GOOGLE_WEB_CLIENT_ID="id".
+<br/>
+
+## Firebase Authentication Setup for IOS
+
+Not setup
+
+<br/>
 ## Debug Tips
 
 1. Install [Android Studio](https://reactnative.dev/docs/set-up-your-environment)
