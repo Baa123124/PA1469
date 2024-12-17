@@ -8,14 +8,14 @@ import { Link, router } from "expo-router"
 import { View } from "react-native"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { AuthSchema, authSchema } from "./schema"
+import { loginSchema } from "./loginSchema"
 import { useColorScheme } from "@/lib/useColorScheme"
 import { useEffect } from "react"
-import { useAuth } from "@/lib/auth/authContext"
+import { useAuth } from "@/lib/auth/AuthContext"
 
 export default function LoginScreen() {
   const { isDarkColorScheme } = useColorScheme()
-  const auth = useAuth();
+  const {loginWithGoogle, loginWithEmailAndPassword} = useAuth();
   // TODO: change this to actual auth session
   const authSession = false
 
@@ -34,7 +34,7 @@ export default function LoginScreen() {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(authSchema),
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -48,14 +48,16 @@ export default function LoginScreen() {
   }, [])
 
   // Only triggers if formData is valid
-  function onSubmit(formData: AuthSchema) {
-    console.log(formData)
-    // TODO: Add authentication
-    //router.replace("/map")
+  function onSubmit(formData: loginSchema) {
+    loginWithEmailAndPassword(formData.email, formData.password).then((user) => {
+      if (user) {
+        router.replace("/map")
+      }
+    })
   }
 
   function handleGoogleSignIn() { 
-    auth.loginWithGoogle().then((user) => {
+    loginWithGoogle().then((user) => {
       if (user) {
         router.replace("/map")
       }
@@ -150,7 +152,7 @@ export default function LoginScreen() {
                 alt="Google"
                 maxHeight={32}
               />
-              <Text>Sign up with Google</Text>
+              <Text>Sign in with Google</Text>
             </Button>
           </View>
         </View>

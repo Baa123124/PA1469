@@ -8,13 +8,13 @@ import { Link, router } from "expo-router"
 import { View } from "react-native"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { AuthSchema, authSchema } from "./schema"
 import { useColorScheme } from "@/lib/useColorScheme"
-// import { Separator } from "@/components/ui/separator"
-// import { ArrowRight } from "@/lib/icons/ArrowRight"
+import { useAuth } from "@/lib/auth/AuthContext"
+import { signupSchema } from "./signupSchema"
 
 export default function SignupScreen() {
   const { isDarkColorScheme } = useColorScheme()
+  const {signUpWithEmailAndPassword, loginWithGoogle} = useAuth();
 
   // TODO: Add logo-dark image
   const logo = {
@@ -31,18 +31,29 @@ export default function SignupScreen() {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(authSchema),
+    resolver: zodResolver(signupSchema),
     defaultValues: {
       email: "",
       password: "",
+      displayName: "",
     },
   })
 
   // Only triggers if formData is valid
-  function onSubmit(formData: AuthSchema) {
-    console.log(formData)
-    // TODO: Add authentication
-    //router.replace("/map")
+  function onSubmit(formData: signupSchema) {
+    signUpWithEmailAndPassword(formData.email, formData.password, formData.displayName).then((user) => {
+      if (user) {
+        router.replace("/map")
+      }
+    })
+  }
+
+  function handleGoogleSignIn() { 
+    loginWithGoogle().then((user) => {
+      if (user) {
+        router.replace("/map")
+      }
+    })
   }
 
   return (
@@ -61,6 +72,27 @@ export default function SignupScreen() {
 
         <View className="mx-auto w-full max-w-sm rounded-md bg-background px-6 py-12 shadow">
           <View className="grid gap-4">
+          <View className="grid w-full max-w-sm gap-1.5">
+              <Label nativeID="displayName">Name</Label>
+              <Controller
+                control={control}
+                name="displayName"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input
+                    aria-labelledby="displayName"
+                    inputMode="text"
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    value={value}
+                    placeholder="Enter your name"
+                    className="w-full"
+                  />
+                )}
+              />
+              {errors.displayName && (
+                <Text className="text-destructive text-sm">{errors.displayName.message}</Text>
+              )}
+            </View>
             <View className="grid w-full max-w-sm gap-1.5">
               <Label nativeID="email">Email</Label>
               <Controller
@@ -112,11 +144,8 @@ export default function SignupScreen() {
             <Button
               variant="outline"
               className="w-full flex flex-row items-center justify-center"
-              onPress={() => {
-                // TODO: Add Google authentication
-                router.replace("/map")
-              }}
-            >
+              onPress={handleGoogleSignIn}
+              >
               <AutoImage
                 webSource={"../../../assets/icons/google.png"}
                 nativeSource={require("../../../assets/icons/google.png")}

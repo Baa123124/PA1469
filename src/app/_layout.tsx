@@ -14,7 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { StatusBar } from "expo-status-bar"
 import { PortalHost } from "@rn-primitives/portal"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
-import { AuthProvider } from "@/lib/auth/authContext"
+import { AuthProvider } from "@/lib/auth/AuthContext"
 
 SplashScreen.preventAutoHideAsync()
 

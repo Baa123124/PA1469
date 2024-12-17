@@ -136,9 +136,10 @@ This is a great place to put miscellaneous helpers and utilities. Things like da
      cd android
      gradlew signingReport
      ```
-     Copy the SHA-1 key and paste it into Firebase.
+     Copy the <Strong>first</strong> SHA-1 key and paste it into Firebase.
 3. Download the google-services.json and place it into the root of this project.
-4. Enable google signin and email signin. Copy web client id from Google and paste into a .env in root as GOOGLE_WEB_CLIENT_ID="id".
+4. Enable google signin and email signin. Copy web client id from Google and paste into a .env in root as EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID="id".
+- NOTE: If you experience a developer error when using google signin, make sure that the key is up to date with your current build. Redo the generation if unsure.
 <br/>
 
 ## Firebase Authentication Setup for IOS
