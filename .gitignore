@@ -97,6 +97,7 @@ npm-debug.*
 web-build/
 
 # Configurations
+.env
 !env.js
 .env*.local
 
@@ -105,5 +106,3 @@ web-build/
 # Yarn
 .yarn/*
 
-# Environment
-.env

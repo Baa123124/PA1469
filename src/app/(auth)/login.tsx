@@ -11,9 +11,11 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { AuthSchema, authSchema } from "./schema"
 import { useColorScheme } from "@/lib/useColorScheme"
 import { useEffect } from "react"
+import { useAuth } from "@/lib/auth/authContext"
 
 export default function LoginScreen() {
   const { isDarkColorScheme } = useColorScheme()
+  const auth = useAuth();
   // TODO: change this to actual auth session
   const authSession = false
 
@@ -50,6 +52,14 @@ export default function LoginScreen() {
     console.log(formData)
     // TODO: Add authentication
     //router.replace("/map")
+  }
+
+  function handleGoogleSignIn() { 
+    auth.loginWithGoogle().then((user) => {
+      if (user) {
+        router.replace("/map")
+      }
+    })
   }
 
   return (
@@ -131,8 +141,7 @@ export default function LoginScreen() {
               variant="outline"
               className="w-full flex flex-row items-center justify-center"
               onPress={() => {
-                // TODO: Add Google authentication
-                router.replace("/map")
+                handleGoogleSignIn()
               }}
             >
               <AutoImage

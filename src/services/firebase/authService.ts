@@ -1,10 +1,9 @@
-import { getApp } from '@react-native-firebase/app';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 GoogleSignin.configure({ 
-    webClientId: process.env.GOOGLE_WEB_CLIENT_ID, 
-    offlineAccess: true 
+    webClientId: process.env.GOOGLE_WEB_CLIENT_ID,
+    offlineAccess: true,
 });
 
 //sign up with email and password
@@ -37,7 +36,7 @@ export const signInWithGoogle = async () => {
             throw new Error('No ID token found');
         }
         const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-        return auth().signInWithCredential(googleCredential);
+        return (await auth().signInWithCredential(googleCredential)).user;
     } catch (error) {
         throw error;
     }
