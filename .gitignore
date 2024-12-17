@@ -104,3 +104,6 @@ web-build/
 
 # Yarn
 .yarn/*
+
+# Environment
+.env
