@@ -58,22 +58,28 @@ export const signIn = async (email: string, password: string) : Promise<Firebase
  * retrieves the ID token from the sign-in result, and uses it to authenticate with Firebase.
  *
  * @returns {Promise<FirebaseAuthTypes.User>} A promise that resolves to the authenticated Firebase user.
- * @throws {Error} If there is no ID token found or if any other error occurs during the sign-in process.
+ * @throws {Error} If there is no ID token or play services found or if any other error occurs during the sign-in process.
 */
 export const signInWithGoogle = async (): Promise<FirebaseAuthTypes.User> => {
     try {
-        await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
+        const hasPlayServices = await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+        if (!hasPlayServices) {
+            throw new Error('Google Play Services are not available. Please install or update Google Play Services.');
+        }
+
         const signInResult = await GoogleSignin.signIn();
         const idToken = signInResult?.data?.idToken;
         if (!idToken) {
             throw new Error('No ID token found');
         }
+
         const googleCredential = auth.GoogleAuthProvider.credential(idToken);
         return (await auth().signInWithCredential(googleCredential)).user;
     } catch (error) {
         throw error;
     }
 };
+
 
 
 /**
@@ -87,7 +93,7 @@ export const signInWithGoogle = async (): Promise<FirebaseAuthTypes.User> => {
 */
 export const signOut = async (): Promise<boolean> => {
     try {
-    const currentUser = auth().currentUser;
+        const currentUser = auth().currentUser;
         if (currentUser) {
             // Check if user signed in via Google
             const isGoogleUser = currentUser.providerData.some(
