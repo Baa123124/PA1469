@@ -3,5 +3,9 @@
   "semi": false,
   "singleQuote": false,
   "trailingComma": "all",
-  "quoteProps": "consistent"
+  "quoteProps": "consistent",
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "tailwindStylesheet": "./global.css",
+  "tailwindConfig": "./tailwind.config.ts",
+  "tailwindFunctions": ["clsx", "cva", "cn"]
 }

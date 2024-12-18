@@ -1,19 +1,20 @@
 import "../../global.css"
 import { useInitialRootStore } from "@/models"
 import { loadDateFnsLocale } from "@/utils/formatDate"
-import { NAV_THEME } from "@/lib/constants"
+import { lightTheme, darkTheme } from "@/lib/constants"
 import { useColorScheme } from "@/lib/useColorScheme"
 import { setAndroidNavigationBar } from "@/lib/android-navigation-bar"
-
 import { useEffect, useState } from "react"
 import { Slot, SplashScreen } from "expo-router"
 import { KeyboardProvider } from "react-native-keyboard-controller"
-import { DarkTheme, DefaultTheme, Theme, ThemeProvider } from "@react-navigation/native"
+import { ThemeProvider } from "@react-navigation/native"
 import { Platform } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { StatusBar } from "expo-status-bar"
 import { PortalHost } from "@rn-primitives/portal"
+import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
+import { dummyUser } from "@/lib/dummyUser"
 
 SplashScreen.preventAutoHideAsync()
 
@@ -22,15 +23,6 @@ if (__DEV__) {
   // include this in our production bundle, so we are using `if (__DEV__)`
   // to only execute this in development.
   require("src/devtools/ReactotronConfig.ts")
-}
-
-const LIGHT_THEME: Theme = {
-  ...DefaultTheme,
-  colors: NAV_THEME.light,
-}
-const DARK_THEME: Theme = {
-  ...DarkTheme,
-  colors: NAV_THEME.dark,
 }
 
 export {
@@ -46,6 +38,7 @@ export default function RootLayout() {
   // to auth info etc
   const { rehydrated } = useInitialRootStore()
 
+  // * colorScheme: light | dark = current system color theme
   const { colorScheme, setColorScheme, isDarkColorScheme } = useColorScheme()
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = useState(false)
 
@@ -53,23 +46,27 @@ export default function RootLayout() {
     ;(async () => {
       loadDateFnsLocale()
 
-      const theme = await AsyncStorage.getItem("theme")
       if (Platform.OS === "web") {
         // Adds the background color to the html element to prevent white background on overscroll.
         document.documentElement.classList.add("bg-background")
       }
+
+      // * theme: light | dark | system = stored user preference
+      const theme = dummyUser.theme // default is system
+
+      // * If new user, set theme to system
       if (!theme) {
-        AsyncStorage.setItem("theme", colorScheme)
+        AsyncStorage.setItem("theme", "system")
+        setColorScheme(colorScheme)
+        setAndroidNavigationBar(colorScheme)
         setIsColorSchemeLoaded(true)
         return
       }
-      const colorTheme = theme === "dark" ? "dark" : "light"
-      if (colorTheme !== colorScheme) {
-        setColorScheme(colorTheme)
-        setAndroidNavigationBar(colorTheme)
-        setIsColorSchemeLoaded(true)
-        return
-      }
+
+      // If recccuring user, set theme to stored user preference
+      // User preference takes precedence over system
+      const colorTheme = theme === "system" ? colorScheme : theme
+      setColorScheme(colorTheme)
       setAndroidNavigationBar(colorTheme)
       setIsColorSchemeLoaded(true)
     })().finally(() => {
@@ -84,14 +81,16 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-      <KeyboardProvider>
-        <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+    <ThemeProvider value={isDarkColorScheme ? darkTheme : lightTheme}>
+      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
         <GestureHandlerRootView style={{ flex: 1 }}>
-          <Slot />
-          <PortalHost />
+          <KeyboardProvider>
+            <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+            <Slot />
+            <PortalHost />
+          </KeyboardProvider>
         </GestureHandlerRootView>
-      </KeyboardProvider>
+      </SafeAreaProvider>
     </ThemeProvider>
   )
 }

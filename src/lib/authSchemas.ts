@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-const passwordSchema = z
+export const passwordSchema = z
   .string()
   .min(8, { message: "Password must be at least 8 characters long" })
   .max(20, { message: "Password must be at most 20 characters long" })
@@ -20,9 +20,13 @@ const passwordSchema = z
     message: "Password must not contain any white spaces",
   })
 
+export const emailSchema = z.string().email({ message: "Invalid email address" }) // email trims automatically
+
 export const authSchema = z.object({
-  email: z.string().email({ message: "Invalid email address" }), // email trims automatically
+  email: emailSchema,
   password: passwordSchema,
 })
 
+export type PasswordSchema = z.infer<typeof passwordSchema>
+export type EmailSchema = z.infer<typeof emailSchema>
 export type AuthSchema = z.infer<typeof authSchema>

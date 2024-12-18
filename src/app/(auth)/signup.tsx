@@ -8,8 +8,9 @@ import { Link, router } from "expo-router"
 import { View } from "react-native"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { AuthSchema, authSchema } from "./schema"
+import { AuthSchema, authSchema } from "@/lib/authSchemas"
 import { useColorScheme } from "@/lib/useColorScheme"
+import { Form, FormField, FormFieldError, FormSubmit } from "@/components/Form"
 // import { Separator } from "@/components/ui/separator"
 // import { ArrowRight } from "@/lib/icons/ArrowRight"
 
@@ -46,22 +47,16 @@ export default function SignupScreen() {
   }
 
   return (
-    <View className="flex-1 bg-secondary/30 items-center" style={useSafeAreaInsetsStyle(["top"])}>
-      <View className="gap-4 w-full pt-32">
-        <View className="items-center pb-2">
-          <AutoImage
-            webSource={logo.web}
-            nativeSource={logo.native}
-            alt="logo"
-            maxHeight={96}
-            className="mb-4"
-          />
+    <View className="flex-1 items-center bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
+      <View className="w-full gap-4 pt-28">
+        <View className="items-center gap-4 pb-4">
+          <AutoImage webSource={logo.web} nativeSource={logo.native} alt="logo" maxHeight={96} />
           <Text className="text-2xl font-bold">Create an account</Text>
         </View>
 
         <View className="mx-auto w-full max-w-sm rounded-md bg-background px-6 py-12 shadow">
-          <View className="grid gap-4">
-            <View className="grid w-full max-w-sm gap-1.5">
+          <Form>
+            <FormField>
               <Label nativeID="email">Email</Label>
               <Controller
                 control={control}
@@ -69,49 +64,49 @@ export default function SignupScreen() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <Input
                     aria-labelledby="email"
-                    inputMode="email"
                     onBlur={onBlur}
                     onChangeText={onChange}
                     value={value}
                     placeholder="Enter your email"
                     className="w-full"
+                    inputMode="email"
+                    keyboardType="email-address"
+                    autoCorrect={false}
+                    autoComplete="email"
                   />
                 )}
               />
-              {errors.email && (
-                <Text className="text-destructive text-sm">{errors.email.message}</Text>
-              )}
-            </View>
-            <View>
-              <View className="grid w-full max-w-sm gap-1.5">
-                <Label nativeID="password">Password</Label>
-                <Controller
-                  control={control}
-                  name="password"
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <Input
-                      aria-labelledby="password"
-                      secureTextEntry
-                      onBlur={onBlur}
-                      onChangeText={onChange}
-                      value={value}
-                      placeholder="Enter your password"
-                      className="w-full"
-                    />
-                  )}
-                />
-                {errors.password && (
-                  <Text className="text-destructive text-sm">{errors.password.message}</Text>
-                )}
-              </View>
-            </View>
+              <FormFieldError errors={errors.email} />
+            </FormField>
 
-            <Button onPress={handleSubmit(onSubmit)} className="mt-2 w-full">
+            <FormField>
+              <Label nativeID="password">Password</Label>
+              <Controller
+                control={control}
+                name="password"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input
+                    aria-labelledby="password"
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    value={value}
+                    placeholder="Enter your password"
+                    className="w-full"
+                    secureTextEntry
+                    autoCorrect={false}
+                    maxLength={20}
+                  />
+                )}
+              />
+              <FormFieldError errors={errors.password} />
+            </FormField>
+
+            <FormSubmit onPress={handleSubmit(onSubmit)}>
               <Text>Get started</Text>
-            </Button>
+            </FormSubmit>
             <Button
               variant="outline"
-              className="w-full flex flex-row items-center justify-center"
+              className="flex w-full max-w-sm flex-row items-center justify-center"
               onPress={() => {
                 // TODO: Add Google authentication
                 router.replace("/map")
@@ -125,14 +120,14 @@ export default function SignupScreen() {
               />
               <Text>Sign up with Google</Text>
             </Button>
-          </View>
+          </Form>
         </View>
 
         <View>
           <View className="flex-row items-center justify-center">
-            <Text className="text-muted-foreground text-sm">Already have an account?</Text>
+            <Text className="text-sm text-muted-foreground">Already have an account?</Text>
             <Link href="/login" asChild>
-              <Button variant="link" className="font-medium !px-2">
+              <Button variant="link" className="!px-2 font-medium">
                 <Text>Log in</Text>
               </Button>
             </Link>
