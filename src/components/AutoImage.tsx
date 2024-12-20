@@ -1,7 +1,7 @@
-import { useLayoutEffect, useState } from "react"
+import React, { LegacyRef, useLayoutEffect, useState } from "react"
 import { Image, ImageProps, ImageSourcePropType, ImageURISource, Platform } from "react-native"
 
-export interface AutoImageProps extends ImageProps {
+type AutoImageProps = ImageProps & {
   maxWidth?: number
   maxHeight?: number
 
@@ -28,7 +28,7 @@ export interface AutoImageProps extends ImageProps {
  * specify only one side's size (not both). Secondly, the image will scale to fit
  * the desired dimensions instead of just being contained within its image-container.
  */
-export function useAutoImage(
+function useAutoImage(
   src: ImageSourcePropType,
   dimensions?: [maxWidth?: number, maxHeight?: number],
 ): [width: number, height: number] {
@@ -72,16 +72,27 @@ export function useAutoImage(
  * An Image component that automatically sizes an image.
  * @see [Documentation and Examples]{@link https://docs.infinite.red/ignite-cli/boilerplate/app/components/AutoImage/}
  */
-export function AutoImage(props: AutoImageProps) {
-  const { maxWidth, maxHeight, webSource, nativeSource, ...ImageProps } = props
-  const src = props.source
-    ? props.source
-    : (Platform.select({
-        web: webSource as ImageSourcePropType,
-        default: nativeSource,
-      }) as ImageURISource)
+const AutoImage = React.forwardRef<React.ComponentPropsWithoutRef<typeof Image>, AutoImageProps>(
+  ({ maxWidth, maxHeight, webSource, nativeSource, ...props }, ref) => {
+    const src = props.source
+      ? props.source
+      : (Platform.select({
+          web: webSource as ImageSourcePropType,
+          default: nativeSource,
+        }) as ImageURISource)
 
-  const [width, height] = useAutoImage(src, [maxWidth, maxHeight])
+    const [width, height] = useAutoImage(src, [maxWidth, maxHeight])
 
-  return <Image {...ImageProps} source={src} style={[{ width, height }, props.style]} />
-}
+    return (
+      <Image
+        ref={ref as LegacyRef<Image>}
+        {...props}
+        source={src}
+        style={[{ width, height }, props.style]}
+      />
+    )
+  },
+)
+AutoImage.displayName = "AutoImage"
+
+export { AutoImage, useAutoImage, type AutoImageProps }

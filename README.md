@@ -113,6 +113,11 @@ This is a great place to put miscellaneous helpers and utilities. Things like da
 
 <br/>
 
+### Utils
+
+- Set system **dark mode** on android: `adb shell "cmd uimode night yes"`
+- Set sytem **light mode** on android: `adb shell "cmd uimode night no"`
+
 <br/>
 
 ## Get Started

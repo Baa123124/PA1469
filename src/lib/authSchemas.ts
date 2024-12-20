@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod"
 
 export const passwordSchema = z
   .string()
@@ -18,20 +18,29 @@ export const passwordSchema = z
   })
   .refine((password) => !/\s/.test(password), {
     message: "Password must not contain any white spaces",
-  });
+  })
 
-export const signupSchema = z.object({
-  displayName: z
-    .string()
-    .min(3, { message: "Name must be at least 3 characters long" })
-    .refine((name) => name.trim().split(" ").length >= 2, {
-      message: "Name must include both first and last name",
-    })
-    .refine((name) => /^[A-Za-z\s'-]+$/.test(name), {
-      message: "Name can only contain letters, spaces, hyphens, or apostrophes",
-    }),
-  email: z.string().email({ message: "Invalid email address" }), // Email trims automatically
+export const emailSchema = z.string().email({ message: "Invalid email address" }) // email trims automatically
+
+export const displayNameSchema = z
+.string()
+.min(3, { message: "Name must be at least 3 characters long" })
+.refine((name) => name.trim().split(" ").length >= 2, {
+  message: "Name must include both first and last name",
+})
+
+export const authSchema = z.object({
+  email: emailSchema,
   password: passwordSchema,
-});
+})
 
-export type signupSchema = z.infer<typeof signupSchema>;
+export const registerSchema = z.object({ 
+    displayName: displayNameSchema,
+    email: emailSchema,
+    password: passwordSchema,
+})
+
+export type PasswordSchema = z.infer<typeof passwordSchema>
+export type EmailSchema = z.infer<typeof emailSchema>
+export type AuthSchema = z.infer<typeof authSchema>
+export type RegisterSchema = z.infer<typeof registerSchema>

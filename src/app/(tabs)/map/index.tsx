@@ -17,6 +17,8 @@ import { Text } from "@/components/ui/text"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { ThemeToggle } from "@/components/ThemeToggle"
 import { useSafeAreaInsetsStyle } from "@/utils/useSafeAreaInsetsStyle"
+import { Settings } from "@/lib/icons/Settings"
+import { Link } from "expo-router"
 import { useAuth } from "@/lib/auth/AuthContext"
 
 const ANONYMOUS_AVATAR_URI =
@@ -32,12 +34,19 @@ export default function MapScreen() {
 
   return (
     <View className="flex-1 bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
-      <ThemeToggle />
+      <View className="flex-row justify-between p-2">
+        <ThemeToggle />
+        <Link href="/settings" asChild>
+          <Button variant="ghost" size="icon">
+            <Settings size={16} strokeWidth={1.25} />
+          </Button>
+        </Link>
+      </View>
 
-      <View className="flex-1 justify-center items-center gap-5 p-6">
-        <Card className="w-full max-w-sm p-6 rounded-2xl">
+      <View className="flex-1 items-center justify-center gap-5 p-6">
+        <Card className="w-full max-w-sm rounded-2xl p-6">
           <CardHeader className="items-center">
-            <Avatar alt="Rick Sanchez's Avatar" className="w-24 h-24">
+            <Avatar alt="Rick Sanchez's Avatar" className="h-24 w-24">
               <AvatarImage source={{ uri: user?.photoURL ? user.photoURL : ANONYMOUS_AVATAR_URI }} />
               <AvatarFallback>
                 <Text>RS</Text>
@@ -46,7 +55,15 @@ export default function MapScreen() {
             <View className="p-3" />
             <CardTitle className="pb-2 text-center">{user?.displayName}</CardTitle>
             <View className="flex-row">
-              <CardDescription className="text-base font-semibold">{user?.email}</CardDescription>
+              <CardDescription className="text-base font-semibold">Scientist</CardDescription>
+              <Tooltip delayDuration={150}>
+                <TooltipTrigger className="px-2 pb-0.5 active:opacity-50">
+                  <Info size={14} strokeWidth={2.5} className="h-4 w-4 text-foreground/70" />
+                </TooltipTrigger>
+                <TooltipContent className="px-4 py-2 shadow">
+                  <Text className="native:text-lg">Freelance</Text>
+                </TooltipContent>
+              </Tooltip>
             </View>
           </CardHeader>
 
