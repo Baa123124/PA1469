@@ -1,9 +1,10 @@
-import { Tabs } from "expo-router"
+import { Href, Tabs } from "expo-router"
 import { Bookmark } from "@/lib/icons/Bookmark"
 import { MapPin } from "@/lib/icons/MapPin"
 import { User } from "@/lib/icons/User"
 import { BottomTabBar } from "@react-navigation/bottom-tabs"
 import { TabBarButton } from "./(components)/TabBarButton"
+import { dummyUser } from "@/lib/dummyUser"
 
 export default function TabLayout() {
   return (
@@ -32,10 +33,10 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="profile/index"
+        name="profile/[id]"
         options={{
           tabBarIcon: ({ focused }) => (
-            <TabBarButton icon={User} focused={focused} href={"/profile"} />
+            <TabBarButton icon={User} focused={focused} href={`/profile/${dummyUser.id}` as Href} />
           ),
         }}
       />
