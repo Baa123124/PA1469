@@ -1,4 +1,4 @@
-import { TopNav, TopNavRoute } from "@/components/TopNav"
+import { TopNav, TopNavBackButton, TopNavRoute } from "@/components/TopNav"
 import { Text } from "@/components/ui/text"
 import { useSafeAreaInsetsStyle } from "@/utils/useSafeAreaInsetsStyle"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -34,6 +34,7 @@ export default function EmailSettingsScreen() {
   return (
     <View className="flex-1 gap-8 bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
       <TopNav>
+        <TopNavBackButton />
         <TopNavRoute>Email</TopNavRoute>
       </TopNav>
 

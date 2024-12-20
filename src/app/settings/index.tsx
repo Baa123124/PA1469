@@ -13,7 +13,7 @@ import { SquarePen } from "@/lib/icons/SquarePen"
 import { useSafeAreaInsetsStyle } from "@/utils/useSafeAreaInsetsStyle"
 import { useState } from "react"
 import { View } from "react-native"
-import { TopNav } from "@/components/TopNav"
+import { TopNav, TopNavBackButton } from "@/components/TopNav"
 import { Settings, SettingsGroup, SettingsField } from "./(components)/Settings"
 import { Link } from "expo-router"
 
@@ -26,7 +26,8 @@ export default function SettingsScreen() {
   return (
     <View className="flex-1 gap-8 bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
       <TopNav className="justify-between">
-        <Button variant="ghost" className="flex-row items-center gap-2">
+        <TopNavBackButton />
+        <Button variant="ghost" className="ml-auto flex-row items-center gap-2">
           <LogOut size={16} className="text-destructive" strokeWidth={1.25} />
           <Text className="text-destructive">Log out</Text>
         </Button>
