@@ -36,7 +36,7 @@ export default function SettingsScreen() {
 
       <View className="items-center justify-center gap-4">
         <Avatar alt="profile avatar" className="h-24 w-24">
-          <AvatarImage source={dummyUser.avatar} />
+          <AvatarImage source={{ uri: user?.photoURL ?? dummyUser.avatar.uri }} />
           <AvatarFallback>
             <Text>Avatar</Text>
           </AvatarFallback>

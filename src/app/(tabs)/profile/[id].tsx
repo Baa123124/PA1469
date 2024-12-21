@@ -13,11 +13,14 @@ import { TopNav, TopNavBackButton, TopNavSettingsButton } from "@/components/Top
 import { useLocalSearchParams } from "expo-router"
 import { ScrollView } from "react-native-gesture-handler"
 import { CacheGroup, CacheImage, Caches } from "./(components)/Caches"
+import { useAuth } from "@/lib/auth/AuthContext"
 
 // TODO: Link caches to map view
 
 export default function ProfileScreen() {
   const params = useLocalSearchParams<{ id: string; back?: "true" }>()
+  const { user } = useAuth()
+  const creationTime = user?.metadata.creationTime ?? ""
 
   return (
     <View className="flex-1 bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
@@ -35,7 +38,7 @@ export default function ProfileScreen() {
           </TopNav>
 
           <Avatar alt="profile avatar" className="absolute bottom-0 left-6 !h-[96px] !w-[96px]">
-            <AvatarImage source={dummyUser.avatar} />
+            <AvatarImage source={{ uri: user?.photoURL ?? dummyUser.avatar.uri }} />
             <AvatarFallback>
               <Text>Avatar</Text>
             </AvatarFallback>
@@ -45,7 +48,7 @@ export default function ProfileScreen() {
         <View className="gap-8 px-6 pt-4">
           <View className="gap-4">
             <View className="gap-1">
-              <Text className="text-2xl font-bold">{dummyUser.displayName}</Text>
+              <Text className="text-2xl font-bold">{user?.displayName}</Text>
               <View className="flex-row items-center gap-1">
                 <CalendarRange
                   size={16}
@@ -53,7 +56,7 @@ export default function ProfileScreen() {
                   className="text-sm text-muted-foreground"
                 />
                 <Text className="gap-2 text-sm text-muted-foreground">
-                  Joined {format(dummyUser.createdAt, "MMM yyyy")}
+                  Joined {format(creationTime, "MMM yyyy")}
                 </Text>
               </View>
             </View>

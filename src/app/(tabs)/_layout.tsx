@@ -4,10 +4,12 @@ import { MapPin } from "@/lib/icons/MapPin"
 import { User } from "@/lib/icons/User"
 import { BottomTabBar } from "@react-navigation/bottom-tabs"
 import { TabBarButton } from "./(components)/TabBarButton"
-import { dummyUser } from "@/lib/dummyUser"
 import ProtectedScreen from "@/lib/auth/ProtectedScreen"
+import { useAuth } from "@/lib/auth/AuthContext"
 
 export default function TabLayout() {
+  const { user } = useAuth()
+
   return (
     <ProtectedScreen>
       <Tabs
@@ -38,11 +40,7 @@ export default function TabLayout() {
           name="profile/[id]"
           options={{
             tabBarIcon: ({ focused }) => (
-              <TabBarButton
-                icon={User}
-                focused={focused}
-                href={`/profile/${dummyUser.id}` as Href}
-              />
+              <TabBarButton icon={User} focused={focused} href={`/profile/${user?.uid}` as Href} />
             ),
           }}
         />
