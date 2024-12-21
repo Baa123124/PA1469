@@ -20,7 +20,7 @@ import { useAuth } from "@/lib/auth/AuthContext"
 // TODO: Change dummyUser to actual user
 
 export default function SettingsScreen() {
-  const {user, logout} = useAuth()
+  const { user, logout } = useAuth()
   const [discoveryMode, setDiscoveryMode] = useState(dummyUser.discoveryMode)
   const [notifications, setNotifications] = useState(dummyUser.notifications)
 
@@ -29,7 +29,7 @@ export default function SettingsScreen() {
       <TopNav className="justify-between">
         <Button onPress={logout} variant="ghost" className="flex-row items-center gap-2">
           <LogOut size={16} className="text-destructive" strokeWidth={1.25} />
-          <Text className="text-destructive">Log out</Text>
+          <Text className="!text-destructive">Log out</Text>
         </Button>
       </TopNav>
 

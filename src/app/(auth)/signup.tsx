@@ -11,11 +11,11 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useColorScheme } from "@/lib/useColorScheme"
 import { Form, FormField, FormFieldError, FormSubmit } from "@/components/Form"
 import { useAuth } from "@/lib/auth/AuthContext"
-import { registerSchema, RegisterSchema } from "@/lib/authSchemas";
+import { registerSchema, RegisterSchema } from "@/lib/authSchemas"
 
 export default function SignupScreen() {
   const { isDarkColorScheme } = useColorScheme()
-  const {signUpWithEmailAndPassword, loginWithGoogle} = useAuth();
+  const { signUpWithEmailAndPassword, loginWithGoogle } = useAuth()
 
   // TODO: Add logo-dark image
   const logo = {
@@ -42,14 +42,16 @@ export default function SignupScreen() {
 
   // Only triggers if formData is valid
   function onSubmit(formData: RegisterSchema) {
-    signUpWithEmailAndPassword(formData.email, formData.password, formData.displayName).then((user) => {
-      if (user) {
-        router.replace("/map")
-      }
-    })
+    signUpWithEmailAndPassword(formData.email, formData.password, formData.displayName).then(
+      (user) => {
+        if (user) {
+          router.replace("/map")
+        }
+      },
+    )
   }
 
-  function handleGoogleSignIn() { 
+  function handleGoogleSignIn() {
     loginWithGoogle().then((user) => {
       if (user) {
         router.replace("/map")
@@ -59,7 +61,7 @@ export default function SignupScreen() {
 
   return (
     <View className="flex-1 items-center bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
-      <View className="w-full gap-4 pt-28">
+      <View className="w-full gap-4 pt-20">
         <View className="items-center gap-4 pb-4">
           <AutoImage webSource={logo.web} nativeSource={logo.native} alt="logo" maxHeight={96} />
           <Text className="text-2xl font-bold">Create an account</Text>
@@ -67,7 +69,7 @@ export default function SignupScreen() {
 
         <View className="mx-auto w-full max-w-sm rounded-md bg-background px-6 py-12 shadow">
           <Form>
-          <View className="grid w-full max-w-sm gap-1.5">
+            <View className="grid w-full max-w-sm gap-1.5">
               <Label nativeID="displayName">Name</Label>
               <Controller
                 control={control}
@@ -85,7 +87,7 @@ export default function SignupScreen() {
                 )}
               />
               {errors.displayName && (
-                <Text className="text-destructive text-sm">{errors.displayName.message}</Text>
+                <Text className="text-sm text-destructive">{errors.displayName.message}</Text>
               )}
             </View>
             <FormField>
@@ -140,7 +142,7 @@ export default function SignupScreen() {
               variant="outline"
               className="flex w-full max-w-sm flex-row items-center justify-center"
               onPress={handleGoogleSignIn}
-              >
+            >
               <AutoImage
                 webSource={"../../../assets/icons/google.png"}
                 nativeSource={require("../../../assets/icons/google.png")}

@@ -23,21 +23,22 @@ export const passwordSchema = z
 export const emailSchema = z.string().email({ message: "Invalid email address" }) // email trims automatically
 
 export const displayNameSchema = z
-.string()
-.min(3, { message: "Name must be at least 3 characters long" })
-.refine((name) => name.trim().split(" ").length >= 2, {
-  message: "Name must include both first and last name",
-})
+  .string()
+  .min(3, { message: "Name must be at least 3 characters long" })
+  .max(20, { message: "Name must be at most 20 characters long" })
+  .refine((name) => name.trim().split(" ").length >= 2, {
+    message: "Name must include both first and last name",
+  })
 
 export const authSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
 })
 
-export const registerSchema = z.object({ 
-    displayName: displayNameSchema,
-    email: emailSchema,
-    password: passwordSchema,
+export const registerSchema = z.object({
+  displayName: displayNameSchema,
+  email: emailSchema,
+  password: passwordSchema,
 })
 
 export type PasswordSchema = z.infer<typeof passwordSchema>

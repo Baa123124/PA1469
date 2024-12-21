@@ -10,15 +10,12 @@ import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { authSchema, AuthSchema } from "@/lib/authSchemas"
 import { useColorScheme } from "@/lib/useColorScheme"
-import { useEffect } from "react"
 import { Form, FormField, FormFieldError, FormSubmit } from "@/components/Form"
 import { useAuth } from "@/lib/auth/AuthContext"
 
 export default function LoginScreen() {
   const { isDarkColorScheme } = useColorScheme()
-  const {loginWithGoogle, loginWithEmailAndPassword} = useAuth();
-  // TODO: change this to actual auth session
-  const authSession = false
+  const { loginWithGoogle, loginWithEmailAndPassword } = useAuth()
 
   const logo = {
     web: isDarkColorScheme
@@ -41,12 +38,6 @@ export default function LoginScreen() {
     },
   })
 
-  useEffect(() => {
-    if (authSession) {
-      router.replace("/map")
-    }
-  }, [])
-
   // Only triggers if formData is valid
   function onSubmit(formData: AuthSchema) {
     loginWithEmailAndPassword(formData.email, formData.password).then((user) => {
@@ -56,7 +47,7 @@ export default function LoginScreen() {
     })
   }
 
-  function handleGoogleSignIn() { 
+  function handleGoogleSignIn() {
     loginWithGoogle().then((user) => {
       if (user) {
         router.replace("/map")
