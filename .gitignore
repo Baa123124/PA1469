@@ -74,6 +74,9 @@ bin/Exponent.app
 /ios
 expo-env.d.ts
 
+# Firebase
+google-services.json
+
 # Metro
 .metro-health-check*
 
@@ -94,6 +97,7 @@ npm-debug.*
 web-build/
 
 # Configurations
+.env
 !env.js
 .env*.local
 
@@ -101,3 +105,4 @@ web-build/
 
 # Yarn
 .yarn/*
+

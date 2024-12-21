@@ -17,6 +17,7 @@ Includes:
 - [Jest](https://jestjs.io/) (unit testing)
 - [Maestro](https://maestro.mobile.dev/) (e2e testing)
 - [Reactotron](https://github.com/infinitered/reactotron) (react native debug tool)
+- [React Native Firebase](https://rnfirebase.io/) (Backend as a service used for authentication purposes)
 
 <br/>
 
@@ -126,6 +127,36 @@ This is a great place to put miscellaneous helpers and utilities. Things like da
 3. Post installation: `npm run postinstall`
 4. Start app: `npm run start`, `npm run web` or `npm run android`
 5. Alternatively, start with cleared cache: `npm run start:clear`
+
+<br/>
+
+## Firebase Authentication Setup for Android
+
+1. Go to the [Firebase Console](https://console.firebase.google.com/) and **create a new Firebase project**.
+2. Register an Android app with the following:
+   - **Android package name**: `com.xplorify`
+   - **App nickname**: `Xplorify`
+   - Generate a **Debug signing certificate SHA-1**:
+     ```bash
+     cd android
+     gradlew signingReport
+     ```
+     Copy the <Strong>first</strong> SHA-1 key and paste it into Firebase.
+3. Download the google-services.json and place it into the root of this project.
+4. Enable google signin and email signin. 
+5. Copy client id from your google-services.json -> client -> oauth_client -> {
+  "client_id": "copy",
+  "client_type": 3
+} 
+paste into a .env in root as EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID="id".
+6. `npx expo prebuild --clean`
+7. Start the app with `npm run android`
+- NOTE: If you experience a developer error when using google signin, make sure that the key is up to date with your current build.
+<br/>
+
+## Firebase Authentication Setup for IOS
+
+Not setup
 
 <br/>
 

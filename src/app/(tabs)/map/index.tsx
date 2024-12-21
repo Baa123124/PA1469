@@ -19,12 +19,14 @@ import { ThemeToggle } from "@/components/ThemeToggle"
 import { useSafeAreaInsetsStyle } from "@/utils/useSafeAreaInsetsStyle"
 import { Settings } from "@/lib/icons/Settings"
 import { Link } from "expo-router"
+import { useAuth } from "@/lib/auth/AuthContext"
 
-const GITHUB_AVATAR_URI =
+const ANONYMOUS_AVATAR_URI =
   "https://i.pinimg.com/originals/ef/a2/8d/efa28d18a04e7fa40ed49eeb0ab660db.jpg"
 
 export default function MapScreen() {
   const [progress, setProgress] = React.useState(78)
+  const {user, logout} = useAuth()
 
   function updateProgressValue() {
     setProgress(Math.floor(Math.random() * 100))
@@ -45,13 +47,13 @@ export default function MapScreen() {
         <Card className="w-full max-w-sm rounded-2xl p-6">
           <CardHeader className="items-center">
             <Avatar alt="Rick Sanchez's Avatar" className="h-24 w-24">
-              <AvatarImage source={{ uri: GITHUB_AVATAR_URI }} />
+              <AvatarImage source={{ uri: user?.photoURL ? user.photoURL : ANONYMOUS_AVATAR_URI }} />
               <AvatarFallback>
                 <Text>RS</Text>
               </AvatarFallback>
             </Avatar>
             <View className="p-3" />
-            <CardTitle className="pb-2 text-center">Rick Sanchez</CardTitle>
+            <CardTitle className="pb-2 text-center">{user?.displayName}</CardTitle>
             <View className="flex-row">
               <CardDescription className="text-base font-semibold">Scientist</CardDescription>
               <Tooltip delayDuration={150}>
@@ -98,13 +100,22 @@ export default function MapScreen() {
             </View>
             <Progress value={progress} className="h-2" indicatorClassName="bg-sky-600" />
             <View />
-            <Button
-              variant="outline"
-              className="shadow shadow-foreground/5"
-              onPress={updateProgressValue}
-            >
-              <Text>Update</Text>
-            </Button>
+            <View className="flex flex-row gap-2">
+              <Button
+                variant="outline"
+                className="shadow shadow-foreground/5"
+                onPress={updateProgressValue}
+              >
+                <Text>Update</Text>
+              </Button>
+              <Button
+                variant="outline"
+                className="shadow shadow-foreground/5"
+                onPress={logout}
+              >
+                <Text>Logout</Text>
+              </Button>
+            </View>
           </CardFooter>
         </Card>
       </View>

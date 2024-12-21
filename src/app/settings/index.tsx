@@ -16,19 +16,20 @@ import { View } from "react-native"
 import { TopNav } from "@/components/TopNav"
 import { Settings, SettingsGroup, SettingsField } from "./(components)/Settings"
 import { Link } from "expo-router"
-
+import { useAuth } from "@/lib/auth/AuthContext"
 // TODO: Change dummyUser to actual user
 
 export default function SettingsScreen() {
+  const { user, logout } = useAuth()
   const [discoveryMode, setDiscoveryMode] = useState(dummyUser.discoveryMode)
   const [notifications, setNotifications] = useState(dummyUser.notifications)
 
   return (
     <View className="flex-1 gap-8 bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
       <TopNav className="justify-between">
-        <Button variant="ghost" className="flex-row items-center gap-2">
+        <Button onPress={logout} variant="ghost" className="flex-row items-center gap-2">
           <LogOut size={16} className="text-destructive" strokeWidth={1.25} />
-          <Text className="text-destructive">Log out</Text>
+          <Text className="!text-destructive">Log out</Text>
         </Button>
       </TopNav>
 
@@ -40,8 +41,8 @@ export default function SettingsScreen() {
           </AvatarFallback>
         </Avatar>
         <View className="items-center">
-          <Text className="text-2xl font-bold">{dummyUser.displayName}</Text>
-          <Text className="text-sm text-muted-foreground">{dummyUser.email}</Text>
+          <Text className="text-2xl font-bold">{user?.displayName}</Text>
+          <Text className="text-sm text-muted-foreground">{user?.email}</Text>
         </View>
         <Link href="/settings/profile" asChild>
           <Button className="flex-row gap-2">
@@ -98,7 +99,7 @@ export default function SettingsScreen() {
             icon={Mail}
             name="Email"
             type="link"
-            value={dummyUser.email}
+            value={user?.email as string | undefined}
             href="/settings/email"
           />
           <SettingsField
