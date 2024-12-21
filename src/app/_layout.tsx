@@ -15,6 +15,7 @@ import { PortalHost } from "@rn-primitives/portal"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { dummyUser } from "@/lib/dummyUser"
+import { AuthProvider } from "@/lib/auth/AuthContext"
 
 SplashScreen.preventAutoHideAsync()
 
@@ -85,9 +86,11 @@ export default function RootLayout() {
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <KeyboardProvider>
-            <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-            <Slot />
-            <PortalHost />
+            <AuthProvider>
+              <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+              <Slot />
+              <PortalHost />
+            </AuthProvider>
           </KeyboardProvider>
         </GestureHandlerRootView>
       </SafeAreaProvider>

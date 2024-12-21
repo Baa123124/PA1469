@@ -8,15 +8,14 @@ import { Link, router } from "expo-router"
 import { View } from "react-native"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useColorScheme } from "@/lib/useColorScheme"
-import { useEffect } from "react"
 import { authSchema, AuthSchema } from "@/lib/authSchemas"
+import { useColorScheme } from "@/lib/useColorScheme"
 import { Form, FormField, FormFieldError, FormSubmit } from "@/components/Form"
+import { useAuth } from "@/lib/auth/AuthContext"
 
 export default function LoginScreen() {
   const { isDarkColorScheme } = useColorScheme()
-  // TODO: change this to actual auth session
-  const authSession = false
+  const { loginWithGoogle, loginWithEmailAndPassword } = useAuth()
 
   const logo = {
     web: isDarkColorScheme
@@ -39,17 +38,21 @@ export default function LoginScreen() {
     },
   })
 
-  useEffect(() => {
-    if (authSession) {
-      router.replace("/map")
-    }
-  }, [])
-
   // Only triggers if formData is valid
   function onSubmit(formData: AuthSchema) {
-    console.log(formData)
-    // TODO: Add authentication
-    //router.replace("/map")
+    loginWithEmailAndPassword(formData.email, formData.password).then((user) => {
+      if (user) {
+        router.replace("/map")
+      }
+    })
+  }
+
+  function handleGoogleSignIn() {
+    loginWithGoogle().then((user) => {
+      if (user) {
+        router.replace("/map")
+      }
+    })
   }
 
   return (
@@ -125,8 +128,7 @@ export default function LoginScreen() {
               variant="outline"
               className="flex w-full max-w-sm flex-row items-center justify-center"
               onPress={() => {
-                // TODO: Add Google authentication
-                router.replace("/map")
+                handleGoogleSignIn()
               }}
             >
               <AutoImage
@@ -135,7 +137,7 @@ export default function LoginScreen() {
                 alt="Google"
                 maxHeight={32}
               />
-              <Text>Sign up with Google</Text>
+              <Text>Sign in with Google</Text>
             </Button>
           </Form>
         </View>

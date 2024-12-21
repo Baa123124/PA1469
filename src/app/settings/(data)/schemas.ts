@@ -1,4 +1,4 @@
-import { emailSchema, passwordSchema } from "@/lib/authSchemas"
+import { passwordSchema, emailSchema } from "@/lib/authSchemas"
 import { z } from "zod"
 
 const changeEmailSchema = z
