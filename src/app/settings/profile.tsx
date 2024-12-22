@@ -14,6 +14,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { AutoImage } from "@/components/AutoImage"
 import { ImagePicker } from "@/components/ui/image-picker"
+import { showToast } from "@/components/ui/toast"
 
 // TODO: Change dummyUser to actual user
 
@@ -36,7 +37,11 @@ export default function ProfileSettingsScreen() {
     console.log(formData)
     goBack()
     // TODO: Update user settings
-    // TODO: Add success toast
+    showToast({
+      type: "success",
+      description: "Profile updated successfully",
+      position: "bottom",
+    })
   }
 
   return (

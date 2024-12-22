@@ -51,7 +51,6 @@ export default function CacheRangeSettingsScreen() {
     console.log(formData)
     goBack()
     // TODO: Update user settings
-    // TODO: Add success toast
   }
 
   return (

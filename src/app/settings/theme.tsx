@@ -35,7 +35,6 @@ export default function ThemeSettingsScreen() {
     setColorScheme(formData.theme)
     setAndroidNavigationBar(colorTheme)
     // TODO: Update user settings
-    // TODO: Add success toast
   }
 
   return (

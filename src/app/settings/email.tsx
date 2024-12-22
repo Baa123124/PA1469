@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { goBack } from "@/utils/goBack"
 import { Form, FormField, FormFieldError, FormSubmit } from "@/components/Form"
+import { showToast } from "@/components/ui/toast"
 
 export default function EmailSettingsScreen() {
   const {
@@ -28,7 +29,11 @@ export default function EmailSettingsScreen() {
     // TODO: Send confirmation email
     goBack() // if valid go back to previous screen
     // TODO: Update user settings
-    // TODO: Add success toast
+    showToast({
+      type: "success",
+      description: "Email updated successfully",
+      position: "bottom",
+    })
   }
 
   return (
