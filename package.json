@@ -22,6 +22,7 @@
     "start": "npx expo start",
     "start:clear": "npx expo start --clear",
     "android": "npx expo run:android",
+    "android:prod": "npx expo run:android --variant release",
     "web": "npx expo start --web",
     "bundle:web": "npx expo export --platform web",
     "serve:web": "npx server dist",
