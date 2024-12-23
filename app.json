@@ -12,7 +12,7 @@
     "splash": {
       "image": "./assets/images/splash-logo-all.png",
       "resizeMode": "contain",
-      "backgroundColor": "#191015"
+      "backgroundColor": "#ffffff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -29,7 +29,7 @@
       "splash": {
         "image": "./assets/images/splash-logo-android-universal.png",
         "resizeMode": "contain",
-        "backgroundColor": "#191015"
+        "backgroundColor": "#ffffff"
       },
       "googleServicesFile": "./google-services.json"
     },
@@ -38,7 +38,7 @@
       "splash": {
         "image": "./assets/images/splash-logo-web.png",
         "resizeMode": "contain",
-        "backgroundColor": "#191015"
+        "backgroundColor": "#ffffff"
       },
       "bundler": "metro"
     },
