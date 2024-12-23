@@ -12,7 +12,7 @@ import { Flame } from "@/lib/icons/Flame"
 import { TopNav, TopNavBackButton, TopNavSettingsButton } from "@/components/TopNav"
 import { useLocalSearchParams } from "expo-router"
 import { ScrollView } from "react-native-gesture-handler"
-import { CacheGroup, CacheImage, Caches } from "./(components)/Caches"
+import { CacheGroup, CacheImage, Caches } from "@/components/tabs/profile/Caches"
 import { useAuth } from "@/lib/auth/AuthContext"
 
 // TODO: Link caches to map view

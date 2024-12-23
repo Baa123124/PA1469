@@ -14,7 +14,7 @@ import { useSafeAreaInsetsStyle } from "@/utils/useSafeAreaInsetsStyle"
 import { useState } from "react"
 import { View } from "react-native"
 import { TopNav, TopNavBackButton } from "@/components/TopNav"
-import { Settings, SettingsGroup, SettingsField } from "./(components)/Settings"
+import { Settings, SettingsGroup, SettingsField } from "@/components/settings/Settings"
 import { Link } from "expo-router"
 import { useAuth } from "@/lib/auth/AuthContext"
 // TODO: Change dummyUser to actual user
