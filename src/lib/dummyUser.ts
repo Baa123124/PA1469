@@ -1,3 +1,5 @@
+import * as Crypto from "expo-crypto"
+
 type Settings = {
   notifications: boolean
   theme: "light" | "dark" | "system"
@@ -83,7 +85,7 @@ const dummyCachePhoto3 =
   "https://images.pexels.com/photos/247599/pexels-photo-247599.jpeg?auto=compress&cs=tinysrgb&w=600"
 
 const dummyReview: Review = {
-  id: "123",
+  id: Crypto.randomUUID(),
   rating: 4,
   comment: "This is a very interesting comment.",
   createdAt: new Date("2023-01-01T00:00:00.000Z"),
@@ -91,7 +93,7 @@ const dummyReview: Review = {
 }
 
 const dummyCache: Cache = {
-  id: "123",
+  id: Crypto.randomUUID(),
   name: "Cache 1",
   description: "This is a very interesting description of the cache.",
   photos: [dummyCachePhoto1, dummyCachePhoto2, dummyCachePhoto3],
@@ -102,14 +104,54 @@ const dummyCache: Cache = {
   reviews: [dummyReview, dummyReview, dummyReview],
 }
 
-const dummyList: List = {
-  id: "123",
-  name: "Favorites",
-  caches: [dummyCache, dummyCache, dummyCache],
-}
+const dummyLists: List[] = [
+  {
+    id: Crypto.randomUUID(),
+    name: "History",
+    caches: [
+      dummyCache,
+      dummyCache,
+      dummyCache,
+      dummyCache,
+      dummyCache,
+      dummyCache,
+      dummyCache,
+      dummyCache,
+      dummyCache,
+      dummyCache,
+      dummyCache,
+      dummyCache,
+    ],
+  },
+  {
+    id: Crypto.randomUUID(),
+    name: "Reviews",
+    caches: [
+      dummyCache,
+      dummyCache,
+      dummyCache,
+      dummyCache,
+      dummyCache,
+      dummyCache,
+      dummyCache,
+      dummyCache,
+      dummyCache,
+    ],
+  },
+  {
+    id: Crypto.randomUUID(),
+    name: "Favorites",
+    caches: [dummyCache, dummyCache, dummyCache, dummyCache, dummyCache, dummyCache],
+  },
+  {
+    id: Crypto.randomUUID(),
+    name: "Future journeys",
+    caches: [dummyCache, dummyCache, dummyCache],
+  },
+]
 
 const dummyUser: User = {
-  id: "123",
+  id: "123", // Firebase user id
   email: "john.doe@example.com",
   createdAt: new Date("2023-01-01T00:00:00.000Z"),
   displayName: "John Doe",
@@ -127,7 +169,7 @@ const dummyUser: User = {
   cachesVisited: 56,
   streak: 3,
   reviews: [dummyReview, dummyReview, dummyReview],
-  lists: [dummyList, dummyList, dummyList],
+  lists: dummyLists,
 }
 
 export {
@@ -136,7 +178,7 @@ export {
   dummyBanner,
   dummyCache,
   dummyReview,
-  dummyList,
+  dummyLists,
   dummyAvatarRaw,
   dummyBannerRaw,
 }

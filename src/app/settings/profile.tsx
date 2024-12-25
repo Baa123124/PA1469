@@ -45,7 +45,7 @@ export default function ProfileSettingsScreen() {
   }
 
   return (
-    <View className="flex-1 gap-8 bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
+    <View className="flex-1 gap-4 bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
       <TopNav>
         <TopNavBackButton />
         <TopNavRoute>Profile</TopNavRoute>

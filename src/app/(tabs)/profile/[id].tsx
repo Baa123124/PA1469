@@ -12,7 +12,7 @@ import { Flame } from "@/lib/icons/Flame"
 import { TopNav, TopNavBackButton, TopNavSettingsButton } from "@/components/TopNav"
 import { useLocalSearchParams } from "expo-router"
 import { ScrollView } from "react-native-gesture-handler"
-import { CacheGroup, CacheImage, Caches } from "@/components/tabs/profile/Caches"
+import { CacheGroup, CacheImage, Caches } from "@/components/tabs/Caches"
 import { useAuth } from "@/lib/auth/AuthContext"
 
 // TODO: Link caches to map view
@@ -24,7 +24,7 @@ export default function ProfileScreen() {
 
   return (
     <View className="flex-1 bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View className="relative !h-[240px]">
           <AutoImage
             source={{ uri: dummyUser.banner }}
@@ -103,6 +103,7 @@ export default function ProfileScreen() {
                     aria-labelledby={dummyCache.name}
                     name={dummyCache.name}
                     href="/"
+                    maxHeight={128}
                   />
                 )
               })}
@@ -116,6 +117,7 @@ export default function ProfileScreen() {
                     aria-labelledby={dummyCache.name}
                     name={dummyCache.name}
                     href="/"
+                    maxHeight={128}
                   />
                 )
               })}
@@ -129,6 +131,7 @@ export default function ProfileScreen() {
                     aria-labelledby={dummyCache.name}
                     name={dummyCache.name}
                     href="/"
+                    maxHeight={128}
                   />
                 )
               })}

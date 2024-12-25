@@ -20,7 +20,7 @@ const CacheGroup = React.forwardRef<ViewRef, CacheGroupProps>(
   ({ className, name, children, ...props }, ref) => (
     <View ref={ref} className={cn("gap-2", className)} {...props}>
       <Text className="w-full text-sm font-semibold text-primary">{name}</Text>
-      <ScrollView horizontal>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <View className="flex-row gap-2">{children}</View>
       </ScrollView>
     </View>
@@ -31,14 +31,20 @@ CacheGroup.displayName = "CacheGroup"
 type CacheImageProps = AutoImageProps & {
   name: string
   href: Href
+  maxHeight?: number
 }
 const CacheImage = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof AutoImage>,
   CacheImageProps
->(({ className, name, href, ...props }, ref) => (
+>(({ className, name, href, maxHeight, ...props }, ref) => (
   <Link href={href}>
     <View>
-      <AutoImage ref={ref} maxHeight={128} className={cn("rounded-md", className)} {...props} />
+      <AutoImage
+        ref={ref}
+        maxHeight={maxHeight}
+        className={cn("max-w-full rounded-md", className)}
+        {...props}
+      />
       <Badge variant="secondary" className="absolute bottom-2 left-2" asChild>
         <Link href={href}>
           <Text>{name}</Text>

@@ -21,7 +21,7 @@ export default function TabLayout() {
         tabBar={(props) => <BottomTabBar {...props} />}
       >
         <Tabs.Screen
-          name="caches/index"
+          name="caches"
           options={{
             tabBarIcon: ({ focused }) => (
               <TabBarButton icon={Bookmark} focused={focused} href={"/caches"} />
