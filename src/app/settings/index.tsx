@@ -21,8 +21,8 @@ import { useAuth } from "@/lib/auth/AuthContext"
 
 export default function SettingsScreen() {
   const { user, logout } = useAuth()
-  const [discoveryMode, setDiscoveryMode] = useState(dummyUser.discoveryMode)
-  const [notifications, setNotifications] = useState(dummyUser.notifications)
+  const [discoveryMode, setDiscoveryMode] = useState(dummyUser.settings.discoveryMode)
+  const [notifications, setNotifications] = useState(dummyUser.settings.notifications)
 
   return (
     <View className="flex-1 gap-8 bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
@@ -36,7 +36,7 @@ export default function SettingsScreen() {
 
       <View className="items-center justify-center gap-4">
         <Avatar alt="profile avatar" className="h-24 w-24">
-          <AvatarImage source={{ uri: user?.photoURL ?? dummyUser.avatar.uri }} />
+          <AvatarImage source={{ uri: user?.photoURL ?? dummyUser.avatar }} />
           <AvatarFallback>
             <Text>Avatar</Text>
           </AvatarFallback>
@@ -59,7 +59,7 @@ export default function SettingsScreen() {
             icon={ArrowUpDown}
             name="Cache range"
             type="link"
-            value={`${dummyUser.minCacheRange} km - ${dummyUser.maxCacheRange} km`}
+            value={`${dummyUser.settings.minCacheRange} km - ${dummyUser.settings.maxCacheRange} km`}
             href="/settings/cache-range"
           />
           <SettingsField
@@ -90,7 +90,9 @@ export default function SettingsScreen() {
             icon={Palette}
             name="Theme"
             type="link"
-            value={dummyUser.theme.charAt(0).toUpperCase() + dummyUser.theme.slice(1)}
+            value={
+              dummyUser.settings.theme.charAt(0).toUpperCase() + dummyUser.settings.theme.slice(1)
+            }
             href="/settings/theme"
           />
         </SettingsGroup>

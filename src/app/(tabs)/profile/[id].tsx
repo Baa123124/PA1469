@@ -27,7 +27,7 @@ export default function ProfileScreen() {
       <ScrollView>
         <View className="relative !h-[240px]">
           <AutoImage
-            source={dummyUser.banner}
+            source={{ uri: dummyUser.banner }}
             aria-labelledby="banner"
             className="!max-h-[192px] max-w-full"
           />
@@ -38,7 +38,7 @@ export default function ProfileScreen() {
           </TopNav>
 
           <Avatar alt="profile avatar" className="absolute bottom-0 left-6 !h-[96px] !w-[96px]">
-            <AvatarImage source={{ uri: user?.photoURL ?? dummyUser.avatar.uri }} />
+            <AvatarImage source={{ uri: user?.photoURL ?? dummyUser.avatar }} />
             <AvatarFallback>
               <Text>Avatar</Text>
             </AvatarFallback>
@@ -77,7 +77,7 @@ export default function ProfileScreen() {
                   className="text-yellow-400 dark:text-yellow-500"
                 />
                 <Text className="gap-2 text-sm font-medium text-muted-foreground">
-                  {dummyUser.reviewsGiven} Reviews
+                  {dummyUser.reviews.length} Reviews
                 </Text>
               </View>
               <View className="flex-row items-center gap-1">
@@ -99,7 +99,7 @@ export default function ProfileScreen() {
                 return (
                   <CacheImage
                     key={index}
-                    source={photo}
+                    source={{ uri: photo }}
                     aria-labelledby={dummyCache.name}
                     name={dummyCache.name}
                     href="/"
@@ -112,7 +112,7 @@ export default function ProfileScreen() {
                 return (
                   <CacheImage
                     key={index}
-                    source={photo}
+                    source={{ uri: photo }}
                     aria-labelledby={dummyCache.name}
                     name={dummyCache.name}
                     href="/"
@@ -125,7 +125,7 @@ export default function ProfileScreen() {
                 return (
                   <CacheImage
                     key={index}
-                    source={photo}
+                    source={{ uri: photo }}
                     aria-labelledby={dummyCache.name}
                     name={dummyCache.name}
                     href="/"

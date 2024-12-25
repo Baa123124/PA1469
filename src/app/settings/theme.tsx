@@ -25,7 +25,7 @@ export default function ThemeSettingsScreen() {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(themeSchema),
-    defaultValues: { theme: dummyUser.theme },
+    defaultValues: { theme: dummyUser.settings.theme },
   })
 
   function onSubmit(formData: ThemeSchema) {

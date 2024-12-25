@@ -33,8 +33,8 @@ export default function CacheRangeSettingsScreen() {
   } = useForm({
     resolver: zodResolver(cacheRangeSchema),
     defaultValues: {
-      minRange: dummyUser.minCacheRange.toString(),
-      maxRange: dummyUser.maxCacheRange.toString(),
+      minRange: dummyUser.settings.minCacheRange.toString(),
+      maxRange: dummyUser.settings.maxCacheRange.toString(),
     },
   })
 
@@ -70,8 +70,8 @@ export default function CacheRangeSettingsScreen() {
               <Select
                 aria-labelledby="minRange"
                 defaultValue={{
-                  value: dummyUser.minCacheRange.toString(),
-                  label: dummyUser.minCacheRange.toString(),
+                  value: dummyUser.settings.minCacheRange.toString(),
+                  label: dummyUser.settings.minCacheRange.toString(),
                 }}
                 value={{
                   value: value,
@@ -111,8 +111,8 @@ export default function CacheRangeSettingsScreen() {
               <Select
                 aria-labelledby="maxRange"
                 defaultValue={{
-                  value: dummyUser.maxCacheRange.toString(),
-                  label: dummyUser.maxCacheRange.toString(),
+                  value: dummyUser.settings.maxCacheRange.toString(),
+                  label: dummyUser.settings.maxCacheRange.toString(),
                 }}
                 value={{
                   value: value,
