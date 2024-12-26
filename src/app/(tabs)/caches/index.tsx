@@ -42,13 +42,60 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { FormField, FormFieldError, FormSubmit } from "@/components/Form"
+import { Label } from "@/components/ui/label"
+import { Controller, useForm } from "react-hook-form"
+import { Input } from "@/components/ui/input"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { newListSchema } from "@/lib/cachesSchema"
 
 // TODO: Automatically add visited caches to "History" and reviews to "Reviews", and have them be locked
 
 export default function CachesScreen() {
   const [removeDialogOpen, setRemoveDialogOpen] = useState(false)
+  const [editDialogOpen, setEditDialogOpen] = useState(false)
+  const [newListDialogOpen, setNewListDialogOpen] = useState(false)
   const [selectedList, setSelectedList] = useState<List | null>(null)
+
+  // Set all list table cell widths to the largest width (and head)
+  const listCellRefs = useRef<Array<View | null>>([])
+  const [listCellWidth, setListCellWidth] = useState<number | null>(null)
+  useEffect(() => {
+    const widths: number[] = []
+
+    listCellRefs.current.forEach((ref) => {
+      if (ref) {
+        ref.measure((x, y, width, height, pageX, pageY) => {
+          widths.push(width)
+          if (widths.length === dummyUser.lists.length) {
+            setListCellWidth(Math.max(...widths))
+          }
+        })
+      }
+    })
+  }, [])
+
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(newListSchema),
+    defaultValues: {
+      name: "",
+    },
+  })
 
   return (
     <View className="flex-1 bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
@@ -67,7 +114,7 @@ export default function CachesScreen() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="min-w-40 flex-1 pl-6">
+                  <TableHead className="min-w-40 pl-6" style={{ width: listCellWidth || "auto" }}>
                     <Text className="font-semibold text-primary">Lists</Text>
                   </TableHead>
                   <TableHead className="min-w-20 flex-1">
@@ -82,15 +129,19 @@ export default function CachesScreen() {
                   return (
                     <Link href={`/caches/${list.id}` as Href} asChild key={list.id}>
                       <TableRow className={cn("active:bg-secondary", index % 2 && "bg-muted/40")}>
-                        <TableCell className="min-w-40 flex-1 justify-center pl-6">
-                          <View className="flex-row items-center gap-2">
+                        <TableCell
+                          ref={(el) => (listCellRefs.current[index] = el)}
+                          style={{ width: listCellWidth || "auto" }}
+                          className="min-w-40 max-w-64 flex-1 justify-center pl-6"
+                        >
+                          <View className="flex-row items-center gap-2 pr-8">
                             {list.name === "History" && <History size={16} strokeWidth={1.25} />}
                             {list.name === "Reviews" && <Star size={16} strokeWidth={1.25} />}
                             {list.name === "Favorites" && <Heart size={16} strokeWidth={1.25} />}
                             {list.name === "Future journeys" && (
                               <MapPin size={16} strokeWidth={1.25} />
                             )}
-                            <Text>{list.name}</Text>
+                            <Text numberOfLines={1}>{list.name}</Text>
                           </View>
                         </TableCell>
                         <TableCell className="min-w-20 flex-1 justify-center">
@@ -151,15 +202,63 @@ export default function CachesScreen() {
             </Table>
           </ScrollView>
 
-          <Button
-            className="mr-6 flex-row gap-2 self-end"
-            onPress={() => {
-              // TODO: Create new list
+          <Dialog
+            open={newListDialogOpen}
+            onOpenChange={(open) => {
+              setNewListDialogOpen(open)
+              if (!open) {
+                reset()
+              }
             }}
           >
-            <Plus size={16} strokeWidth={1.25} className="text-primary-foreground" />
-            <Text>New list</Text>
-          </Button>
+            <DialogTrigger asChild>
+              <Button className="mr-6 flex-row gap-2 self-end">
+                <Plus size={16} strokeWidth={1.25} className="text-primary-foreground" />
+                <Text>New list</Text>
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>New list</DialogTitle>
+                <DialogDescription>
+                  Create a new list to save and keep track of caches.
+                </DialogDescription>
+              </DialogHeader>
+              <FormField className="pt-2">
+                <Label nativeID="name">Name</Label>
+                <Controller
+                  control={control}
+                  name="name"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <Input
+                      aria-labelledby="name"
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                      placeholder="Enter list name"
+                      className="w-full"
+                      inputMode="text"
+                      maxLength={20}
+                    />
+                  )}
+                />
+                <FormFieldError errors={errors.name} />
+              </FormField>
+              <DialogFooter>
+                <FormSubmit
+                  className="flex-row gap-2"
+                  onPress={handleSubmit((formData) => {
+                    // TODO: Create new list
+                    console.log(formData)
+                    setNewListDialogOpen(false)
+                  })}
+                >
+                  <Plus size={16} strokeWidth={1.25} className="text-primary-foreground" />
+                  <Text>Create</Text>
+                </FormSubmit>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </View>
       </ScrollView>
 

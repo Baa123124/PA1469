@@ -41,6 +41,7 @@
     "@react-navigation/native-stack": "^6.0.2",
     "@rn-primitives/alert-dialog": "^1.1.0",
     "@rn-primitives/avatar": "^1.1.0",
+    "@rn-primitives/dialog": "^1.1.0",
     "@rn-primitives/dropdown-menu": "^1.1.0",
     "@rn-primitives/label": "^1.1.0",
     "@rn-primitives/portal": "^1.1.0",
