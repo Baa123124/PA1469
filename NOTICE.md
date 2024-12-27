@@ -28,4 +28,4 @@
 
 - The `src/app/profile/[id].tsx` screen was inspired by [Profile Page](https://dribbble.com/shots/23681946-Profile-Page) by _Vishnu Prasad_ on Dribbble.
 
-- The **table** and **dropdown-menu** in `src/app/(tabs)/caches/index` is adapted from the React Native Reusables documentation: [Table](https://rnr-docs.vercel.app/components/table/) and [Dropdown Menu](https://rnr-docs.vercel.app/components/dropdown-menu/).
+- The **table**, **dropdown-menu**, **dialog**, and **alert-dialog** in `src/app/(tabs)/caches/index` is adapted from the React Native Reusables documentation: [Table](https://rnr-docs.vercel.app/components/table/), [Dropdown Menu](https://rnr-docs.vercel.app/components/dropdown-menu/), [Dialog](https://rnr-docs.vercel.app/components/dialog/), and [Alert Dialog](https://rnr-docs.vercel.app/components/alert-dialog/).

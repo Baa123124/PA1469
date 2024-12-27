@@ -57,9 +57,10 @@ import { Label } from "@/components/ui/label"
 import { Controller, useForm } from "react-hook-form"
 import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { newListSchema } from "@/lib/cachesSchema"
+import { editListSchema, newListSchema } from "@/lib/cachesSchema"
 
-// TODO: Automatically add visited caches to "History" and reviews to "Reviews", and have them be locked
+// TODO: Automatically add visited caches to "History" and reviews to "Reviews"
+// TODO: Add dialogs into separate components
 
 export default function CachesScreen() {
   const [removeDialogOpen, setRemoveDialogOpen] = useState(false)
@@ -86,12 +87,24 @@ export default function CachesScreen() {
   }, [])
 
   const {
-    control,
-    handleSubmit,
-    reset,
-    formState: { errors },
+    control: newControl,
+    handleSubmit: newHandleSubmit,
+    reset: newReset,
+    formState: { errors: newErrors },
   } = useForm({
     resolver: zodResolver(newListSchema),
+    defaultValues: {
+      name: "",
+    },
+  })
+
+  const {
+    control: editControl,
+    handleSubmit: editHandleSubmit,
+    reset: editReset,
+    formState: { errors: editErrors },
+  } = useForm({
+    resolver: zodResolver(editListSchema),
     defaultValues: {
       name: "",
     },
@@ -162,23 +175,12 @@ export default function CachesScreen() {
                               <DropdownMenuContent className="w-48">
                                 <DropdownMenuItem
                                   onPress={() => {
-                                    // TODO: Edit list
                                     setSelectedList(list)
+                                    setEditDialogOpen(true)
                                   }}
                                 >
                                   <SquarePen size={16} strokeWidth={1.25} />
                                   <Text>Edit</Text>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onPress={() => {
-                                    // TODO: Share list
-                                    // It's only possible to share one image at a time: https://docs.expo.dev/versions/latest/sdk/sharing/#types
-                                    // ? Either make lists public and move caches/[id] to caches/[userId]/[listId], and share link to the list
-                                    // ? Or don't share lists and just share individual caches in caches/[id] instead
-                                  }}
-                                >
-                                  <Share2 size={16} strokeWidth={1.25} />
-                                  <Text>Share</Text>
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
@@ -206,9 +208,7 @@ export default function CachesScreen() {
             open={newListDialogOpen}
             onOpenChange={(open) => {
               setNewListDialogOpen(open)
-              if (!open) {
-                reset()
-              }
+              newReset()
             }}
           >
             <DialogTrigger asChild>
@@ -227,7 +227,7 @@ export default function CachesScreen() {
               <FormField className="pt-2">
                 <Label nativeID="name">Name</Label>
                 <Controller
-                  control={control}
+                  control={newControl}
                   name="name"
                   render={({ field: { onChange, onBlur, value } }) => (
                     <Input
@@ -242,12 +242,12 @@ export default function CachesScreen() {
                     />
                   )}
                 />
-                <FormFieldError errors={errors.name} />
+                <FormFieldError errors={newErrors.name} />
               </FormField>
               <DialogFooter>
                 <FormSubmit
                   className="flex-row gap-2"
-                  onPress={handleSubmit((formData) => {
+                  onPress={newHandleSubmit((formData) => {
                     // TODO: Create new list
                     console.log(formData)
                     setNewListDialogOpen(false)
@@ -261,6 +261,56 @@ export default function CachesScreen() {
           </Dialog>
         </View>
       </ScrollView>
+
+      <Dialog
+        open={editDialogOpen}
+        onOpenChange={(open) => {
+          setEditDialogOpen(open)
+          editReset()
+        }}
+      >
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Edit list</DialogTitle>
+            <DialogDescription>
+              Edit the name of your list. (Remove caches from the list page.)
+            </DialogDescription>
+          </DialogHeader>
+          <FormField className="pt-2">
+            <Label nativeID="name">Name</Label>
+            <Controller
+              control={editControl}
+              name="name"
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  aria-labelledby="name"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  placeholder="Enter list name"
+                  className="w-full"
+                  inputMode="text"
+                  maxLength={20}
+                />
+              )}
+            />
+            <FormFieldError errors={editErrors.name} />
+          </FormField>
+          <DialogFooter>
+            <FormSubmit
+              className="flex-row gap-2"
+              onPress={editHandleSubmit((formData) => {
+                // TODO: Edit list
+                console.log(formData)
+                setEditDialogOpen(false)
+              })}
+            >
+              <SquarePen size={16} strokeWidth={1.25} className="text-primary-foreground" />
+              <Text>Edit</Text>
+            </FormSubmit>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <AlertDialog open={removeDialogOpen} onOpenChange={setRemoveDialogOpen}>
         <AlertDialogContent>

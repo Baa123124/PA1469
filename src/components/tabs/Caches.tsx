@@ -32,11 +32,12 @@ type CacheImageProps = AutoImageProps & {
   name: string
   href: Href
   maxHeight?: number
+  children?: React.ReactNode
 }
 const CacheImage = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof AutoImage>,
   CacheImageProps
->(({ className, name, href, maxHeight, ...props }, ref) => (
+>(({ className, name, href, maxHeight, children, ...props }, ref) => (
   <Link href={href}>
     <View>
       <AutoImage
@@ -50,6 +51,7 @@ const CacheImage = React.forwardRef<
           <Text>{name}</Text>
         </Link>
       </Badge>
+      {children}
     </View>
   </Link>
 ))
