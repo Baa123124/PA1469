@@ -14,7 +14,6 @@ import { Text } from "@/components/ui/text"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { Ellipsis } from "@/lib/icons/Ellipsis"
-import { Plus } from "@/lib/icons/Plus"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,7 +22,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { SquarePen } from "@/lib/icons/SquarePen"
-import { Share2 } from "@/lib/icons/Share2"
 import { Trash2 } from "@/lib/icons/Trash2"
 import { Href, Link } from "expo-router"
 import { dummyUser, List } from "@/lib/dummyUser"
@@ -32,35 +30,12 @@ import { Star } from "@/lib/icons/Star"
 import { Heart } from "@/lib/icons/Heart"
 import { MapPin } from "@/lib/icons/MapPin"
 import { LockKeyhole } from "@/lib/icons/LockKeyhole"
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
 import { useEffect, useRef, useState } from "react"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { FormField, FormFieldError, FormSubmit } from "@/components/Form"
-import { Label } from "@/components/ui/label"
-import { Controller, useForm } from "react-hook-form"
-import { Input } from "@/components/ui/input"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { editListSchema, newListSchema } from "@/lib/cachesSchema"
+import { RemoveListDialog } from "@/components/tabs/caches/RemoveListDialog"
+import { EditListDialog } from "@/components/tabs/caches/EditListDialog"
+import { NewListDialog } from "@/components/tabs/caches/NewListDialog"
 
 // TODO: Automatically add visited caches to "History" and reviews to "Reviews"
-// TODO: Add dialogs into separate components
 
 export default function CachesScreen() {
   const [removeDialogOpen, setRemoveDialogOpen] = useState(false)
@@ -85,30 +60,6 @@ export default function CachesScreen() {
       }
     })
   }, [])
-
-  const {
-    control: newControl,
-    handleSubmit: newHandleSubmit,
-    reset: newReset,
-    formState: { errors: newErrors },
-  } = useForm({
-    resolver: zodResolver(newListSchema),
-    defaultValues: {
-      name: "",
-    },
-  })
-
-  const {
-    control: editControl,
-    handleSubmit: editHandleSubmit,
-    reset: editReset,
-    formState: { errors: editErrors },
-  } = useForm({
-    resolver: zodResolver(editListSchema),
-    defaultValues: {
-      name: "",
-    },
-  })
 
   return (
     <View className="flex-1 bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
@@ -204,142 +155,17 @@ export default function CachesScreen() {
             </Table>
           </ScrollView>
 
-          <Dialog
-            open={newListDialogOpen}
-            onOpenChange={(open) => {
-              setNewListDialogOpen(open)
-              newReset()
-            }}
-          >
-            <DialogTrigger asChild>
-              <Button className="mr-6 flex-row gap-2 self-end">
-                <Plus size={16} strokeWidth={1.25} className="text-primary-foreground" />
-                <Text>New list</Text>
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle>New list</DialogTitle>
-                <DialogDescription>
-                  Create a new list to save and keep track of caches.
-                </DialogDescription>
-              </DialogHeader>
-              <FormField className="pt-2">
-                <Label nativeID="name">Name</Label>
-                <Controller
-                  control={newControl}
-                  name="name"
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <Input
-                      aria-labelledby="name"
-                      onBlur={onBlur}
-                      onChangeText={onChange}
-                      value={value}
-                      placeholder="Enter list name"
-                      className="w-full"
-                      inputMode="text"
-                      maxLength={20}
-                    />
-                  )}
-                />
-                <FormFieldError errors={newErrors.name} />
-              </FormField>
-              <DialogFooter>
-                <FormSubmit
-                  className="flex-row gap-2"
-                  onPress={newHandleSubmit((formData) => {
-                    // TODO: Create new list
-                    console.log(formData)
-                    setNewListDialogOpen(false)
-                  })}
-                >
-                  <Plus size={16} strokeWidth={1.25} className="text-primary-foreground" />
-                  <Text>Create</Text>
-                </FormSubmit>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+          <NewListDialog open={newListDialogOpen} setOpen={setNewListDialogOpen} />
         </View>
       </ScrollView>
 
-      <Dialog
-        open={editDialogOpen}
-        onOpenChange={(open) => {
-          setEditDialogOpen(open)
-          editReset()
-        }}
-      >
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Edit list</DialogTitle>
-            <DialogDescription>
-              Edit the name of your list. (Remove caches from the list page.)
-            </DialogDescription>
-          </DialogHeader>
-          <FormField className="pt-2">
-            <Label nativeID="name">Name</Label>
-            <Controller
-              control={editControl}
-              name="name"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input
-                  aria-labelledby="name"
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  placeholder="Enter list name"
-                  className="w-full"
-                  inputMode="text"
-                  maxLength={20}
-                />
-              )}
-            />
-            <FormFieldError errors={editErrors.name} />
-          </FormField>
-          <DialogFooter>
-            <FormSubmit
-              className="flex-row gap-2"
-              onPress={editHandleSubmit((formData) => {
-                // TODO: Edit list
-                console.log(formData)
-                setEditDialogOpen(false)
-              })}
-            >
-              <SquarePen size={16} strokeWidth={1.25} className="text-primary-foreground" />
-              <Text>Edit</Text>
-            </FormSubmit>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <EditListDialog open={editDialogOpen} setOpen={setEditDialogOpen} />
 
-      <AlertDialog open={removeDialogOpen} onOpenChange={setRemoveDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your list.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter className="flex-row justify-between">
-            <AlertDialogCancel>
-              <Text>Cancel</Text>
-            </AlertDialogCancel>
-            <AlertDialogAction asChild>
-              <Button
-                variant="destructive"
-                className="flex-row gap-2 !bg-destructive"
-                onPress={() => {
-                  // TODO: Delete list
-                  console.log(selectedList)
-                }}
-              >
-                <Trash2 size={16} strokeWidth={1.25} className="text-destructive-foreground" />
-                <Text>Remove</Text>
-              </Button>
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <RemoveListDialog
+        open={removeDialogOpen}
+        setOpen={setRemoveDialogOpen}
+        selectedList={selectedList}
+      />
     </View>
   )
 }
