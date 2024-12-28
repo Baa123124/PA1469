@@ -36,66 +36,71 @@ export default function CacheDetailsScreen() {
         </TopNav>
 
         <View className="gap-4 px-6 pt-4">
-          {list?.caches.map((cache, index) => {
-            return (
-              <CacheImage
-                key={index}
-                source={{ uri: cache.photos[0] }}
-                aria-labelledby={cache.name}
-                name={cache.name}
-                href="/"
-                className="max-h-48 flex-1"
-              >
-                <DropdownMenu className="absolute right-2 top-2">
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="icon" onPress={() => {}}>
-                      <Ellipsis size={16} strokeWidth={1.25} />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-48">
-                    <Link href="/" asChild>
-                      <DropdownMenuItem>
-                        <MapPin size={16} strokeWidth={1.25} />
-                        <Text>Visit cache</Text>
+          {list?.caches
+            .slice()
+            .reverse()
+            .map((cache, index) => {
+              return (
+                <CacheImage
+                  key={index}
+                  source={{ uri: cache.photos[0] }}
+                  aria-labelledby={cache.name}
+                  name={cache.name}
+                  href="/"
+                  className="max-h-48 flex-1"
+                >
+                  <DropdownMenu className="absolute right-2 top-2">
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="icon" onPress={() => {}}>
+                        <Ellipsis size={16} strokeWidth={1.25} />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-48">
+                      <Link href="/" asChild>
+                        <DropdownMenuItem>
+                          <MapPin size={16} strokeWidth={1.25} />
+                          <Text>Visit cache</Text>
+                        </DropdownMenuItem>
+                      </Link>
+                      <DropdownMenuItem
+                        onPress={async () => {
+                          // ? Possibly use android "App Links" instead of deep links to link to play store if app isn't installed
+                          // Firebase dynamic links are being deprecated: https://firebase.google.com/support/dynamic-links-faq?hl=en&authuser=0
+                          try {
+                            await Share.open({
+                              title: cache.name,
+                              message: "Check out this cache on Xplorify: ",
+                              url: "xplorify://map?cacheId=" + cache.id,
+                            })
+                          } catch (error) {
+                            showToast({
+                              type: "error",
+                              description: "Failed to share cache. Please try again",
+                              position: "bottom",
+                            })
+                          }
+                        }}
+                      >
+                        <Share2 size={16} strokeWidth={1.25} />
+                        <Text>Share</Text>
                       </DropdownMenuItem>
-                    </Link>
-                    <DropdownMenuItem
-                      onPress={async () => {
-                        // ? Possibly use android "App Links" instead of deep links to link to play store if app isn't installed
-                        // Firebase dynamic links are being deprecated: https://firebase.google.com/support/dynamic-links-faq?hl=en&authuser=0
-                        try {
-                          await Share.open({
-                            title: cache.name,
-                            message: "Check out this cache on Xplorify: ",
-                            url: "xplorify://map?cacheId=" + cache.id,
-                          })
-                        } catch (error) {
-                          showToast({
-                            type: "error",
-                            description: "Failed to share cache. Please try again",
-                            position: "bottom",
-                          })
-                        }
-                      }}
-                    >
-                      <Share2 size={16} strokeWidth={1.25} />
-                      <Text>Share</Text>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      onPress={() => {
-                        // TODO: Remove cache from list
-                        console.log(cache.id)
-                      }}
-                    >
-                      <Trash2 size={16} strokeWidth={1.25} />
-                      <Text>Remove</Text>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </CacheImage>
-            )
-          })}
+                      {!list.locked && <DropdownMenuSeparator />}
+                      {!list.locked && (
+                        <DropdownMenuItem
+                          onPress={() => {
+                            // TODO: Remove cache from list
+                            console.log(cache.id)
+                          }}
+                        >
+                          <Trash2 size={16} strokeWidth={1.25} />
+                          <Text>Remove</Text>
+                        </DropdownMenuItem>
+                      )}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </CacheImage>
+              )
+            })}
         </View>
       </ScrollView>
     </View>

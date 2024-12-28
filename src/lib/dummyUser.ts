@@ -47,6 +47,7 @@ type List = {
   id: string
   name: string
   caches: Cache[]
+  locked?: boolean
 }
 
 type Image = {
@@ -104,49 +105,75 @@ const dummyCache: Cache = {
   reviews: [dummyReview, dummyReview, dummyReview],
 }
 
+const dummyCache2: Cache = {
+  id: Crypto.randomUUID(),
+  name: "Cache 2",
+  description: "This is a very interesting description of the cache.",
+  photos: [dummyCachePhoto2, dummyCachePhoto1, dummyCachePhoto3],
+  tags: ["City"],
+  coordinates: { latitude: 40.712776, longitude: -74.005974 },
+  rating: 4,
+  views: 100,
+  reviews: [dummyReview, dummyReview, dummyReview],
+}
+
+const dummyCache3: Cache = {
+  id: Crypto.randomUUID(),
+  name: "Cache 3",
+  description: "This is a very interesting description of the cache.",
+  photos: [dummyCachePhoto3, dummyCachePhoto2, dummyCachePhoto1],
+  tags: ["Park", "Nature", "Scenic view"],
+  coordinates: { latitude: 35.689487, longitude: 139.691711 },
+  rating: 3,
+  views: 72,
+  reviews: [dummyReview, dummyReview, dummyReview],
+}
+
 const dummyLists: List[] = [
   {
     id: Crypto.randomUUID(),
     name: "History",
     caches: [
       dummyCache,
+      dummyCache2,
+      dummyCache3,
       dummyCache,
+      dummyCache2,
+      dummyCache3,
       dummyCache,
+      dummyCache2,
+      dummyCache3,
       dummyCache,
-      dummyCache,
-      dummyCache,
-      dummyCache,
-      dummyCache,
-      dummyCache,
-      dummyCache,
-      dummyCache,
-      dummyCache,
+      dummyCache2,
+      dummyCache3,
     ],
+    locked: true,
   },
   {
     id: Crypto.randomUUID(),
     name: "Reviews",
     caches: [
       dummyCache,
+      dummyCache2,
+      dummyCache3,
       dummyCache,
+      dummyCache2,
+      dummyCache3,
       dummyCache,
-      dummyCache,
-      dummyCache,
-      dummyCache,
-      dummyCache,
-      dummyCache,
-      dummyCache,
+      dummyCache2,
+      dummyCache3,
     ],
+    locked: true,
   },
   {
     id: Crypto.randomUUID(),
     name: "Favorites",
-    caches: [dummyCache, dummyCache, dummyCache, dummyCache, dummyCache, dummyCache],
+    caches: [dummyCache, dummyCache2, dummyCache3, dummyCache, dummyCache2, dummyCache3],
   },
   {
     id: Crypto.randomUUID(),
     name: "Future journeys",
-    caches: [dummyCache, dummyCache, dummyCache],
+    caches: [dummyCache, dummyCache2, dummyCache3],
   },
 ]
 
