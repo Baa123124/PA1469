@@ -22,3 +22,4 @@ const Input = React.forwardRef<React.ElementRef<typeof TextInput>, TextInputProp
 Input.displayName = "Input"
 
 export { Input }
+export type InputRef = React.ElementRef<typeof TextInput>

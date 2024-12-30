@@ -1,123 +1,121 @@
 import * as React from "react"
 import { View } from "react-native"
-import Animated, { FadeInUp, FadeOutDown, LayoutAnimationConfig } from "react-native-reanimated"
-import { Info } from "@/lib/icons/Info"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
-import { Text } from "@/components/ui/text"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
-import { ThemeToggle } from "@/components/ThemeToggle"
 import { useSafeAreaInsetsStyle } from "@/utils/useSafeAreaInsetsStyle"
-import { Settings } from "@/lib/icons/Settings"
-import { Link } from "expo-router"
 import { useAuth } from "@/lib/auth/AuthContext"
+import { TopNav, TopNavSettingsButton } from "@/components/TopNav"
+import { dummyCache, dummyCache2, dummyCache3, dummyUser } from "@/lib/dummyUser"
+import { CacheSearchBar } from "@/components/tabs/map/CacheSearchBar"
+import { Button } from "@/components/ui/button"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { Compass } from "@/lib/icons/Compass"
+import { MapPinPlus } from "@/lib/icons/MapPinPlus"
+import { Play } from "@/lib/icons/Play"
+import { Pause } from "@/lib/icons/Pause"
+import { Badge } from "@/components/ui/badge"
+import { Text } from "@/components/ui/text"
+import { formatDistance } from "@/utils/formatDistance"
+import { ThemeToggle } from "@/components/ThemeToggle"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
-const ANONYMOUS_AVATAR_URI =
-  "https://i.pinimg.com/originals/ef/a2/8d/efa28d18a04e7fa40ed49eeb0ab660db.jpg"
+// TODO: Add map
+// TODO: Remove temporary theme toggle
+// * Save selectedCacheId to AsyncStorage (local storage) when walk is started/stopped
 
 export default function MapScreen() {
-  const [progress, setProgress] = React.useState(78)
-  const {user, logout} = useAuth()
+  const insets = useSafeAreaInsets()
+  const { user, logout } = useAuth()
+  const [walkActive, setWalkActive] = React.useState(false)
 
-  function updateProgressValue() {
-    setProgress(Math.floor(Math.random() * 100))
-  }
+  React.useEffect(() => {
+    AsyncStorage.getItem("selectedCacheId").then((cacheId) => {
+      if (cacheId) {
+        // TODO: Start walk
+        setWalkActive(true)
+      }
+    })
+  }, [])
+
+  // TODO: Get all caches witin min and max range
+  // TODO: Use geolib to get distance
+  const caches = [dummyCache, dummyCache2, dummyCache3]
+  const data = caches.map((cache) => ({
+    label: cache.name,
+    value: cache.id,
+    distance: 12000,
+    // distance: getDistance(cache.coordinates, dummyUser.coordinates),
+    // distance: getPreciseDistance(cache.coordinates, dummyUser.coordinates), // slower but more accurate
+  }))
 
   return (
     <View className="flex-1 bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
-      <View className="flex-row justify-between p-2">
+      <TopNav className="absolute gap-2" style={{ top: insets.top }}>
+        <CacheSearchBar data={data} />
+        <TopNavSettingsButton variant="outline" className="static" />
+      </TopNav>
+
+      <View className="absolute inset-0 items-center justify-center">
         <ThemeToggle />
-        <Link href="/settings" asChild>
-          <Button variant="ghost" size="icon">
-            <Settings size={16} strokeWidth={1.25} />
-          </Button>
-        </Link>
       </View>
 
-      <View className="flex-1 items-center justify-center gap-5 p-6">
-        <Card className="w-full max-w-sm rounded-2xl p-6">
-          <CardHeader className="items-center">
-            <Avatar alt="Rick Sanchez's Avatar" className="h-24 w-24">
-              <AvatarImage source={{ uri: user?.photoURL ? user.photoURL : ANONYMOUS_AVATAR_URI }} />
-              <AvatarFallback>
-                <Text>RS</Text>
-              </AvatarFallback>
-            </Avatar>
-            <View className="p-3" />
-            <CardTitle className="pb-2 text-center">{user?.displayName}</CardTitle>
-            <View className="flex-row">
-              <CardDescription className="text-base font-semibold">Scientist</CardDescription>
-              <Tooltip delayDuration={150}>
-                <TooltipTrigger className="px-2 pb-0.5 active:opacity-50">
-                  <Info size={14} strokeWidth={2.5} className="h-4 w-4 text-foreground/70" />
-                </TooltipTrigger>
-                <TooltipContent className="px-4 py-2 shadow">
-                  <Text className="native:text-lg">Freelance</Text>
-                </TooltipContent>
-              </Tooltip>
-            </View>
-          </CardHeader>
+      <View className="absolute bottom-4 items-center justify-center gap-2 self-center">
+        {walkActive && (
+          <Badge variant="outline">
+            <Text>{formatDistance(120)}</Text>
+          </Badge>
+        )}
+        <Button
+          className="items-center justify-center self-center rounded-full !px-[16px] !py-8"
+          onPress={() => {
+            if (walkActive) {
+              // TODO: Start walk
+              setWalkActive(false)
+              AsyncStorage.setItem("selectedCacheId", "")
+            } else {
+              // TODO: Stop walk
+              if (dummyUser.settings.discoveryMode) {
+                // TODO: Select random walk
+                AsyncStorage.setItem("selectedCacheId", dummyCache.id)
+              }
+              setWalkActive(true)
+            }
+          }}
+          disabled={!walkActive && !dummyUser.settings.discoveryMode}
+        >
+          {walkActive ? (
+            <Pause
+              size={24}
+              strokeWidth={1.25}
+              className="fill-primary-foreground text-primary-foreground"
+            />
+          ) : (
+            <Play
+              size={24}
+              strokeWidth={1.25}
+              className="fill-primary-foreground text-primary-foreground"
+            />
+          )}
+        </Button>
+      </View>
 
-          <CardContent>
-            <View className="flex-row justify-around gap-3">
-              <View className="items-center">
-                <Text className="text-sm text-muted-foreground">Dimension</Text>
-                <Text className="text-xl font-semibold">C-137</Text>
-              </View>
-              <View className="items-center">
-                <Text className="text-sm text-muted-foreground">Age</Text>
-                <Text className="text-xl font-semibold">70</Text>
-              </View>
-              <View className="items-center">
-                <Text className="text-sm text-muted-foreground">Species</Text>
-                <Text className="text-xl font-semibold">Human</Text>
-              </View>
-            </View>
-          </CardContent>
-
-          <CardFooter className="flex-col gap-3 pb-0">
-            <View className="flex-row items-center overflow-hidden">
-              <Text className="text-sm text-muted-foreground">Productivity:</Text>
-              <LayoutAnimationConfig skipEntering>
-                <Animated.View
-                  key={progress}
-                  entering={FadeInUp}
-                  exiting={FadeOutDown}
-                  className="w-11 items-center"
-                >
-                  <Text className="text-sm font-bold text-sky-600">{progress}%</Text>
-                </Animated.View>
-              </LayoutAnimationConfig>
-            </View>
-            <Progress value={progress} className="h-2" indicatorClassName="bg-sky-600" />
-            <View />
-            <View className="flex flex-row gap-2">
-              <Button
-                variant="outline"
-                className="shadow shadow-foreground/5"
-                onPress={updateProgressValue}
-              >
-                <Text>Update</Text>
-              </Button>
-              <Button
-                variant="outline"
-                className="shadow shadow-foreground/5"
-                onPress={logout}
-              >
-                <Text>Logout</Text>
-              </Button>
-            </View>
-          </CardFooter>
-        </Card>
+      <View className="absolute bottom-4 right-4 gap-2">
+        <Button
+          variant="outline"
+          size="icon"
+          onPress={() => {
+            // TODO: Toggle map compass thing if possible
+          }}
+        >
+          <Compass size={16} strokeWidth={1.25} />
+        </Button>
+        <Button
+          variant="outline"
+          size="icon"
+          onPress={() => {
+            // TODO: Open new cache dialog
+          }}
+        >
+          <MapPinPlus size={16} strokeWidth={1.25} />
+        </Button>
       </View>
     </View>
   )

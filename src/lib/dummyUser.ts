@@ -21,6 +21,7 @@ type User = {
   settings: Settings
   reviews: Review[]
   lists: List[]
+  coordinates: { latitude: number; longitude: number }
 }
 
 type Cache = {
@@ -191,12 +192,13 @@ const dummyUser: User = {
     theme: "system",
     minCacheRange: 0,
     maxCacheRange: 10,
-    discoveryMode: false,
+    discoveryMode: true,
   },
   cachesVisited: 56,
   streak: 3,
   reviews: [dummyReview, dummyReview, dummyReview],
   lists: dummyLists,
+  coordinates: { latitude: 62.918161, longitude: 18.643501 },
 }
 
 export {
@@ -204,6 +206,8 @@ export {
   dummyAvatar,
   dummyBanner,
   dummyCache,
+  dummyCache2,
+  dummyCache3,
   dummyReview,
   dummyLists,
   dummyAvatarRaw,
