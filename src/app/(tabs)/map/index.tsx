@@ -16,6 +16,10 @@ import { Text } from "@/components/ui/text"
 import { formatDistance } from "@/utils/formatDistance"
 import { ThemeToggle } from "@/components/ThemeToggle"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { CacheReachedDialog } from "@/components/tabs/map/CacheReachedDialog"
+import { ReviewCacheDialog } from "@/components/tabs/map/ReviewCacheDialog"
+import { SaveCacheDialog } from "@/components/tabs/map/SaveCacheDialog"
+import { NewCacheDialog } from "@/components/tabs/map/NewCacheDialog"
 
 // TODO: Add map
 // TODO: Remove temporary theme toggle
@@ -25,12 +29,18 @@ export default function MapScreen() {
   const insets = useSafeAreaInsets()
   const { user, logout } = useAuth()
   const [walkActive, setWalkActive] = React.useState(false)
+  const [selectedCacheId, setSelectedCacheId] = React.useState("")
+  const [cacheReachedOpen, setCacheReachedOpen] = React.useState(false)
+  const [saveCacheOpen, setSaveCacheOpen] = React.useState(false)
+  const [reviewCacheOpen, setReviewCacheOpen] = React.useState(false)
+  const [newCacheOpen, setNewCacheOpen] = React.useState(false)
 
   React.useEffect(() => {
     AsyncStorage.getItem("selectedCacheId").then((cacheId) => {
       if (cacheId) {
         // TODO: Start walk
         setWalkActive(true)
+        setSelectedCacheId(cacheId)
       }
     })
   }, [])
@@ -53,8 +63,27 @@ export default function MapScreen() {
         <TopNavSettingsButton variant="outline" className="static" />
       </TopNav>
 
-      <View className="absolute inset-0 items-center justify-center">
+      <View className="absolute inset-0 items-center justify-center gap-2">
         <ThemeToggle />
+        <CacheReachedDialog
+          open={cacheReachedOpen}
+          setOpen={setCacheReachedOpen}
+          setSaveOpen={setSaveCacheOpen}
+          setReviewOpen={setReviewCacheOpen}
+          cacheId={selectedCacheId}
+          streak={dummyUser.streak}
+        />
+        <ReviewCacheDialog
+          open={reviewCacheOpen}
+          setOpen={setReviewCacheOpen}
+          cacheId={selectedCacheId}
+        />
+        <SaveCacheDialog
+          open={saveCacheOpen}
+          setOpen={setSaveCacheOpen}
+          cacheId={selectedCacheId}
+          lists={dummyUser.lists}
+        />
       </View>
 
       <View className="absolute bottom-4 items-center justify-center gap-2 self-center">
@@ -75,6 +104,7 @@ export default function MapScreen() {
               if (dummyUser.settings.discoveryMode) {
                 // TODO: Select random walk
                 AsyncStorage.setItem("selectedCacheId", dummyCache.id)
+                setSelectedCacheId(dummyCache.id)
               }
               setWalkActive(true)
             }
@@ -107,16 +137,12 @@ export default function MapScreen() {
         >
           <Compass size={16} strokeWidth={1.25} />
         </Button>
-        <Button
-          variant="outline"
-          size="icon"
-          onPress={() => {
-            // TODO: Open new cache dialog
-          }}
-        >
+        <Button variant="outline" size="icon" onPress={() => setNewCacheOpen(true)}>
           <MapPinPlus size={16} strokeWidth={1.25} />
         </Button>
       </View>
+
+      <NewCacheDialog open={newCacheOpen} setOpen={setNewCacheOpen} />
     </View>
   )
 }
