@@ -1,7 +1,8 @@
-import { FormField, FormFieldError, FormSubmit } from "@/components/Form"
+import { Form, FormField, FormFieldError, FormSubmit } from "@/components/Form"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -61,33 +62,43 @@ const NewListDialog = React.forwardRef<DialogRef, NewListDialogProps>(
               Create a new list to save and keep track of caches.
             </DialogDescription>
           </DialogHeader>
-          <FormField className="pt-2">
-            <Label nativeID="name">Name</Label>
-            <Controller
-              control={newControl}
-              name="name"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input
-                  aria-labelledby="name"
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  placeholder="Enter list name"
-                  className="w-full"
-                  inputMode="text"
-                  maxLength={20}
-                />
-              )}
-            />
-            <FormFieldError errors={newErrors.name} />
-          </FormField>
-          <DialogFooter>
+
+          <Form>
+            <FormField>
+              <Label nativeID="name">Name</Label>
+              <Controller
+                control={newControl}
+                name="name"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input
+                    aria-labelledby="name"
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    value={value}
+                    placeholder="Enter list name"
+                    className="w-full"
+                    inputMode="text"
+                    maxLength={20}
+                  />
+                )}
+              />
+              <FormFieldError errors={newErrors.name} />
+            </FormField>
+          </Form>
+
+          <DialogFooter className="flex-row justify-between">
+            <DialogClose asChild>
+              <Button variant="outline">
+                <Text>Cancel</Text>
+              </Button>
+            </DialogClose>
             <FormSubmit
-              className="flex-row gap-2"
+              className="w-auto flex-row gap-2"
               onPress={newHandleSubmit((formData) => {
                 // TODO: Create new list
                 console.log(formData)
                 setOpen(false)
+                newReset()
               })}
             >
               <Plus size={16} strokeWidth={1.25} className="text-primary-foreground" />
