@@ -1,6 +1,8 @@
-import { FormField, FormFieldError, FormSubmit } from "@/components/Form"
+import { Form, FormField, FormFieldError, FormSubmit } from "@/components/Form"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -50,36 +52,46 @@ const EditListDialog = React.forwardRef<DialogRef, EditListDialogProps>(
           <DialogHeader>
             <DialogTitle>Edit list</DialogTitle>
             <DialogDescription>
-              Edit the name of your list. (Remove caches from the list page.)
+              Edit the name of your list. (Remove caches from the list page)
             </DialogDescription>
           </DialogHeader>
-          <FormField className="pt-2">
-            <Label nativeID="name">Name</Label>
-            <Controller
-              control={editControl}
-              name="name"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input
-                  aria-labelledby="name"
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  placeholder="Enter list name"
-                  className="w-full"
-                  inputMode="text"
-                  maxLength={20}
-                />
-              )}
-            />
-            <FormFieldError errors={editErrors.name} />
-          </FormField>
-          <DialogFooter>
+
+          <Form>
+            <FormField>
+              <Label nativeID="name">Name</Label>
+              <Controller
+                control={editControl}
+                name="name"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input
+                    aria-labelledby="name"
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    value={value}
+                    placeholder="Enter list name"
+                    className="w-full"
+                    inputMode="text"
+                    maxLength={20}
+                  />
+                )}
+              />
+              <FormFieldError errors={editErrors.name} />
+            </FormField>
+          </Form>
+
+          <DialogFooter className="flex-row justify-between">
+            <DialogClose asChild>
+              <Button variant="outline">
+                <Text>Cancel</Text>
+              </Button>
+            </DialogClose>
             <FormSubmit
-              className="flex-row gap-2"
+              className="w-auto flex-row gap-2"
               onPress={editHandleSubmit((formData) => {
                 // TODO: Edit list
                 console.log(formData)
                 setOpen(false)
+                editReset()
               })}
             >
               <SquarePen size={16} strokeWidth={1.25} className="text-primary-foreground" />
