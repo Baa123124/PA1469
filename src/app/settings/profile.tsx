@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { goBack } from "@/utils/goBack"
 import { Form, FormField, FormFieldError, FormSubmit } from "@/components/Form"
-import { dummyUser } from "@/lib/dummyUser"
+import { dummyAvatarRaw, dummyBannerRaw, dummyUser } from "@/lib/dummyUser"
 import { Textarea } from "@/components/ui/textarea"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { AutoImage } from "@/components/AutoImage"
@@ -28,8 +28,8 @@ export default function ProfileSettingsScreen() {
     defaultValues: {
       displayName: dummyUser.displayName,
       description: dummyUser.description,
-      avatar: dummyUser.avatar,
-      banner: dummyUser.banner,
+      avatar: dummyAvatarRaw,
+      banner: dummyBannerRaw,
     },
   })
 
@@ -45,7 +45,7 @@ export default function ProfileSettingsScreen() {
   }
 
   return (
-    <View className="flex-1 gap-8 bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
+    <View className="flex-1 gap-4 bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
       <TopNav>
         <TopNavBackButton />
         <TopNavRoute>Profile</TopNavRoute>

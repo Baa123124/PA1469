@@ -13,7 +13,7 @@
 
 - The code in `src/app/(tabs)/_layout.tsx` is a combination of [React Native Reusables](https://github.com/mrzachnugent/react-native-reusables/blob/main/packages/templates/starter-base/app/_layout.tsx) and [Ignite](https://github.com/infinitered/ignite/blob/master/boilerplate/src/app/_layout.tsx).
 
-- The **passwordSchema** in `src/app/(auth)/schema.ts` is adapted from a [GitHub discussion](https://github.com/colinhacks/zod/discussions/3412), published June 30, 2024.
+- The **passwordSchema** in `src/app/lib/authSchema` is adapted from a [GitHub discussion](https://github.com/colinhacks/zod/discussions/3412), published June 30, 2024.
 
 - The **form validation** in `src/app/(auth)/login.tsx` and `src/app/(auth)/signup.tsx` was implemented with insights from this blog post:
   [Building a Robust Form in React Native](https://medium.com/@rutikpanchal121/building-a-robust-form-in-react-native-with-react-hook-form-and-zod-for-validation-7583678970c3) by _Rutikpanchal_, published September 11, 2024.
@@ -27,3 +27,5 @@
 - The individual settings screens were inspired by [Snapchat Android](https://play.google.com/store/apps/details?id=com.snapchat.android&hl=en-US).
 
 - The `src/app/profile/[id].tsx` screen was inspired by [Profile Page](https://dribbble.com/shots/23681946-Profile-Page) by _Vishnu Prasad_ on Dribbble.
+
+- The **table**, **dropdown-menu**, **dialog**, and **alert-dialog** in `src/app/(tabs)/caches/index` is adapted from the React Native Reusables documentation: [Table](https://rnr-docs.vercel.app/components/table/), [Dropdown Menu](https://rnr-docs.vercel.app/components/dropdown-menu/), [Dialog](https://rnr-docs.vercel.app/components/dialog/), and [Alert Dialog](https://rnr-docs.vercel.app/components/alert-dialog/).

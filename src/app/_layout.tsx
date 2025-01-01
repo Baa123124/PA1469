@@ -55,7 +55,7 @@ export default function RootLayout() {
       }
 
       // theme: light | dark | system = stored user preference
-      const theme = dummyUser.theme // default is system
+      const theme = dummyUser.settings.theme // default is system
 
       // If new user, set theme to system
       if (!theme) {
@@ -91,8 +91,8 @@ export default function RootLayout() {
             <AuthProvider>
               <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
               <Slot />
-              <PortalHost />
               <Toast config={toastConfig(isDarkColorScheme ? darkTheme : lightTheme)} />
+              <PortalHost />
             </AuthProvider>
           </KeyboardProvider>
         </GestureHandlerRootView>

@@ -7,6 +7,8 @@ import { TabBarButton } from "../../components/tabs/TabBarButton"
 import ProtectedScreen from "@/lib/auth/ProtectedScreen"
 import { useAuth } from "@/lib/auth/AuthContext"
 
+// unMountOnBlur fix: https://github.com/react-navigation/react-navigation/issues/11720#issuecomment-2430829754
+
 export default function TabLayout() {
   const { user } = useAuth()
 
@@ -21,8 +23,9 @@ export default function TabLayout() {
         tabBar={(props) => <BottomTabBar {...props} />}
       >
         <Tabs.Screen
-          name="caches/index"
+          name="caches"
           options={{
+            unmountOnBlur: true,
             tabBarIcon: ({ focused }) => (
               <TabBarButton icon={Bookmark} focused={focused} href={"/caches"} />
             ),
@@ -31,6 +34,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="map/index"
           options={{
+            unmountOnBlur: true,
             tabBarIcon: ({ focused }) => (
               <TabBarButton icon={MapPin} focused={focused} href={"/map"} />
             ),
@@ -39,6 +43,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="profile/[id]"
           options={{
+            unmountOnBlur: true,
             tabBarIcon: ({ focused }) => (
               <TabBarButton icon={User} focused={focused} href={`/profile/${user?.uid}` as Href} />
             ),
