@@ -23,3 +23,7 @@
 - The `src/components/ui/image-picker` was implemented with insights from the [Expo ImagePicker](https://docs.expo.dev/versions/latest/sdk/imagepicker/) documentation.
 
 - The `src/app/settings/index.tsx` screen was inspired by [Account settings for Uscreen](https://dribbble.com/shots/24363948-Account-settings-for-Uscreen) by _Danilo Tanic_ on Dribbble.
+
+- The individual settings screens were inspired by [Snapchat Android](https://play.google.com/store/apps/details?id=com.snapchat.android&hl=en-US).
+
+- The `src/app/profile/[id].tsx` screen was inspired by [Profile Page](https://dribbble.com/shots/23681946-Profile-Page) by _Vishnu Prasad_ on Dribbble.

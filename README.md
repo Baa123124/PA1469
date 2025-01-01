@@ -130,7 +130,7 @@ This is a great place to put miscellaneous helpers and utilities. Things like da
 
 <br/>
 
-## Firebase Authentication Setup for Android
+### Firebase Authentication Setup for Android
 
 1. Go to the [Firebase Console](https://console.firebase.google.com/) and **create a new Firebase project**.
 2. Register an Android app with the following:
@@ -143,36 +143,46 @@ This is a great place to put miscellaneous helpers and utilities. Things like da
      ```
      Copy the <Strong>first</strong> SHA-1 key and paste it into Firebase.
 3. Download the google-services.json and place it into the root of this project.
-4. Enable google signin and email signin. 
+4. Enable google signin and email signin.
 5. Copy client id from your google-services.json -> client -> oauth_client -> {
-  "client_id": "copy",
-  "client_type": 3
-} 
-paste into a .env in root as EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID="id".
+   "client_id": "copy",
+   "client_type": 3
+   }
+   paste into a .env in root as EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID="id".
 6. `npx expo prebuild --clean`
 7. Start the app with `npm run android`
-- NOTE: If you experience a developer error when using google signin, make sure that the key is up to date with your current build.
-<br/>
 
-## Firebase Authentication Setup for IOS
+- NOTE: If you experience a developer error when using google signin, make sure that the key is up to date with your current build.
+  <br/>
+
+### Firebase Authentication Setup for IOS
 
 Not setup
 
 <br/>
 
-## Debug Tips
+### Build apk
+
+1. `npm run prebuild:clean`
+2. `npm run android:prod` (release/prod) or `npm run android` (debug/dev)
+3. This will open the emulator and the app automatically
+4. You can find the apk in `android/app/build/outputs/apk/release` or `android/app/build/outputs/apk/debug`
+5. To test manually, drag and drop the apk onto the emulator
+
+<br/>
+
+### Debug Tips
 
 1. Install [Android Studio](https://reactnative.dev/docs/set-up-your-environment)
-2. Make sure you are using openjdk version 22 or below
-3. Delete `.expo`
-4. Delete `android`
-5. Delete `node_modules`
-6. `npm cache clean --force`
-7. `npm run install --force`
-8. `npm run postinstall`
-9. `npm run adb`
-10. `npm run android`
-11. Test starting the emulator manually: `C:\Users\<user>\AppData\Local\Android\Sdk/emulator/emulator -avd Medium_Phone_API_3`
+2. Delete `.expo`
+3. Delete `android`
+4. Delete `node_modules`
+5. `npm cache clean --force`
+6. `npm install --force`
+7. `npm run postinstall`
+8. `npm run adb`
+9. `npm run android`
+10. Test starting the emulator manually: `C:\Users\<user>\AppData\Local\Android\Sdk/emulator/emulator -avd Medium_Phone_API_3`
 
 <br/>
 
@@ -180,4 +190,3 @@ Not setup
 
 - Add database
 - Add Github workflow
-- Add xplorify app icon and splash screen

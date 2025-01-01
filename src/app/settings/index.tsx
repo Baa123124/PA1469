@@ -13,8 +13,8 @@ import { SquarePen } from "@/lib/icons/SquarePen"
 import { useSafeAreaInsetsStyle } from "@/utils/useSafeAreaInsetsStyle"
 import { useState } from "react"
 import { View } from "react-native"
-import { TopNav } from "@/components/TopNav"
-import { Settings, SettingsGroup, SettingsField } from "./(components)/Settings"
+import { TopNav, TopNavBackButton } from "@/components/TopNav"
+import { Settings, SettingsGroup, SettingsField } from "@/components/settings/Settings"
 import { Link } from "expo-router"
 import { useAuth } from "@/lib/auth/AuthContext"
 // TODO: Change dummyUser to actual user
@@ -27,7 +27,8 @@ export default function SettingsScreen() {
   return (
     <View className="flex-1 gap-8 bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
       <TopNav className="justify-between">
-        <Button onPress={logout} variant="ghost" className="flex-row items-center gap-2">
+        <TopNavBackButton />
+        <Button onPress={logout} variant="ghost" className="ml-auto flex-row items-center gap-2">
           <LogOut size={16} className="text-destructive" strokeWidth={1.25} />
           <Text className="!text-destructive">Log out</Text>
         </Button>
@@ -35,7 +36,7 @@ export default function SettingsScreen() {
 
       <View className="items-center justify-center gap-4">
         <Avatar alt="profile avatar" className="h-24 w-24">
-          <AvatarImage source={dummyUser.avatar} />
+          <AvatarImage source={{ uri: user?.photoURL ?? dummyUser.avatar.uri }} />
           <AvatarFallback>
             <Text>Avatar</Text>
           </AvatarFallback>

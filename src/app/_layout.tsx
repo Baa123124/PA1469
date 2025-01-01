@@ -16,6 +16,8 @@ import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-c
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { dummyUser } from "@/lib/dummyUser"
 import { AuthProvider } from "@/lib/auth/AuthContext"
+import Toast from "react-native-toast-message"
+import { toastConfig } from "@/components/ui/toast"
 
 SplashScreen.preventAutoHideAsync()
 
@@ -39,7 +41,7 @@ export default function RootLayout() {
   // to auth info etc
   const { rehydrated } = useInitialRootStore()
 
-  // * colorScheme: light | dark = current system color theme
+  // colorScheme: light | dark = current system color theme
   const { colorScheme, setColorScheme, isDarkColorScheme } = useColorScheme()
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = useState(false)
 
@@ -52,10 +54,10 @@ export default function RootLayout() {
         document.documentElement.classList.add("bg-background")
       }
 
-      // * theme: light | dark | system = stored user preference
+      // theme: light | dark | system = stored user preference
       const theme = dummyUser.theme // default is system
 
-      // * If new user, set theme to system
+      // If new user, set theme to system
       if (!theme) {
         AsyncStorage.setItem("theme", "system")
         setColorScheme(colorScheme)
@@ -90,6 +92,7 @@ export default function RootLayout() {
               <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
               <Slot />
               <PortalHost />
+              <Toast config={toastConfig(isDarkColorScheme ? darkTheme : lightTheme)} />
             </AuthProvider>
           </KeyboardProvider>
         </GestureHandlerRootView>

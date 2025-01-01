@@ -1,10 +1,10 @@
-import { TopNav, TopNavRoute } from "@/components/TopNav"
+import { TopNav, TopNavBackButton, TopNavRoute } from "@/components/TopNav"
 import { Text } from "@/components/ui/text"
 import { useSafeAreaInsetsStyle } from "@/utils/useSafeAreaInsetsStyle"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import { View } from "react-native"
-import { ProfileSchema, profileSchema } from "./(data)/schemas"
+import { ProfileSchema, profileSchema } from "@/lib/settingsSchema"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { goBack } from "@/utils/goBack"
@@ -14,6 +14,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { AutoImage } from "@/components/AutoImage"
 import { ImagePicker } from "@/components/ui/image-picker"
+import { showToast } from "@/components/ui/toast"
 
 // TODO: Change dummyUser to actual user
 
@@ -36,12 +37,17 @@ export default function ProfileSettingsScreen() {
     console.log(formData)
     goBack()
     // TODO: Update user settings
-    // TODO: Add success toast
+    showToast({
+      type: "success",
+      description: "Profile updated successfully",
+      position: "bottom",
+    })
   }
 
   return (
     <View className="flex-1 gap-8 bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
       <TopNav>
+        <TopNavBackButton />
         <TopNavRoute>Profile</TopNavRoute>
       </TopNav>
 

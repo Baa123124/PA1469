@@ -1,12 +1,15 @@
-import { Tabs } from "expo-router"
+import { Href, Tabs } from "expo-router"
 import { Bookmark } from "@/lib/icons/Bookmark"
 import { MapPin } from "@/lib/icons/MapPin"
 import { User } from "@/lib/icons/User"
 import { BottomTabBar } from "@react-navigation/bottom-tabs"
-import { TabBarButton } from "./(components)/TabBarButton"
+import { TabBarButton } from "../../components/tabs/TabBarButton"
 import ProtectedScreen from "@/lib/auth/ProtectedScreen"
+import { useAuth } from "@/lib/auth/AuthContext"
 
 export default function TabLayout() {
+  const { user } = useAuth()
+
   return (
     <ProtectedScreen>
       <Tabs
@@ -34,10 +37,10 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="profile/index"
+          name="profile/[id]"
           options={{
             tabBarIcon: ({ focused }) => (
-              <TabBarButton icon={User} focused={focused} href={"/profile"} />
+              <TabBarButton icon={User} focused={focused} href={`/profile/${user?.uid}` as Href} />
             ),
           }}
         />
