@@ -79,6 +79,7 @@
     "react-native-config": "^1.5.3",
     "react-native-drawer-layout": "4.0.0-alpha.9",
     "react-native-gesture-handler": "~2.16.1",
+    "react-native-image-zoom-viewer": "^3.0.1",
     "react-native-keyboard-controller": "^1.12.7",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-maps": "^1.20.1",

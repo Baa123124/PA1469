@@ -51,7 +51,6 @@ const CacheInfoModal: React.FC<CacheInfoModalProps> = ({
 }) => {
   const modalizeRef = useRef<Modalize>(null);
 
-  // 1. Open/close the Modalize when `modalVisible` changes
   useEffect(() => {
     if (modalVisible) {
       modalizeRef.current?.open();
@@ -60,7 +59,6 @@ const CacheInfoModal: React.FC<CacheInfoModalProps> = ({
     }
   }, [modalVisible]);
 
-  // 2. The “content” that goes inside Modalize
   const renderContent = () => {
     return (
       <View style={styles.contentContainer}>
@@ -108,7 +106,6 @@ const CacheInfoModal: React.FC<CacheInfoModalProps> = ({
               <Button
                 title="Select cache as destination"
                 onPress={() => {
-                  closeModal();
                   setSelectedGoToCache(selectedCacheData.id);
                 }}
                 color="#4285F4"
@@ -117,7 +114,6 @@ const CacheInfoModal: React.FC<CacheInfoModalProps> = ({
               <Button
                 title="Cancel"
                 onPress={() => {
-                  closeModal();
                   setSelectedGoToCache('');
                 }}
                 color="#CC5555"

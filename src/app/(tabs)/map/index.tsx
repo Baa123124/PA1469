@@ -49,7 +49,7 @@ const temp_marker_data = [
           "https://picsum.photos/300/200?random=5",
           "https://picsum.photos/300/200?random=7",
         ],
-        description: `This is a very detailed description of marker C. Marker C has truly been a special marker to me and my friend as we often travel to this location to think of old memories. It is also to test the size limit of the container's scroll feature.`,
+        description: `This is a very detailed description of marker C. Marker C has truly been a special marker to me and my friend as we often travel to this location to think of old memories. It is also to test the size limit of the container's scroll feature. Marker C has truly been a special marker to me and my friend as we often travel to this location to think of old memories. It is also to test the size limit of the container's scroll feature Marker C has truly been a special marker to me and my friend as we often travel to this location to think of old memories. It is also to test the size limit of the container's scroll feature Marker C has truly been a special marker to me and my friend as we often travel to this location to think of old memories. It is also to test the size limit of the container's scroll feature Marker C has truly been a special marker to me and my friend as we often travel to this location to think of old memories. It is also to test the size limit of the container's scroll feature.`,
         comments: [
           {
             creatorID: "user456",
@@ -77,7 +77,6 @@ const temp_marker_data = [
       date: new Date("2024-03-05"),
       info: {
         pictures: [
-          "https://picsum.photos/300/200?random=7",
           "https://picsum.photos/300/200?random=8",
         ],
         description: "Cache B offers a peaceful retreat away from the city noise.",
