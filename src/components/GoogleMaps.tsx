@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+
 import {
   View,
   Text,
@@ -18,44 +19,41 @@ import { getDistance } from 'geolib';
 import { useColorScheme } from '@/lib/useColorScheme';
 import CacheInfoModal from '@/components/CacheInfoModal';
 
-interface Comment {
-  creatorID: string;
-  userName: string;
-  titel: string;
-  avatarURL: string;
-  description: string;
-  date: Date;
-  raiting: number;
-  picture: string;
+type Review = {
+  id: string
+  rating: 1 | 2 | 3 | 4 | 5
+  comment: string
+  createdAt: Date
+  photo: string
 }
 
-interface CacheData {
-  label: string;
-  id: string;
-  name: string;
-  rating: number;
-  views: number;
-  type: string;
-  date: Date;
-  info: {
-    pictures: string[];
-    description: string;
-    comments: Comment[];
-  };
+type CacheData = {
+  creatorId: string
+  name: string
+  description: string
+  photos: string[]
+  tags: string[] // exclude
+  rating: number
+  views: number
+  reviews: Review[]
 }
 
 interface Cache {
-  coordinates: { latitude: number; longitude: number };
-  data: CacheData;
+  id: string
+  coordinates: { latitude: number; longitude: number }
+  data: CacheData
 }
 
 interface MapScreenProps {
-  allCachesInit: Cache[];
+  allCaches: Cache[];
   displayCaches: string[];
-  selectedGoToCache: string;
-  setSelectedGoToCache: React.Dispatch<React.SetStateAction<string>>;
+  selectedGoToCacheId: string;
+  setSelectedGoToCacheId: React.Dispatch<React.SetStateAction<string>>;
   goalReached: boolean;
   setGoalReached: React.Dispatch<React.SetStateAction<boolean>>;
+  setDistanceToGoal?: React.Dispatch<React.SetStateAction<number | null>>;
+  addingCache: boolean,
+  getNewCacheCoord: (coord: LatLng) => void
 }
 
 const darkModeMap = [
@@ -196,15 +194,16 @@ const initialRegion = {
 };
 
 const MapScreen: React.FC<MapScreenProps> = ({
-  allCachesInit,
+  allCaches,
   displayCaches,
-  selectedGoToCache,
-  setSelectedGoToCache,
+  selectedGoToCacheId,
+  setSelectedGoToCacheId,
   goalReached,
   setGoalReached,
+  setDistanceToGoal,
+  addingCache,
+  getNewCacheCoord
 }) => {
-  const [allCaches, setAllCaches] = useState<Cache[] | null>(allCachesInit || null);
-  const [isAddingCache, setIsAddingCache] = useState<boolean>(false);
   const [currentUserLocation, setCurrentUserLocation] = useState<LatLng | null>(null);
 
   const [newMarkerPosition, setNewMarkerPosition] = useState<LatLng>({
@@ -212,6 +211,11 @@ const MapScreen: React.FC<MapScreenProps> = ({
     longitude: initialRegion.longitude,
   });
 
+  useEffect(() => {
+    getNewCacheCoord(newMarkerPosition)
+  }, [newMarkerPosition])
+
+  const [selectedGoToCache, setSelectedGoToCache] = useState<Cache | null>(null)
   const [favorites, setFavorites] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
@@ -220,12 +224,8 @@ const MapScreen: React.FC<MapScreenProps> = ({
 
   const { isDarkColorScheme } = useColorScheme();
 
-  /**
-   * Keep marker position in sync with the user’s current location
-   * if they are adding a new cache.
-   */
   useEffect(() => {
-    if (isAddingCache) {
+    if (addingCache) {
       setNewMarkerPosition(
         currentUserLocation || {
           latitude: initialRegion.latitude,
@@ -233,7 +233,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
         }
       );
     }
-  }, [isAddingCache, currentUserLocation]);
+  }, [addingCache]);
 
   /**
    * Request or check location permission on mount.
@@ -295,23 +295,39 @@ const MapScreen: React.FC<MapScreenProps> = ({
         ? { latitude: coordinate.latitude, longitude: coordinate.longitude }
         : null
     );
+  };
 
-    if (!coordinate || !selectedCache) return;
+  useEffect(() => {
+
+    if(!selectedGoToCache) {
+      if(setDistanceToGoal)
+        setDistanceToGoal(null);
+    }
+
+    if (!currentUserLocation || !selectedGoToCache) return;
 
     // Calculate distance in meters
     const distanceInMeters = getDistance(
-      { latitude: coordinate.latitude, longitude: coordinate.longitude },
+      currentUserLocation,
       {
-        latitude: selectedCache.coordinates.latitude,
-        longitude: selectedCache.coordinates.longitude,
+        latitude: selectedGoToCache.coordinates.latitude,
+        longitude: selectedGoToCache.coordinates.longitude,
       }
     );
+    if(setDistanceToGoal)
+      setDistanceToGoal(distanceInMeters);
 
     // Check if within 50 meters
     if (distanceInMeters <= 50) {
       setGoalReached(true);
     }
-  };
+  }, [currentUserLocation, selectedGoToCache])
+
+  useEffect(() => {
+    const selectedCache = allCaches.find((cache) => cache.id === selectedGoToCacheId);
+    setSelectedGoToCache(selectedCache || null);
+    
+  }, [selectedGoToCacheId])
 
   /**
    * Toggle a cache as favorite or remove it from favorites.
@@ -333,19 +349,10 @@ const MapScreen: React.FC<MapScreenProps> = ({
   };
 
   /**
-   * (Optional) Could be used to finalize placing a marker before
-   * transitioning to another screen or form.
-   */
-  const handleFinalizeMarkerPlacement = () => {
-    setIsAddingCache(false);
-    // Continue to marker creation page...
-  };
-
-  /**
    * Filter caches that should be visible on the map.
    */
   const cachesToDisplay = allCaches?.filter((cache) =>
-    displayCaches.includes(cache.data.id)
+    displayCaches.includes(cache.id)
   );
 
   /**
@@ -375,7 +382,8 @@ const MapScreen: React.FC<MapScreenProps> = ({
 
   return (
     <View style={styles.container}>
-      <MapView
+      {locationPermissionGranted && !loading && <MapView
+        toolbarEnabled={false}
         provider={PROVIDER_GOOGLE}
         style={styles.map}
         initialRegion={initialRegion}
@@ -383,25 +391,26 @@ const MapScreen: React.FC<MapScreenProps> = ({
         showsUserLocation
         onUserLocationChange={handleUserLocationChange}
       >
-        {!isAddingCache ? (
+        {!addingCache ? (
           cachesToDisplay?.map((cache) => {
-            const isSelected = selectedGoToCache === cache.data.id;
+            const isSelected = selectedGoToCacheId === cache.id;
             return (
               <Marker
-                key={cache.data.id}
+                stopPropagation={true}
+                key={cache.id}
                 coordinate={cache.coordinates}
-                pinColor={favorites.includes(cache.data.id) ? '#FFD700' : '#00FF00'}
+                pinColor={favorites.includes(cache.id) ? '#FFD700' : '#00FF00'}
                 style={{
                   opacity:
-                    selectedGoToCache !== ''
+                    selectedGoToCacheId !== ''
                       ? isSelected
                         ? 1
-                        : 0.5
+                        : 0.2
                       : 1,
                   transform: [
                     {
                       scale:
-                        selectedGoToCache !== ''
+                        selectedGoToCacheId !== ''
                           ? isSelected
                             ? 1.5
                             : 0.8
@@ -410,7 +419,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
                   ],
                 }}
                 onPress={
-                  selectedGoToCache === '' || isSelected
+                  selectedGoToCacheId === '' || isSelected
                     ? () => handleMarkerPress(cache)
                     : () => {}
                 }
@@ -419,20 +428,24 @@ const MapScreen: React.FC<MapScreenProps> = ({
           })
         ) : (
           <Marker
+            stopPropagation={true}
             coordinate={newMarkerPosition}
             draggable
             onDragEnd={handleMarkerDragEnd}
           />
         )}
-      </MapView>
+      </MapView>}
 
       {selectedCache && (
         <CacheInfoModal
           modalVisible={modalVisible}
-          selectedCacheData={selectedCache.data}
+          selectedCacheData={{
+            ...selectedCache.data,
+            cacheId: selectedCache.id
+          }}
           closeModal={handleCloseModal}
-          selectedGoToCache={selectedGoToCache}
-          setSelectedGoToCache={setSelectedGoToCache}
+          selectedGoToCache={selectedGoToCacheId}
+          setSelectedGoToCache={setSelectedGoToCacheId}
         />
       )}
     </View>

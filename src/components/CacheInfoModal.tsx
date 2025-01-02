@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage"
 import React, { useRef, useEffect } from 'react';
 import { 
   View, Text, Button, ScrollView,
@@ -11,27 +12,24 @@ import { MapPin } from "@/lib/icons/MapPin";
 import { Eye } from "@/lib/icons/ViewsIcon";
 import { Star } from "@/lib/icons/RaitingIcon";
 
-interface Comment {
-  creatorID: string;
-  userName: string;
-  titel: string;
-  avatarURL: string;
-  description: string;
-  date: Date;
-  raiting: number;
-  picture: string;
+type Review = {
+  id: string
+  rating: 1 | 2 | 3 | 4 | 5
+  comment: string
+  createdAt: Date
+  photo: string
 }
 
-interface CacheData {
-  id: string;
-  name: string;
-  views: number;
-  rating: number;
-  info: {
-    description: string;
-    pictures: string[];
-    comments: Comment[];
-  };
+type CacheData = {
+  cacheId: string,
+  creatorId: string
+  name: string
+  description: string
+  photos: string[]
+  tags: string[] // exclude
+  rating: number
+  views: number
+  reviews: Review[]
 }
 
 interface CacheInfoModalProps {
@@ -87,12 +85,12 @@ const CacheInfoModal: React.FC<CacheInfoModalProps> = ({
           
           <ScrollView style={{ maxHeight: 500 }}>
             <Text style={styles.modalDescription}>
-              {selectedCacheData?.info?.description}
+              {selectedCacheData?.description}
             </Text>
 
-            {selectedCacheData?.info.pictures && (
+            {selectedCacheData?.photos && (
               <SafeAreaView>
-                <DynamicImageGrid images={selectedCacheData?.info.pictures} />
+                <DynamicImageGrid images={selectedCacheData?.photos} />
               </SafeAreaView>
             )}
 
@@ -102,11 +100,12 @@ const CacheInfoModal: React.FC<CacheInfoModalProps> = ({
         {/* Action Buttons */}
         <View style={styles.buttonContainer}>
           <View style={styles.fullWidthButton}>
-            {selectedGoToCache !== selectedCacheData?.id ? (
+            {selectedGoToCache !== selectedCacheData?.cacheId ? (
               <Button
                 title="Select cache as destination"
                 onPress={() => {
-                  setSelectedGoToCache(selectedCacheData.id);
+                  setSelectedGoToCache(selectedCacheData.cacheId);
+                  AsyncStorage.setItem("selectedCacheId", selectedCacheData.cacheId)
                 }}
                 color="#4285F4"
               />
@@ -115,6 +114,7 @@ const CacheInfoModal: React.FC<CacheInfoModalProps> = ({
                 title="Cancel"
                 onPress={() => {
                   setSelectedGoToCache('');
+                  AsyncStorage.setItem("selectedCacheId", "")
                 }}
                 color="#CC5555"
               />

@@ -1,14 +1,15 @@
-import { TopNav, TopNavRoute } from "@/components/TopNav"
+import { TopNav, TopNavBackButton, TopNavRoute } from "@/components/TopNav"
 import { Text } from "@/components/ui/text"
 import { useSafeAreaInsetsStyle } from "@/utils/useSafeAreaInsetsStyle"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import { View } from "react-native"
-import { ChangeEmailSchema, changeEmailSchema } from "./(data)/schemas"
+import { ChangeEmailSchema, changeEmailSchema } from "@/lib/settingsSchema"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { goBack } from "@/utils/goBack"
 import { Form, FormField, FormFieldError, FormSubmit } from "@/components/Form"
+import { showToast } from "@/components/ui/toast"
 
 export default function EmailSettingsScreen() {
   const {
@@ -28,12 +29,17 @@ export default function EmailSettingsScreen() {
     // TODO: Send confirmation email
     goBack() // if valid go back to previous screen
     // TODO: Update user settings
-    // TODO: Add success toast
+    showToast({
+      type: "success",
+      description: "Email updated successfully",
+      position: "bottom",
+    })
   }
 
   return (
-    <View className="flex-1 gap-8 bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
+    <View className="flex-1 gap-4 bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
       <TopNav>
+        <TopNavBackButton />
         <TopNavRoute>Email</TopNavRoute>
       </TopNav>
 

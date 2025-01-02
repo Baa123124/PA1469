@@ -1,115 +1,204 @@
-import React, { useState } from 'react';
-import MapScreen from '@/components/GoogleMaps';
+import React, { useState, useEffect } from "react"
+import { View, StyleSheet } from "react-native"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
-const temp_marker_data = [
-  {
-    coordinates: { latitude: 62.918161, longitude: 18.643501 },
-    data: {
-      label: "A",
-      id: "13238gej3lk34",
-      name: "Cache A",
-      rating: 3.6,
-      views: 421,
-      type: "Scenic View",
-      date: new Date("2024-01-01"),
-      info: {
-        pictures: [
-          "https://picsum.photos/300/200?random=1",
-          "https://picsum.photos/300/200?random=2",
-        ],
-        description: "A beautiful scenic view at Cache A with breathtaking landscapes.",
-        comments: [
-          {
-            creatorID: "user123",
-            userName: "Explorer1",
-            titel: "Amazing View",
-            avatarURL: "https://i.pravatar.cc/150?img=1",
-            description: "Absolutely stunning spot. Worth the trip!",
-            date: new Date("2024-01-15"),
-            raiting: 4.5,
-            picture: "https://picsum.photos/300/200?random=3",
-          },
-        ],
-      },
-    },
-  },
-  {
-    coordinates: { latitude: 63.318161, longitude: 18.643901 },
-    data: {
-      label: "C",
-      id: "13238fej3lkhh",
-      name: "Cache C",
-      rating: 5.0,
-      views: 5043,
-      type: "Scenic View",
-      date: new Date("2024-02-10"),
-      info: {
-        pictures: [
-          "https://picsum.photos/300/200?random=4",
-          "https://picsum.photos/300/200?random=5",
-          "https://picsum.photos/300/200?random=7",
-        ],
-        description: `This is a very detailed description of marker C. Marker C has truly been a special marker to me and my friend as we often travel to this location to think of old memories. It is also to test the size limit of the container's scroll feature. Marker C has truly been a special marker to me and my friend as we often travel to this location to think of old memories. It is also to test the size limit of the container's scroll feature Marker C has truly been a special marker to me and my friend as we often travel to this location to think of old memories. It is also to test the size limit of the container's scroll feature Marker C has truly been a special marker to me and my friend as we often travel to this location to think of old memories. It is also to test the size limit of the container's scroll feature Marker C has truly been a special marker to me and my friend as we often travel to this location to think of old memories. It is also to test the size limit of the container's scroll feature.`,
-        comments: [
-          {
-            creatorID: "user456",
-            userName: "NatureLover",
-            titel: "Breathtaking Experience",
-            avatarURL: "https://i.pravatar.cc/150?img=2",
-            description: "This spot offers the best sunset view ever!",
-            date: new Date("2024-02-18"),
-            raiting: 5.0,
-            picture: "https://picsum.photos/300/200?random=6",
-          },
-        ],
-      },
-    },
-  },
-  {
-    coordinates: { latitude: 37.7849, longitude: -122.4294 },
-    data: {
-      label: "B",
-      id: "29832u3hfu444",
-      name: "Cache B",
-      rating: 0.4,
-      views: 321,
-      type: "Scenic View",
-      date: new Date("2024-03-05"),
-      info: {
-        pictures: [
-          "https://picsum.photos/300/200?random=8",
-        ],
-        description: "Cache B offers a peaceful retreat away from the city noise.",
-        comments: [
-          {
-            creatorID: "user789",
-            userName: "PeaceSeeker",
-            titel: "Hidden Gem",
-            avatarURL: "https://i.pravatar.cc/150?img=3",
-            description: "A tranquil spot to relax and recharge.",
-            date: new Date("2024-03-12"),
-            raiting: 4.0,
-            picture: "https://picsum.photos/300/200?random=9",
-          },
-        ],
-      },
-    },
-  },
-];
+import MapScreen from "@/components/GoogleMaps" // <-- Your Google Maps component
 
-export default function App() {
-  const [selectedCache, setSelectedCache] = useState<string>('');
-  const [goalReached, setGoalReached] = useState<boolean>(false);
-  const displayCaches = temp_marker_data.map((cache) => cache.data.id);
+import { useSafeAreaInsetsStyle } from "@/utils/useSafeAreaInsetsStyle"
+import { useAuth } from "@/lib/auth/AuthContext"
+import { TopNav, TopNavSettingsButton } from "@/components/TopNav"
+import { dummyCache, dummyCache2, dummyCache3, dummyUser } from "@/lib/dummyUser"
+import { CacheSearchBar } from "@/components/tabs/map/CacheSearchBar"
+import { Button } from "@/components/ui/button"
+import { Compass } from "@/lib/icons/Compass"
+import { MapPinPlus } from "@/lib/icons/MapPinPlus"
+import { Play } from "@/lib/icons/Play"
+import { Pause } from "@/lib/icons/Pause"
+import { Badge } from "@/components/ui/badge"
+import { Text } from "@/components/ui/text"
+import { formatDistance } from "@/utils/formatDistance"
+import { ThemeToggle } from "@/components/ThemeToggle"
+import { CacheReachedDialog } from "@/components/tabs/map/CacheReachedDialog"
+import { ReviewCacheDialog } from "@/components/tabs/map/ReviewCacheDialog"
+import { SaveCacheDialog } from "@/components/tabs/map/SaveCacheDialog"
+import { NewCacheDialog } from "@/components/tabs/map/NewCacheDialog"
+
+import {LatLng} from 'react-native-maps';
+
+// Merged "Map" + Overlays:
+export default function MergedMapScreen() {
+  const insets = useSafeAreaInsets()
+  const { user } = useAuth()
+
+  // ----- State for your GoogleMaps component -----
+  const [selectedCacheId, setSelectedCacheId] = useState<string>("")
+  const [goalReached, setGoalReached] = useState<boolean>(false)
+  const [distanceToGoal, setDistanceToGoal] = useState<number | null>(null)
+
+  // ----- State for the overlay UI -----
+  const [walkActive, setWalkActive] = useState(false)
+  const [cacheReachedOpen, setCacheReachedOpen] = useState(false)
+  const [saveCacheOpen, setSaveCacheOpen] = useState(false)
+  const [reviewCacheOpen, setReviewCacheOpen] = useState(false)
+  const [newCacheOpen, setNewCacheOpen] = useState(false)
+  const [addingCache, setAddingCache] = useState(false)
+  const [newCacheCoord, setNewCacheCoord] = useState<LatLng | null>(null)
+
+  // Restore a previously selected cache from AsyncStorage, if any
+  useEffect(() => {
+    AsyncStorage.getItem("selectedCacheId").then((cacheId) => {
+      if (cacheId) {
+        setWalkActive(true)
+        setSelectedCacheId(cacheId)
+      }
+    })
+  }, [])
+
+  useEffect(() => {
+    if(goalReached){
+      setCacheReachedOpen(true)
+    }
+  }, [goalReached])
+
+  /**
+   * Replace the old mock data with the new dummy caches.
+   * Each dummyCache has its own coordinates and properties;
+   * we wrap them in the same shape your MapScreen expects:
+   * { coordinates: ..., data: ... }
+   */
+  const allCachesInit = [
+    dummyCache,
+    dummyCache2,
+    dummyCache3,
+  ]
+
+  // List of cache IDs to display
+  const displayCaches = allCachesInit.map((cache) => cache.id)
+
+  // Data for the search bar in your friend’s overlay
+  const cachesForSearch = [dummyCache, dummyCache2, dummyCache3]
+  const data = cachesForSearch.map((c) => ({
+    label: c.data.name,
+    value: c.id,
+    distance: 12000, // or real distances with geolib
+  }))
+
+  const newMarkerCoord = (coord: LatLng) => {
+    setNewCacheCoord(coord)
+  }
 
   return (
-    <MapScreen
-      allCachesInit={temp_marker_data}
-      displayCaches={["13238gej3lk34", "29832u3hfu444", "13238fej3lkhh"]}
-      selectedGoToCache={selectedCache}
-      setSelectedGoToCache={setSelectedCache}
-      setGoalReached={setGoalReached}
-      goalReached={goalReached}
-    />
-  );
+    <View style={styles.root}>
+      {/* 
+        1) Map in the background 
+           Make sure it fills the screen absolutely.
+      */}
+      <View style={StyleSheet.absoluteFill}>
+        <MapScreen
+          allCaches={allCachesInit}
+          displayCaches={displayCaches}
+          selectedGoToCacheId={selectedCacheId}
+          setSelectedGoToCacheId={setSelectedCacheId}
+          goalReached={goalReached}
+          setGoalReached={setGoalReached}
+          setDistanceToGoal={setDistanceToGoal}
+          addingCache={addingCache}
+          getNewCacheCoord={newMarkerCoord}
+        />
+      </View>
+
+      {/* 
+        2) Overlays on top 
+           Absolute-positioned elements and dialogs
+      */}
+      <View 
+        className="flex-1" 
+        style={useSafeAreaInsetsStyle(["top"])}
+        pointerEvents="box-none"
+      >
+        {/* Top Nav + Settings Button + Search */}
+        {!addingCache && <TopNav className="absolute gap-2" style={{ top: insets.top }}>
+          <CacheSearchBar data={data} />
+          <TopNavSettingsButton variant="outline" className="static" />
+        </TopNav>}
+
+        {/* Bottom Center: Walk Start/Stop Button */}
+        {!addingCache && <View className="absolute bottom-4 items-center justify-center gap-2 self-center">
+          {walkActive && distanceToGoal && (
+            <Badge variant="outline">
+              <Text>{formatDistance(distanceToGoal)}</Text>
+              
+            </Badge>
+          )}
+          <Button
+            className="items-center justify-center self-center rounded-full !px-[16px] !py-8"
+            onPress={() => {
+              if (walkActive) {
+                // Stop walk
+                setWalkActive(false)
+                AsyncStorage.setItem("selectedCacheId", "")
+              } else {
+                // Start walk
+                {/* Selects random cache within specified distance */}
+                if (dummyUser.settings.discoveryMode) {
+                  AsyncStorage.setItem("selectedCacheId", dummyCache.id)
+                  setSelectedCacheId(dummyCache.id)
+                }
+                setWalkActive(true)
+              }
+            }}
+            disabled={!walkActive && !dummyUser.settings.discoveryMode}
+          >
+            {walkActive ? (
+              <Pause
+                size={24}
+                strokeWidth={1.25}
+                className="fill-primary-foreground text-primary-foreground"
+              />
+            ) : (
+              <Play
+                size={24}
+                strokeWidth={1.25}
+                className="fill-primary-foreground text-primary-foreground"
+              />
+            )}
+          </Button>
+        </View>}
+
+        {/* Bottom Right: Compass + New Cache Button */}
+        <View className="absolute bottom-4 right-4 gap-2">
+          {!addingCache ? (
+            <>
+              <Button variant="outline" size="icon" onPress={() => { /* Toggle map compass? */ }}>
+                <Compass size={16} strokeWidth={1.25} />
+              </Button>
+              <Button variant="outline" size="icon" onPress={() => setAddingCache(true)}>
+                <MapPinPlus size={16} strokeWidth={1.25} />
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button style={{backgroundColor: "green"}} variant="outline" size="icon" onPress={() => {setAddingCache(false); setNewCacheOpen(true)}}>
+                <Text style={{color: "white"}}>Conf</Text>
+              </Button>
+              <Button style={{backgroundColor: "red"}} variant="outline" size="icon" onPress={() => {setAddingCache(false)}}>
+                <Text style={{color: "white"}}>Exit</Text>
+              </Button>
+            </>
+        )
+          }
+        </View>
+
+        {/* New Cache Dialog */}
+        <NewCacheDialog open={newCacheOpen} setOpen={setNewCacheOpen} />
+      </View>
+    </View>
+  )
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+  },
+})

@@ -29,6 +29,7 @@ export default function LoginScreen() {
   const {
     control,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(authSchema),
@@ -43,6 +44,9 @@ export default function LoginScreen() {
     loginWithEmailAndPassword(formData.email, formData.password).then((user) => {
       if (user) {
         router.replace("/map")
+      } else {
+        setError("email", { message: "Invalid email or password" })
+        setError("password", { message: "Invalid email or password" })
       }
     })
   }
