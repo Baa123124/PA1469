@@ -9,11 +9,10 @@ import {
   Modal,
   ScrollView,
   TouchableOpacity,
-  Animated,
   PermissionsAndroid,
   Platform,
 } from 'react-native';
-import MapView, { PROVIDER_GOOGLE, Marker, UserLocationChangeEvent } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, Marker, UserLocationChangeEvent, LatLng, Region } from 'react-native-maps';
 import { useColorScheme } from "@/lib/useColorScheme"
 import CacheInfoModal from "@/components/CacheInfoModal";
 import { getDistance } from 'geolib';
@@ -21,10 +20,13 @@ import { getDistance } from 'geolib';
 
 interface Comment {
   creatorID: string;
-  name: string;
+  userName: string;
+  titel: string;
+  avatarURL: string;
   description: string;
   date: Date;
   raiting: number;
+  picture: string;
 }
 
 interface CacheData {
@@ -48,7 +50,7 @@ interface Cache {
 }
 
 interface MapScreenProps {
-  allCaches: Cache[];
+  allCachesInit: Cache[];
   displayCaches: string[];
   selectedGoToCache: string;
   setSelectedGoToCache: React.Dispatch<React.SetStateAction<string>>;
@@ -300,7 +302,7 @@ const initialRegion = {
 };
 
 const MapScreen: React.FC<MapScreenProps> = ({
-  allCaches,
+  allCachesInit,
   displayCaches,
   selectedGoToCache,
   setSelectedGoToCache,
@@ -308,17 +310,39 @@ const MapScreen: React.FC<MapScreenProps> = ({
   setGoalReached
   
 }) => {
+  const [allCaches, setAllCaches] = useState<Cache[] | null>(allCachesInit || null)
+
+  const [addCacheState, setAddCacheState] = useState<boolean>(false);
+  const [curUsrLocation, setCurUsrLocation] = useState<LatLng | null>(null)
+  const [newMarkerPosition, setNewMarkerPosition] = useState<LatLng>({
+    latitude: initialRegion.latitude,
+    longitude: initialRegion.longitude,
+  });
+  
+  // Sync marker position when `addCacheState` changes
+  useEffect(() => {
+    if (addCacheState) {
+      setNewMarkerPosition(
+        curUsrLocation || { latitude: initialRegion.latitude, longitude: initialRegion.longitude }
+      );
+    }
+  }, [addCacheState]);
+
   const [favorites, setFavorites] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedCache, setSelectedCache] = useState<Cache | null>(null);
-  const backgroundOpacity = useRef(new Animated.Value(0)).current;
 
   const [locationPermissionGranted, setLocationPermissionGranted] = useState(false);
 
   function UsrDistCheck(event: UserLocationChangeEvent) {
     const { coordinate } = event.nativeEvent;
     console.log(coordinate, coordinate?.timestamp);
+    setCurUsrLocation(
+      coordinate
+        ? { latitude: coordinate.latitude, longitude: coordinate.longitude }
+        : null
+    );
   
     if (!coordinate || !selectedCache) return;
   
@@ -378,7 +402,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
   const {isDarkColorScheme} = useColorScheme()
 
   useEffect(() => {
-    if (allCaches.length > 0 && displayCaches.length > 0) {
+    if (allCaches) {
       setLoading(false);
     }
   }, [allCaches, displayCaches]);
@@ -400,29 +424,29 @@ const MapScreen: React.FC<MapScreenProps> = ({
     );
   };
 
-  const cachesToDisplay = allCaches.filter((cache) =>
+  const handleMarkerDragEnd = (e: any) => {
+    const { latitude, longitude } = e.nativeEvent.coordinate;
+    setNewMarkerPosition({ latitude, longitude });
+  };
+
+  const finalizeMarkerPlacement = () => {
+    setAddCacheState(false) // reset map to normal
+    // Continue to marker creation page
+    
+  }
+
+  const cachesToDisplay = allCaches?.filter((cache) =>
     displayCaches.includes(cache.data.id)
   );
 
   const handleMarkerPress = (cache: Cache) => {
     setSelectedCache(cache);
     setModalVisible(true);
-    Animated.timing(backgroundOpacity, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
   };
 
   const closeModal = () => {
-    Animated.timing(backgroundOpacity, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start(() => {
-      setModalVisible(false);
-      setSelectedCache(null);
-    });
+    setModalVisible(false);
+    setSelectedCache(null);
   };
 
   if (loading) {
@@ -444,7 +468,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
       showsUserLocation={true}
       onUserLocationChange={UsrDistCheck}
       >
-        {cachesToDisplay.map((cache) => {
+        {!addCacheState ? cachesToDisplay?.map((cache) => {
           // Render all markers
           const isSelected = selectedGoToCache === cache.data.id;
           return (
@@ -461,16 +485,13 @@ const MapScreen: React.FC<MapScreenProps> = ({
               onPress={selectedGoToCache === '' || isSelected ? () => handleMarkerPress(cache): () => {}}
             />
           );
-        })}
+        }) : <Marker
+                coordinate={newMarkerPosition}
+                draggable
+                onDragEnd={handleMarkerDragEnd}
+             >
+          </Marker>}
       </MapView>
-
-      {/* Animated Background */}
-      <Animated.View
-        style={[
-          styles.animatedBackground,
-          { opacity: backgroundOpacity, display: modalVisible ? 'flex' : 'none' },
-        ]}
-      />
 
       {/* Modal for Cache Details */}
       {selectedCache && (
@@ -498,15 +519,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  animatedBackground: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    zIndex: 1,
   },
 });
 
