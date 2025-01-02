@@ -43,9 +43,9 @@ export default function CacheDetailsScreen() {
               return (
                 <CacheImage
                   key={index}
-                  source={{ uri: cache.photos[0] }}
-                  aria-labelledby={cache.name}
-                  name={cache.name}
+                  source={{ uri: cache.data.photos[0] }}
+                  aria-labelledby={cache.data.name}
+                  name={cache.data.name}
                   href="/"
                   className="max-h-48 flex-1"
                 >
@@ -68,7 +68,7 @@ export default function CacheDetailsScreen() {
                           // Firebase dynamic links are being deprecated: https://firebase.google.com/support/dynamic-links-faq?hl=en&authuser=0
                           try {
                             await Share.open({
-                              title: cache.name,
+                              title: cache.data.name,
                               message: "Check out this cache on Xplorify: ",
                               url: "xplorify://map?cacheId=" + cache.id,
                             })

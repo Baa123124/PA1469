@@ -180,7 +180,7 @@ export default function MergedMapScreen() {
           ) : (
             <>
               <Button style={{backgroundColor: "green"}} variant="outline" size="icon" onPress={() => {setAddingCache(false); setNewCacheOpen(true)}}>
-                <Text style={{color: "white"}}>Conf</Text>
+                <Text style={{color: "white"}}>Add</Text>
               </Button>
               <Button style={{backgroundColor: "red"}} variant="outline" size="icon" onPress={() => {setAddingCache(false)}}>
                 <Text style={{color: "white"}}>Exit</Text>
