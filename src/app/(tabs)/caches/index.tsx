@@ -34,6 +34,7 @@ import { useEffect, useRef, useState } from "react"
 import { RemoveListDialog } from "@/components/tabs/caches/RemoveListDialog"
 import { EditListDialog } from "@/components/tabs/caches/EditListDialog"
 import { NewListDialog } from "@/components/tabs/caches/NewListDialog"
+import { Bookmark } from "@/lib/icons/Bookmark"
 
 // TODO: Automatically add visited caches to "History" and reviews to "Reviews"
 
@@ -101,9 +102,10 @@ export default function CachesScreen() {
                           <View className="flex-row items-center gap-2 pr-8">
                             {list.name === "History" && <History size={16} strokeWidth={1.25} />}
                             {list.name === "Reviews" && <Star size={16} strokeWidth={1.25} />}
+                            {list.name === "My caches" && <MapPin size={16} strokeWidth={1.25} />}
                             {list.name === "Favorites" && <Heart size={16} strokeWidth={1.25} />}
-                            {list.name === "Future journeys" && (
-                              <MapPin size={16} strokeWidth={1.25} />
+                            {list.name === "Bookmarked" && (
+                              <Bookmark size={16} strokeWidth={1.25} />
                             )}
                             <Text numberOfLines={1}>{list.name}</Text>
                           </View>
@@ -112,7 +114,7 @@ export default function CachesScreen() {
                           <Text>{list.caches.length}</Text>
                         </TableCell>
                         <TableCell className="ml-auto mr-6 justify-center">
-                          {list.name === "History" || list.name === "Reviews" ? (
+                          {list.locked ? (
                             <View className="h-10 w-10 items-center justify-center">
                               <LockKeyhole size={16} strokeWidth={1.25} />
                             </View>

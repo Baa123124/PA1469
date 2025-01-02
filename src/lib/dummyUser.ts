@@ -167,12 +167,18 @@ const dummyLists: List[] = [
   },
   {
     id: Crypto.randomUUID(),
+    name: "My caches",
+    caches: [dummyCache, dummyCache2, dummyCache3, dummyCache, dummyCache2, dummyCache3],
+    locked: true,
+  },
+  {
+    id: Crypto.randomUUID(),
     name: "Favorites",
     caches: [dummyCache, dummyCache2, dummyCache3, dummyCache, dummyCache2, dummyCache3],
   },
   {
     id: Crypto.randomUUID(),
-    name: "Future journeys",
+    name: "Bookmarked",
     caches: [dummyCache, dummyCache2, dummyCache3],
   },
 ]
