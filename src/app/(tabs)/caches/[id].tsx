@@ -84,18 +84,23 @@ export default function CacheDetailsScreen() {
                         <Share2 size={16} strokeWidth={1.25} />
                         <Text>Share</Text>
                       </DropdownMenuItem>
-                      {!list.locked && <DropdownMenuSeparator />}
-                      {!list.locked && (
-                        <DropdownMenuItem
-                          onPress={() => {
-                            // TODO: Remove cache from list
-                            console.log(cache.id)
-                          }}
-                        >
-                          <Trash2 size={16} strokeWidth={1.25} />
-                          <Text>Remove</Text>
-                        </DropdownMenuItem>
-                      )}
+                      {!list.locked || (list.name === "My caches" && <DropdownMenuSeparator />)}
+                      {!list.locked ||
+                        (list.name === "My caches" && (
+                          <DropdownMenuItem
+                            onPress={() => {
+                              // TODO: Remove cache from list
+                              console.log(cache.id)
+
+                              if (list.name === "My caches") {
+                                // TODO: Remove cache from global caches
+                              }
+                            }}
+                          >
+                            <Trash2 size={16} strokeWidth={1.25} />
+                            <Text>Remove</Text>
+                          </DropdownMenuItem>
+                        ))}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </CacheImage>

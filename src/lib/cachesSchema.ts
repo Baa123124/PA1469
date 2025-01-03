@@ -1,5 +1,13 @@
 import { z } from "zod"
 
+/**
+ * Schema for validating the creation of a new list.
+ *
+ * Fields:
+ * - `name`: A string that:
+ *   - Must be at least 1 character long.
+ *   - Must be at most 20 characters long.
+ */
 const newListSchema = z.object({
   name: z
     .string()
@@ -7,6 +15,14 @@ const newListSchema = z.object({
     .max(20, { message: "Name must be at most 20 characters long" }),
 })
 
+/**
+ * Schema for validating edits to an existing list.
+ *
+ * Fields:
+ * - `name`: A string that:
+ *   - Must be at least 1 character long.
+ *   - Must be at most 20 characters long.
+ */
 const editListSchema = z.object({
   name: z
     .string()
