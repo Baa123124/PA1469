@@ -161,7 +161,7 @@ This is a great place to put miscellaneous helpers and utilities. Things like da
 
 ### Build apk
 
-1. `npm run prebuild`
+1. `npx expo prebuild` or `npm run prebuild:clean` + add Google Maps API key in `.android/app/src/main/AndroidManifest.xml`
 2. `npm run android:prod` (release/prod) or `npm run android` (debug/dev)
 3. This will open the emulator and the app automatically
 4. You can find the apk in `android/app/build/outputs/apk/release` or `android/app/build/outputs/apk/debug`
