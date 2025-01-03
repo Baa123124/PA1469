@@ -26,12 +26,10 @@ import { NewCacheDialog } from "@/components/tabs/map/NewCacheDialog"
 
 import {LatLng} from 'react-native-maps';
 
-// Merged "Map" + Overlays:
 export default function MergedMapScreen() {
   const insets = useSafeAreaInsets()
   const { user } = useAuth()
 
-  // ----- State for your GoogleMaps component -----
   const [selectedCacheId, setSelectedCacheId] = useState<string>("")
   const [goalReached, setGoalReached] = useState<boolean>(false)
   const [distanceToGoal, setDistanceToGoal] = useState<number | null>(null)
@@ -45,7 +43,6 @@ export default function MergedMapScreen() {
   const [addingCache, setAddingCache] = useState(false)
   const [newCacheCoord, setNewCacheCoord] = useState<LatLng | null>(null)
 
-  // Restore a previously selected cache from AsyncStorage, if any
   useEffect(() => {
     AsyncStorage.getItem("selectedCacheId").then((cacheId) => {
       if (cacheId) {
@@ -64,8 +61,6 @@ export default function MergedMapScreen() {
   /**
    * Replace the old mock data with the new dummy caches.
    * Each dummyCache has its own coordinates and properties;
-   * we wrap them in the same shape your MapScreen expects:
-   * { coordinates: ..., data: ... }
    */
   const allCachesInit = [
     dummyCache,
@@ -76,12 +71,11 @@ export default function MergedMapScreen() {
   // List of cache IDs to display
   const displayCaches = allCachesInit.map((cache) => cache.id)
 
-  // Data for the search bar in your friend’s overlay
   const cachesForSearch = [dummyCache, dummyCache2, dummyCache3]
   const data = cachesForSearch.map((c) => ({
     label: c.data.name,
     value: c.id,
-    distance: 12000, // or real distances with geolib
+    distance: 12000,
   }))
 
   const newMarkerCoord = (coord: LatLng) => {
@@ -90,10 +84,6 @@ export default function MergedMapScreen() {
 
   return (
     <View style={styles.root}>
-      {/* 
-        1) Map in the background 
-           Make sure it fills the screen absolutely.
-      */}
       <View style={StyleSheet.absoluteFill}>
         <MapScreen
           allCaches={allCachesInit}
@@ -108,10 +98,6 @@ export default function MergedMapScreen() {
         />
       </View>
 
-      {/* 
-        2) Overlays on top 
-           Absolute-positioned elements and dialogs
-      */}
       <View 
         className="flex-1" 
         style={useSafeAreaInsetsStyle(["top"])}

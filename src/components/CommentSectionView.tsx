@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Star } from "@/lib/icons/RaitingIcon";
+import { Star } from "@/lib/icons/Star"
 import {
     Modal,
     View,
@@ -15,19 +15,18 @@ import {
 
 
 interface CommentSectionModalProps {
-    comments: Comment[]; // Data of the current selected cache
+    comments: Review[]; // Data of the current selected cache
 }
 
 
-interface Comment {
-    creatorID: string;
-    userName: string;
-    titel: string;
-    description: string;
-    date: Date;
-    raiting: number;
-    avatarURL: string;
-  }
+type Review = {
+  id: string
+  rating: 1 | 2 | 3 | 4 | 5
+  comment: string
+  createdAt: Date
+  photo: string
+  userName: string
+}
 
 
 const CommentSectionModal: React.FC<CommentSectionModalProps> = ({
@@ -42,8 +41,22 @@ const CommentSectionModal: React.FC<CommentSectionModalProps> = ({
           <View style={styles.userContainer}>
 
             <Avatar style={styles.avatar} alt={`Avatar of ${comment.userName}`}>
-              <AvatarImage source={{uri: comment.avatarURL}}/>
+              <AvatarImage source={{uri: comment.photo}}/>
             </Avatar>
+            <View style={styles.userInfo}>
+              <Text style={styles.userName}>{comment.userName}</Text>
+              {/* Here could caches explored portion be added*/}
+            </View>
+
+            {/* Rating */}
+            <View style={styles.rating}>
+              {[1,2,3,4,5].map((_, index) => (
+                <Star key={index} width={14} height={14} color={index < (comment.rating || 0) ? "#FFD700" : "#D1D5DB"}/>
+              ))}
+
+            </View>
+
+
           </View>
         </View>)
       })

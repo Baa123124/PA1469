@@ -25,6 +25,7 @@ type Review = {
   comment: string
   createdAt: Date
   photo: string
+  userName: string
 }
 
 type CacheData = {
