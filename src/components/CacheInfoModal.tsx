@@ -1,16 +1,17 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import React, { useRef, useEffect } from 'react';
-import { 
-  View, Text, Button, ScrollView,
-  StyleSheet, SafeAreaView
-} from 'react-native';
-import { Modalize } from 'react-native-modalize';
-import LinearGradient from 'react-native-linear-gradient';
-import DynamicImageGrid from "@/components/DynamicImageGrid";
+import React, { useRef, useEffect } from "react"
+import { View, ScrollView, StyleSheet, SafeAreaView } from "react-native"
+import { Modalize } from "react-native-modalize"
+import LinearGradient from "react-native-linear-gradient"
+import DynamicImageGrid from "@/components/DynamicImageGrid"
 
-import { MapPin } from "@/lib/icons/MapPin";
-import { Eye } from "@/lib/icons/ViewsIcon";
-import { Star } from "@/lib/icons/RaitingIcon";
+import { MapPin } from "@/lib/icons/MapPin"
+import { Eye } from "@/lib/icons/Eye"
+import { Star } from "@/lib/icons/RaitingIcon"
+import { Text } from "./ui/text"
+import { Button } from "./ui/button"
+import { useColorScheme } from "@/lib/useColorScheme"
+import { darkTheme, lightTheme } from "@/lib/constants"
 
 type Review = {
   id: string
@@ -21,7 +22,7 @@ type Review = {
 }
 
 type CacheData = {
-  cacheId: string,
+  cacheId: string
   creatorId: string
   name: string
   description: string
@@ -33,11 +34,11 @@ type CacheData = {
 }
 
 interface CacheInfoModalProps {
-  modalVisible: boolean;
-  selectedCacheData: CacheData;
-  closeModal: () => void;
-  selectedGoToCache: string;
-  setSelectedGoToCache: (cacheId: string) => void;
+  modalVisible: boolean
+  selectedCacheData: CacheData
+  closeModal: () => void
+  selectedGoToCache: string
+  setSelectedGoToCache: (cacheId: string) => void
 }
 
 const CacheInfoModal: React.FC<CacheInfoModalProps> = ({
@@ -47,141 +48,108 @@ const CacheInfoModal: React.FC<CacheInfoModalProps> = ({
   selectedGoToCache,
   setSelectedGoToCache,
 }) => {
-  const modalizeRef = useRef<Modalize>(null);
+  const { isDarkColorScheme } = useColorScheme()
+  const theme = isDarkColorScheme ? darkTheme : lightTheme
+  const { colors } = theme
+  const modalizeRef = useRef<Modalize>(null)
 
   useEffect(() => {
     if (modalVisible) {
-      modalizeRef.current?.open();
+      modalizeRef.current?.open()
     } else {
-      modalizeRef.current?.close();
+      modalizeRef.current?.close()
     }
-  }, [modalVisible]);
+  }, [modalVisible])
 
   const renderContent = () => {
     return (
-      <View style={styles.contentContainer}>
-
+      <View className="gap-2 p-4">
         {/* Title */}
-        <Text style={styles.modalTitle}>{selectedCacheData?.name}</Text>
+        <Text className="text-2xl font-bold">{selectedCacheData?.name}</Text>
 
         {/* Stats (Pin, Eye, Star) */}
-        <View style={styles.cacheStatsContainer}>
-          <View style={styles.statsElement}>
-            <MapPin size={24} className="w-6 h-6 text-foreground" />
-            <Text>1km</Text>
+        <View className="flex-row items-center gap-4">
+          <View className="flex-row items-center gap-1">
+            <MapPin size={16} strokeWidth={1.25} className="h-6 w-6 text-primary" />
+            <Text className="gap-2 font-medium text-muted-foreground">1 km</Text>
           </View>
-          <View style={styles.statsElement}>
-            <Eye size={24} className="w-6 h-6 text-foreground" />
-            <Text>{selectedCacheData?.views}</Text>
+          <View className="flex-row items-center gap-1">
+            <Eye size={16} strokeWidth={1.25} className="h-6 w-6 text-foreground" />
+            <Text className="gap-2 font-medium text-muted-foreground">
+              {selectedCacheData?.views}
+            </Text>
           </View>
-          <View style={styles.statsElement}>
-            <Star size={24} color="#ffcd3c" fill="#ffcd3c" className="w-6 h-6 text-foreground" />
-            <Text>{selectedCacheData?.rating}</Text>
+          <View className="flex-row items-center gap-1">
+            <Star
+              size={16}
+              strokeWidth={1.25}
+              className="h-6 w-6 fill-yellow-400 text-yellow-400 dark:fill-yellow-500 dark:text-yellow-500"
+            />
+            <Text className="gap-2 font-medium text-muted-foreground">
+              {selectedCacheData?.rating}
+            </Text>
           </View>
         </View>
 
-        {/* Scrollable Description */}
-        <View style={styles.scrollContainerWrapper}>
-          
-          <ScrollView style={{ maxHeight: 500 }}>
-            <Text style={styles.modalDescription}>
-              {selectedCacheData?.description}
-            </Text>
+        <View className="gap-4">
+          {/* Description (200 chars max, no scroll required) */}
+          <Text>{selectedCacheData?.description}</Text>
 
+          <ScrollView style={{ maxHeight: 500 }} showsVerticalScrollIndicator={false}>
             {selectedCacheData?.photos && (
               <SafeAreaView>
                 <DynamicImageGrid images={selectedCacheData?.photos} />
               </SafeAreaView>
             )}
-
           </ScrollView>
-        </View>
 
-        {/* Action Buttons */}
-        <View style={styles.buttonContainer}>
-          <View style={styles.fullWidthButton}>
+          {/* Action Buttons */}
+          <View className="w-full">
             {selectedGoToCache !== selectedCacheData?.cacheId ? (
               <Button
-                title="Select cache as destination"
                 onPress={() => {
-                  setSelectedGoToCache(selectedCacheData.cacheId);
+                  setSelectedGoToCache(selectedCacheData.cacheId)
                   AsyncStorage.setItem("selectedCacheId", selectedCacheData.cacheId)
                 }}
-                color="#4285F4"
-              />
+              >
+                <Text>Select cache as destination</Text>
+              </Button>
             ) : (
               <Button
-                title="Cancel"
+                variant="destructive"
                 onPress={() => {
-                  setSelectedGoToCache('');
+                  setSelectedGoToCache("")
                   AsyncStorage.setItem("selectedCacheId", "")
                 }}
-                color="#CC5555"
-              />
+              >
+                <Text>Cancel</Text>
+              </Button>
             )}
           </View>
         </View>
       </View>
-    );
-  };
+    )
+  }
 
   return (
     <Modalize
       ref={modalizeRef}
       onClosed={closeModal}
       adjustToContentHeight
-      modalStyle={styles.modalizeStyle}
+      modalStyle={{
+        backgroundColor: colors.background,
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
+      }}
       handleStyle={styles.handleStyle}
     >
       {renderContent()}
     </Modalize>
-  );
-};
+  )
+}
 
-export default CacheInfoModal;
+export default CacheInfoModal
 
 const styles = StyleSheet.create({
-  modalizeStyle: {
-    backgroundColor: 'white',
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-  },
-  handleStyle: {
-  },
-  contentContainer: {
-    padding: 10,
-  },
-  modalTitle: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  cacheStatsContainer: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  statsElement: {
-    marginBottom: 5,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 2,
-  },
-  scrollContainerWrapper: {
-    marginTop: 4,
-    marginBottom: 4,
-  },
-  modalDescription: {
-    fontSize: 16,
-    paddingBottom: 10,
-  },
-  buttonContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  fullWidthButton: {
-    width: '80%',
-    marginBottom: 5,
-    borderRadius: 10,
-    overflow: 'hidden',
-  },
-});
+  handleStyle: {},
+})
