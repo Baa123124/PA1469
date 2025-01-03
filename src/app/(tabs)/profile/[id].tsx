@@ -65,7 +65,7 @@ export default function ProfileScreen() {
 
             <View className="flex-row flex-wrap items-center gap-4">
               <View className="flex-row items-center gap-1">
-                <MapPin size={16} strokeWidth={1.15} className="text-primary" />
+                <MapPin size={16} strokeWidth={1.25} className="text-primary" />
                 <Text className="gap-2 text-sm font-medium text-muted-foreground">
                   {dummyUser.cachesVisited} Caches
                 </Text>
