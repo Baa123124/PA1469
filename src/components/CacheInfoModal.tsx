@@ -2,10 +2,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import React, { useRef, useEffect } from "react"
 import { View, ScrollView, StyleSheet, SafeAreaView } from "react-native"
 import { Modalize } from "react-native-modalize"
-import LinearGradient from "react-native-linear-gradient"
 import DynamicImageGrid from "@/components/DynamicImageGrid"
 import CommentSectionView from "./CommentSectionView"
 
+import { formatDistance } from "@/utils/formatDistance"
 import { MapPin } from "@/lib/icons/MapPin"
 import { Eye } from "@/lib/icons/Eye"
 import { Star } from "@/lib/icons/RaitingIcon"
@@ -39,6 +39,7 @@ type CacheData = {
 interface CacheInfoModalProps {
   modalVisible: boolean
   selectedCacheData: CacheData
+  distance: number | null
   closeModal: () => void
   selectedGoToCache: string
   setSelectedGoToCache: (cacheId: string) => void
@@ -47,6 +48,7 @@ interface CacheInfoModalProps {
 const CacheInfoModal: React.FC<CacheInfoModalProps> = ({
   modalVisible,
   selectedCacheData,
+  distance,
   closeModal,
   selectedGoToCache,
   setSelectedGoToCache,
@@ -74,7 +76,7 @@ const CacheInfoModal: React.FC<CacheInfoModalProps> = ({
         <View className="flex-row items-center gap-4">
           <View className="flex-row items-center gap-1">
             <MapPin size={16} strokeWidth={1.25} className="h-6 w-6 text-primary" />
-            <Text className="gap-2 font-medium text-muted-foreground">1 km</Text>
+            <Text className="gap-2 font-medium text-muted-foreground">{distance ? formatDistance(distance) : "N/A"}</Text>
           </View>
           <View className="flex-row items-center gap-1">
             <Eye size={16} strokeWidth={1.25} className="h-6 w-6 text-foreground" />
@@ -96,9 +98,9 @@ const CacheInfoModal: React.FC<CacheInfoModalProps> = ({
 
         <View className="gap-4">
           
-
+          <Text>{selectedCacheData?.description}</Text>
           <ScrollView style={{ maxHeight: 500 }} showsVerticalScrollIndicator={false}>
-            <Text>{selectedCacheData?.description}</Text>
+            
             {selectedCacheData?.photos && (
               <SafeAreaView>
                 <DynamicImageGrid images={selectedCacheData?.photos} />

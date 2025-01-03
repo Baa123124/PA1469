@@ -113,8 +113,17 @@ const dummyReview3: Review = {
   rating: 2,
   comment: "This is a very interesting comment. This is a very interesting comment. This is a very interesting comment. This is a very interesting comment. This is a very interesting comment. This is a very interesting comment. This is a very interesting comment. This is a very interesting comment.",
   createdAt: new Date("2024-01-01T00:00:00.000Z"),
-  photo: dummyCachePhoto1,
-  userName: "Stefan"
+  photo: dummyCachePhoto2,
+  userName: "Karl"
+}
+
+const dummyReview4: Review = {
+  id: "1304013",
+  rating: 2,
+  comment: "This is a very interesting comment. This is a very interesting comment. This is a very interesting comment. This is a very interesting comment. This is a very interesting comment. This is a very interesting comment. This is a very interesting comment. This is a very interesting comment.",
+  createdAt: new Date("2024-01-01T00:00:00.000Z"),
+  photo: dummyCachePhoto2,
+  userName: "King kong"
 }
 
 const dummyCache: Cache = {
@@ -127,7 +136,7 @@ const dummyCache: Cache = {
     photos: [dummyCachePhoto1, dummyCachePhoto2, dummyCachePhoto3],
     rating: 4,
     views: 10,
-    reviews: [dummyReview, dummyReview2, dummyReview3],
+    reviews: [dummyReview4],
     tags: ["WELLDONE"]
   },
 }
@@ -142,7 +151,7 @@ const dummyCache2: Cache = {
     photos: [dummyCachePhoto1, dummyCachePhoto2, dummyCachePhoto3],
     rating: 4,
     views: 10,
-    reviews: [dummyReview, dummyReview2, dummyReview3],
+    reviews: [],
     tags: ["Cinematic"]
   },
 }
@@ -157,7 +166,7 @@ const dummyCache3: Cache = {
     photos: [dummyCachePhoto1, dummyCachePhoto2, dummyCachePhoto3],
     rating: 4,
     views: 10,
-    reviews: [dummyReview, dummyReview2, dummyReview],
+    reviews: [dummyReview, dummyReview3, dummyReview2],
     tags: ["WELLDONE"]
   },
 }

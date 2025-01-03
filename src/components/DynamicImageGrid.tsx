@@ -154,7 +154,7 @@ export default DynamicImageGrid;
 
 const styles = StyleSheet.create({
   container: {
-    width: SCREEN_WIDTH - 20,
+    width: SCREEN_WIDTH - 30,
     height: 300,
     overflow: "hidden",
     borderRadius: 12,

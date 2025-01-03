@@ -341,6 +341,15 @@ const MapScreen: React.FC<MapScreenProps> = ({
     );
   };
 
+  const getDistanceFromUser = (coord: LatLng) => {
+    if(!currentUserLocation)
+      return null
+    return getDistance(
+      currentUserLocation,
+      coord
+    )
+  }
+
   /**
    * Called when the user finishes dragging the new marker (if adding a cache).
    */
@@ -444,6 +453,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
             ...selectedCache.data,
             cacheId: selectedCache.id
           }}
+          distance={getDistanceFromUser(selectedCache.coordinates)}
           closeModal={handleCloseModal}
           selectedGoToCache={selectedGoToCacheId}
           setSelectedGoToCache={setSelectedGoToCacheId}
