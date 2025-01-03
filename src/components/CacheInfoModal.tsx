@@ -4,6 +4,7 @@ import { View, ScrollView, StyleSheet, SafeAreaView } from "react-native"
 import { Modalize } from "react-native-modalize"
 import LinearGradient from "react-native-linear-gradient"
 import DynamicImageGrid from "@/components/DynamicImageGrid"
+import CommentSectionView from "./CommentSectionView"
 
 import { MapPin } from "@/lib/icons/MapPin"
 import { Eye } from "@/lib/icons/Eye"
@@ -13,12 +14,14 @@ import { Button } from "./ui/button"
 import { useColorScheme } from "@/lib/useColorScheme"
 import { darkTheme, lightTheme } from "@/lib/constants"
 
+
 type Review = {
   id: string
   rating: 1 | 2 | 3 | 4 | 5
   comment: string
   createdAt: Date
   photo: string
+  userName: string
 }
 
 type CacheData = {
@@ -92,15 +95,16 @@ const CacheInfoModal: React.FC<CacheInfoModalProps> = ({
         </View>
 
         <View className="gap-4">
-          {/* Description (200 chars max, no scroll required) */}
-          <Text>{selectedCacheData?.description}</Text>
+          
 
           <ScrollView style={{ maxHeight: 500 }} showsVerticalScrollIndicator={false}>
+            <Text>{selectedCacheData?.description}</Text>
             {selectedCacheData?.photos && (
               <SafeAreaView>
                 <DynamicImageGrid images={selectedCacheData?.photos} />
               </SafeAreaView>
             )}
+            <CommentSectionView comments={selectedCacheData?.reviews} />
           </ScrollView>
 
           {/* Action Buttons */}
