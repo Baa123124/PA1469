@@ -45,6 +45,7 @@ type Review = {
   comment: string
   createdAt: Date
   photo: string
+  userName: string
 }
 
 type List = {
@@ -95,6 +96,7 @@ const dummyReview: Review = {
   comment: "This is a very interesting comment.",
   createdAt: new Date("2023-01-01T00:00:00.000Z"),
   photo: dummyCachePhoto1,
+  userName: "Stefan"
 }
 
 const dummyCache: Cache = {
