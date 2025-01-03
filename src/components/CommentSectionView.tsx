@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
+import { useColorScheme } from "@/lib/useColorScheme"
+import { darkTheme, lightTheme } from "@/lib/constants"
 
 interface CommentSectionViewProps {
   comments: Review[]; // Data of the current selected cache
@@ -25,6 +27,10 @@ type Review = {
 const CommentSectionView: React.FC<CommentSectionViewProps> = ({
   comments,
 }) => {
+  const { isDarkColorScheme } = useColorScheme()
+    const theme = isDarkColorScheme ? darkTheme : lightTheme
+    const { colors } = theme
+
   const [expandedCommentId, setExpandedCommentId] = useState<string | null>(
     null
   );
@@ -34,9 +40,9 @@ const CommentSectionView: React.FC<CommentSectionViewProps> = ({
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       {comments.map((comment) => (
-        <View key={comment.id} style={styles.commentCard}>
+        <View key={comment.id} style={[styles.commentCard, { backgroundColor: isDarkColorScheme ? "#1A1A1A": "#F9F9F9"}]}>
           <View style={styles.header}>
             {/* Avatar */}
             <Avatar style={styles.avatar} alt={`Avatar of ${comment.userName}`}>
@@ -45,7 +51,7 @@ const CommentSectionView: React.FC<CommentSectionViewProps> = ({
 
             {/* User Info */}
             <View style={styles.userInfo}>
-              <Text style={styles.userName}>{comment.userName}</Text>
+              <Text style={[styles.userName, {color: "#ABABAB"}]}>{comment.userName}</Text>
               {/* Meta Info (e.g., date) */}
               <View style={styles.metaInfo}>
                 <CalendarRange width={14} height={14} color="#6B7280" />
@@ -71,13 +77,14 @@ const CommentSectionView: React.FC<CommentSectionViewProps> = ({
           </View>
 
           {/* Comment Text Section */}
-          <View style={styles.commentContentContainer}>
+          <View style={[styles.commentContentContainer, {borderTopColor: isDarkColorScheme ? "#ABABAB" : "#E5E7EB"}]}>
             <Text
               style={[
                 styles.commentText,
                 expandedCommentId === comment.id
                   ? styles.expanded
                   : styles.collapsed,
+                  , {color: isDarkColorScheme ? "#ABABAB" :"#374151",}
               ]}
               numberOfLines={
                 expandedCommentId === comment.id ? undefined : 3
@@ -110,10 +117,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 12,
-    backgroundColor: "#F9FAFB",
   },
   commentCard: {
-    backgroundColor: "#FFFFFF",
     borderRadius: 8,
     padding: 12,
     marginBottom: 12,
@@ -161,11 +166,9 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingTop: 8,
     borderTopWidth: 1,
-    borderTopColor: "#E5E7EB",
   },
   commentText: {
     fontSize: 14,
-    color: "#374151",
     lineHeight: 20,
   },
   collapsed: {
