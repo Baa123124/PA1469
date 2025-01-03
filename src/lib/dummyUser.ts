@@ -199,13 +199,19 @@ const dummyLists: List[] = [
     locked: true,
   },
   {
+    id: "202",
+    name: "My caches",
+    caches: [dummyCache, dummyCache2, dummyCache3, dummyCache, dummyCache2, dummyCache3],
+    locked: true,
+  },
+  {
     id: "300",
     name: "Favorites",
     caches: [dummyCache, dummyCache2, dummyCache3, dummyCache, dummyCache2, dummyCache3],
   },
   {
     id: "301",
-    name: "Future journeys",
+    name: "Bookmarked",
     caches: [dummyCache, dummyCache2, dummyCache3],
   },
 ]

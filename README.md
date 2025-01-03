@@ -19,6 +19,8 @@ Includes:
 - [Reactotron](https://github.com/infinitered/reactotron) (react native debug tool)
 - [React Native Firebase](https://rnfirebase.io/) (Backend as a service used for authentication purposes)
 
+> See references in [NOTICE.md](https://github.com/Baa123124/PA1469/blob/master/NOTICE.md)
+
 <br/>
 
 ## Development
@@ -154,17 +156,12 @@ This is a great place to put miscellaneous helpers and utilities. Things like da
 7. Start the app with `npm run android`
 
 - NOTE: If you experience a developer error when using google signin, make sure that the key is up to date with your current build.
-  <br/>
-
-### Firebase Authentication Setup for IOS
-
-Not setup
 
 <br/>
 
 ### Build apk
 
-1. `npm run prebuild:clean`
+1. `npx expo prebuild` or `npm run prebuild:clean` + add Google Maps API key in `.android/app/src/main/AndroidManifest.xml`
 2. `npm run android:prod` (release/prod) or `npm run android` (debug/dev)
 3. This will open the emulator and the app automatically
 4. You can find the apk in `android/app/build/outputs/apk/release` or `android/app/build/outputs/apk/debug`
