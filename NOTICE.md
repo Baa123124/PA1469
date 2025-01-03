@@ -5,7 +5,7 @@
 - The **boilerplate** project structure and code is from [Ignite](https://github.com/infinitered/ignite).
 - All **prebuilt components** in `src/components/ui` are from [React Native Reusables](https://rnr-docs.vercel.app/getting-started/introduction/).
 - All **icons** in `src/lib/icons` are from [Lucide](https://lucide.dev/).
-- All the **documentation** used throughout the project is listed at the top of the `README` file.
+- All the **documentation** used throughout the project is listed at the top of the [README.md](https://github.com/Baa123124/PA1469/blob/master/README.md) file.
 
 <br/>
 
@@ -27,5 +27,3 @@
 - The individual settings screens were inspired by [Snapchat Android](https://play.google.com/store/apps/details?id=com.snapchat.android&hl=en-US).
 
 - The `src/app/profile/[id].tsx` screen was inspired by [Profile Page](https://dribbble.com/shots/23681946-Profile-Page) by _Vishnu Prasad_ on Dribbble.
-
-- The **table**, **dropdown-menu**, **dialog**, and **alert-dialog** in `src/app/(tabs)/caches/index` is adapted from the React Native Reusables documentation: [Table](https://rnr-docs.vercel.app/components/table/), [Dropdown Menu](https://rnr-docs.vercel.app/components/dropdown-menu/), [Dialog](https://rnr-docs.vercel.app/components/dialog/), and [Alert Dialog](https://rnr-docs.vercel.app/components/alert-dialog/).

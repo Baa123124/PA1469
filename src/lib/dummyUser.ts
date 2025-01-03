@@ -108,7 +108,7 @@ const dummyCache: Cache = {
     rating: 4,
     views: 10,
     reviews: [dummyReview, dummyReview, dummyReview],
-    tags: ["WELLDONE"]
+    tags: ["WELLDONE"],
   },
 }
 
@@ -123,7 +123,7 @@ const dummyCache2: Cache = {
     rating: 4,
     views: 10,
     reviews: [dummyReview, dummyReview, dummyReview],
-    tags: ["Cinematic"]
+    tags: ["Cinematic"],
   },
 }
 
@@ -138,7 +138,7 @@ const dummyCache3: Cache = {
     rating: 4,
     views: 10,
     reviews: [dummyReview, dummyReview, dummyReview],
-    tags: ["WELLDONE"]
+    tags: ["WELLDONE"],
   },
 }
 
@@ -179,13 +179,19 @@ const dummyLists: List[] = [
     locked: true,
   },
   {
+    id: "202",
+    name: "My caches",
+    caches: [dummyCache, dummyCache2, dummyCache3, dummyCache, dummyCache2, dummyCache3],
+    locked: true,
+  },
+  {
     id: "300",
     name: "Favorites",
     caches: [dummyCache, dummyCache2, dummyCache3, dummyCache, dummyCache2, dummyCache3],
   },
   {
     id: "301",
-    name: "Future journeys",
+    name: "Bookmarked",
     caches: [dummyCache, dummyCache2, dummyCache3],
   },
 ]

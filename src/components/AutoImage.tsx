@@ -70,7 +70,7 @@ function useAutoImage(
 
 /**
  * An Image component that automatically sizes an image.
- * @see [Documentation and Examples]{@link https://docs.infinite.red/ignite-cli/boilerplate/app/components/AutoImage/}
+ * @see [Documentation](https://docs.infinite.red/ignite-cli/boilerplate/app/components/AutoImage/)
  */
 const AutoImage = React.forwardRef<React.ComponentPropsWithoutRef<typeof Image>, AutoImageProps>(
   ({ maxWidth, maxHeight, webSource, nativeSource, ...props }, ref) => {
