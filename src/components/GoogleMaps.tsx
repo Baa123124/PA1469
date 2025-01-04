@@ -210,7 +210,6 @@ const MapScreen: React.FC<MapScreenProps> = ({
 
   /** ---------- Map Behavior / Data State ---------- **/
   const [mapReady, setMapReady] = useState<boolean>(false);
-  const [dataLoaded, setDataLoaded] = useState<boolean>(false);
 
   /** ---------- Cache States ---------- **/
   const [newMarkerPosition, setNewMarkerPosition] = useState<LatLng>({
@@ -279,14 +278,6 @@ const MapScreen: React.FC<MapScreenProps> = ({
     }
   }, [addingCache, currentUserLocation]);
 
-  /** 
-   * If allCaches are loaded, mark data as loaded. 
-   */
-  useEffect(() => {
-    if (allCaches) {
-      setDataLoaded(true);
-    }
-  }, [allCaches]);
 
   /** 
    * Request (or check) location permission on mount.
@@ -340,6 +331,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
    * Calculate distance to the goal and check if it is reached.
    */
   useEffect(() => {
+    setGoalReached(false);
     if (!selectedGoToCache && setDistanceToGoal) {
       setDistanceToGoal(null);
     }
@@ -428,7 +420,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
   /**
    * Decide whether to show loading overlay.
    */
-  const showLoadingOverlay = !mapReady || !dataLoaded || loadingMapRegion || !region;
+  const showLoadingOverlay = !mapReady || loadingMapRegion || !region;
 
   /** ---------- Render ---------- **/
   return (
@@ -447,7 +439,6 @@ const MapScreen: React.FC<MapScreenProps> = ({
           onMapReady={() => setMapReady(true)}
         >
           {mapReady &&
-            dataLoaded &&
             (!addingCache ? (
               cachesToDisplay?.map((cache) => {
                 const isSelected = selectedGoToCacheId === cache.id;

@@ -143,7 +143,7 @@ const dummyCache: Cache = {
 
 const dummyCache2: Cache = {
   id: "15",
-  coordinates: { latitude: 51.507351, longitude: -0.127758 },
+  coordinates: { latitude: 56.1592993, longitude: 14.8792046 },
   data: {
     creatorId: "user123",
     name: "Cache 2",
