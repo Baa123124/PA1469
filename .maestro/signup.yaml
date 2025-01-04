@@ -7,6 +7,7 @@ appId: com.xplorify
 ---
 - clearState # Clears the state of our app (navigation and authentication)
 - launchApp # Launches the app
+<<<<<<< Updated upstream
 - assertVisible:
     text: "Sign up"
 - tapOn:
@@ -28,3 +29,18 @@ appId: com.xplorify
 - assertVisible:
     text: "Get started"
 - tapOn: "Get started"
+=======
+- assertVisible: "Welcome back!"
+- tapOn: "Sign up"
+- assertVisible: "Create an account"
+- tapOn: "Enter your name"
+- inputText: "John Doe"
+- tapOn: "Enter your email"
+- inputText: "john.doe@example.com"
+- tapOn: "Enter your password"
+- inputText: "Test12345!"
+- tapOn:
+    point: "92%,91%" # Taps on checkmark after entering password
+- tapOn: "Get started"
+- assertVisible: "John Doe"
+>>>>>>> Stashed changes
