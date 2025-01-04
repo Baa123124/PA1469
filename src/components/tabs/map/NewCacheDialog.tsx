@@ -24,15 +24,17 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import * as React from "react"
 import { Controller, useForm } from "react-hook-form"
 import { View } from "react-native"
+import { LatLng } from "react-native-maps"
 
 // ? Possibly add tags
 
 type NewCacheDialogProps = DialogProps & {
+  newCacheCoord: LatLng
   open: boolean
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 const NewCacheDialog = React.forwardRef<DialogRef, NewCacheDialogProps>(
-  ({ open, setOpen, ...props }, ref) => {
+  ({ newCacheCoord, open, setOpen, ...props }, ref) => {
     const {
       control: newControl,
       handleSubmit: newHandleSubmit,
@@ -179,8 +181,12 @@ const NewCacheDialog = React.forwardRef<DialogRef, NewCacheDialogProps>(
             <FormSubmit
               className="w-auto flex-row gap-2"
               onPress={newHandleSubmit((formData) => {
-                // TODO: Create new cache
-                console.log(formData)
+                const finalData = {
+                  ...formData,
+                  cacheCoord: newCacheCoord, // Append here directly
+                };
+                console.log('Final Form Data:', finalData)
+                console.log('Coordinates:', finalData.cacheCoord)
                 setOpen(false)
                 newReset()
               })}

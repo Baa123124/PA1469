@@ -273,7 +273,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
         },
       )
     }
-  }, [addingCache, currentUserLocation])
+  }, [addingCache])
 
   /**
    * Request (or check) location permission on mount.
@@ -305,7 +305,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
     if (locationPermissionGranted) {
       console.log("Permission is granted, attempting to get position...")
     } else {
-      console.warn("Permission is not granted yet")
+      console.log("Permission is not granted yet")
     }
   }, [locationPermissionGranted])
 
@@ -315,7 +315,6 @@ const MapScreen: React.FC<MapScreenProps> = ({
    */
   const handleUserLocationChange = (event: UserLocationChangeEvent) => {
     const { coordinate } = event.nativeEvent
-    console.log(coordinate, coordinate?.timestamp)
     setCurrentUserLocation(
       coordinate ? { latitude: coordinate.latitude, longitude: coordinate.longitude } : null,
     )

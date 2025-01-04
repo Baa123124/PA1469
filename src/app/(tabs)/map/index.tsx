@@ -212,7 +212,10 @@
           </View>
 
           {/* New Cache Dialog */}
-          <NewCacheDialog open={newCacheOpen} setOpen={setNewCacheOpen} />
+          {
+            newCacheCoord && 
+            <NewCacheDialog newCacheCoord={newCacheCoord} open={newCacheOpen} setOpen={setNewCacheOpen} />
+          }
           <View className="absolute inset-0 items-center justify-center gap-2" style={{ top: "74%" }}>
             <CacheReachedDialog
                 open={cacheReachedOpen}
