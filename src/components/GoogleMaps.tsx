@@ -1,48 +1,55 @@
 import React, { useEffect, useState } from 'react';
-
-import {
-  View,
-  Text,
-  StyleSheet,
-  ActivityIndicator,
-  Platform,
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  ActivityIndicator, 
+  Platform 
 } from 'react-native';
+
 import MapView, {
   PROVIDER_GOOGLE,
   Marker,
   UserLocationChangeEvent,
   LatLng,
+  Region,
 } from 'react-native-maps';
+
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { getDistance } from 'geolib';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useColorScheme } from '@/lib/useColorScheme';
 import CacheInfoModal from '@/components/CacheInfoModal';
 
+/** ---------- Types ---------- **/
 type Review = {
-  id: string
-  rating: 1 | 2 | 3 | 4 | 5
-  comment: string
-  createdAt: Date
-  photo: string
-  userName: string
-}
+  id: string;
+  rating: 1 | 2 | 3 | 4 | 5;
+  comment: string;
+  createdAt: Date;
+  photo: string;
+  userName: string;
+};
 
 type CacheData = {
-  creatorId: string
-  name: string
-  description: string
-  photos: string[]
-  tags: string[] // exclude
-  rating: number
-  views: number
-  reviews: Review[]
-}
+  creatorId: string;
+  name: string;
+  description: string;
+  photos: string[];
+  tags: string[]; // exclude
+  rating: number;
+  views: number;
+  reviews: Review[];
+};
 
 interface Cache {
-  id: string
-  coordinates: { latitude: number; longitude: number }
-  data: CacheData
+  id: string;
+  coordinates: {
+    latitude: number;
+    longitude: number;
+  };
+  data: CacheData;
 }
 
 interface MapScreenProps {
@@ -53,23 +60,15 @@ interface MapScreenProps {
   goalReached: boolean;
   setGoalReached: React.Dispatch<React.SetStateAction<boolean>>;
   setDistanceToGoal?: React.Dispatch<React.SetStateAction<number | null>>;
-  addingCache: boolean,
-  getNewCacheCoord: (coord: LatLng) => void
+  addingCache: boolean;
+  getNewCacheCoord: (coord: LatLng) => void;
 }
 
+/** ---------- Constants ---------- **/
 const darkModeMap = [
-  {
-    elementType: 'geometry',
-    stylers: [{ color: '#1d2c4d' }],
-  },
-  {
-    elementType: 'labels.text.fill',
-    stylers: [{ color: '#8ec3b9' }],
-  },
-  {
-    elementType: 'labels.text.stroke',
-    stylers: [{ color: '#1a3646' }],
-  },
+  { elementType: 'geometry', stylers: [{ color: '#1d2c4d' }] },
+  { elementType: 'labels.text.fill', stylers: [{ color: '#8ec3b9' }] },
+  { elementType: 'labels.text.stroke', stylers: [{ color: '#1a3646' }] },
   {
     featureType: 'administrative.country',
     elementType: 'geometry.stroke',
@@ -120,11 +119,7 @@ const darkModeMap = [
     elementType: 'labels.text.fill',
     stylers: [{ color: '#3C7680' }],
   },
-  {
-    featureType: 'road',
-    elementType: 'geometry',
-    stylers: [{ color: '#304a7d' }],
-  },
+  { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#304a7d' }] },
   {
     featureType: 'road',
     elementType: 'labels.text.fill',
@@ -187,13 +182,16 @@ const darkModeMap = [
   },
 ];
 
-const initialRegion = {
+const DEFAULT_REGION: Region = {
   latitude: 62.918161,
   longitude: 18.643501,
   latitudeDelta: 0.5,
   longitudeDelta: 0.5,
 };
 
+const STORAGE_KEY = 'mapRegion';
+
+/** ---------- Component ---------- **/
 const MapScreen: React.FC<MapScreenProps> = ({
   allCaches,
   displayCaches,
@@ -203,78 +201,118 @@ const MapScreen: React.FC<MapScreenProps> = ({
   setGoalReached,
   setDistanceToGoal,
   addingCache,
-  getNewCacheCoord
+  getNewCacheCoord,
 }) => {
+  /** ---------- Location / Region State ---------- **/
+  const [region, setRegion] = useState<Region | null>(null);
+  const [loadingMapRegion, setLoadingMapRegion] = useState(true);
   const [currentUserLocation, setCurrentUserLocation] = useState<LatLng | null>(null);
 
+  /** ---------- Map Behavior / Data State ---------- **/
+  const [mapReady, setMapReady] = useState<boolean>(false);
+  const [dataLoaded, setDataLoaded] = useState<boolean>(false);
+
+  /** ---------- Cache States ---------- **/
   const [newMarkerPosition, setNewMarkerPosition] = useState<LatLng>({
-    latitude: initialRegion.latitude,
-    longitude: initialRegion.longitude,
+    latitude: DEFAULT_REGION.latitude,
+    longitude: DEFAULT_REGION.longitude,
   });
-
-  useEffect(() => {
-    getNewCacheCoord(newMarkerPosition)
-  }, [newMarkerPosition])
-
-  const [selectedGoToCache, setSelectedGoToCache] = useState<Cache | null>(null)
+  const [selectedGoToCache, setSelectedGoToCache] = useState<Cache | null>(null);
   const [favorites, setFavorites] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedCache, setSelectedCache] = useState<Cache | null>(null);
+
+  /** ---------- Permissions State ---------- **/
   const [locationPermissionGranted, setLocationPermissionGranted] = useState(false);
 
+  /** ---------- Dark Mode ---------- **/
   const { isDarkColorScheme } = useColorScheme();
 
+  /** 
+   * Load region from AsyncStorage or set default. 
+   * Runs only once on mount.
+   */
+  useEffect(() => {
+    const initMapRegion = async () => {
+      try {
+        const savedRegionString = await AsyncStorage.getItem(STORAGE_KEY);
+        if (savedRegionString) {
+          const savedRegion: Region = JSON.parse(savedRegionString);
+          setRegion(savedRegion);
+        } else {
+          setRegion(DEFAULT_REGION);
+        }
+      } catch (error) {
+        console.log('Failed to load region from storage', error);
+        setRegion(DEFAULT_REGION);
+      } finally {
+        setLoadingMapRegion(false);
+      }
+    };
+    initMapRegion();
+  }, []);
+
+  /** 
+   * Whenever the user drags / zooms the map, update region and save to AsyncStorage.
+   */
+  const handleRegionChangeComplete = async (updatedRegion: Region) => {
+    setRegion(updatedRegion);
+    try {
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedRegion));
+    } catch (error) {
+      console.log('Error saving region to AsyncStorage', error);
+    }
+  };
+
+  /** 
+   * Watch for "addingCache" changes to set the position of the new marker 
+   * at either the user’s current location or default region.
+   */
   useEffect(() => {
     if (addingCache) {
       setNewMarkerPosition(
         currentUserLocation || {
-          latitude: initialRegion.latitude,
-          longitude: initialRegion.longitude,
+          latitude: DEFAULT_REGION.latitude,
+          longitude: DEFAULT_REGION.longitude,
         }
       );
     }
-  }, [addingCache]);
+  }, [addingCache, currentUserLocation]);
 
-  /**
-   * Request or check location permission on mount.
+  /** 
+   * If allCaches are loaded, mark data as loaded. 
+   */
+  useEffect(() => {
+    if (allCaches) {
+      setDataLoaded(true);
+    }
+  }, [allCaches]);
+
+  /** 
+   * Request (or check) location permission on mount.
    */
   useEffect(() => {
     (async () => {
       let granted = false;
-
       if (Platform.OS === 'android') {
         const result = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-
         if (result === RESULTS.GRANTED || result === RESULTS.LIMITED) {
           granted = true;
         } else if (result === RESULTS.DENIED) {
-          const requestResult = await request(
-            PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION
-          );
+          const requestResult = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
           granted = requestResult === RESULTS.GRANTED || requestResult === RESULTS.LIMITED;
         }
       } else {
-        // iOS or other platforms
+        // For iOS or other platforms
         const iosResult = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
         granted = iosResult === RESULTS.GRANTED || iosResult === RESULTS.LIMITED;
       }
-
       setLocationPermissionGranted(granted);
     })();
   }, []);
 
-  /**
-   * Hide the loading indicator once caches have been loaded.
-   */
-  useEffect(() => {
-    if (allCaches) {
-      setLoading(false);
-    }
-  }, [allCaches, displayCaches]);
-
-  /**
-   * Basic log to confirm location permission state changes.
+  /** 
+   * Log changes to permission state.
    */
   useEffect(() => {
     if (locationPermissionGranted) {
@@ -285,8 +323,8 @@ const MapScreen: React.FC<MapScreenProps> = ({
   }, [locationPermissionGranted]);
 
   /**
-   * Called whenever the user’s location changes on the map.
-   * Checks distance to the currently selected cache to see if the goal is reached.
+   * Handle real-time user location changes. 
+   * Update user location and check distance to selected cache.
    */
   const handleUserLocationChange = (event: UserLocationChangeEvent) => {
     const { coordinate } = event.nativeEvent;
@@ -298,40 +336,40 @@ const MapScreen: React.FC<MapScreenProps> = ({
     );
   };
 
+  /**
+   * Calculate distance to the goal and check if it is reached.
+   */
   useEffect(() => {
-
-    if(!selectedGoToCache) {
-      if(setDistanceToGoal)
-        setDistanceToGoal(null);
+    if (!selectedGoToCache && setDistanceToGoal) {
+      setDistanceToGoal(null);
     }
-
     if (!currentUserLocation || !selectedGoToCache) return;
 
-    // Calculate distance in meters
-    const distanceInMeters = getDistance(
-      currentUserLocation,
-      {
-        latitude: selectedGoToCache.coordinates.latitude,
-        longitude: selectedGoToCache.coordinates.longitude,
-      }
-    );
-    if(setDistanceToGoal)
-      setDistanceToGoal(distanceInMeters);
+    const distanceInMeters = getDistance(currentUserLocation, {
+      latitude: selectedGoToCache.coordinates.latitude,
+      longitude: selectedGoToCache.coordinates.longitude,
+    });
 
-    // Check if within 50 meters
+    if (setDistanceToGoal) {
+      setDistanceToGoal(distanceInMeters);
+    }
+
+    // If within 50 meters, goal is reached
     if (distanceInMeters <= 50) {
       setGoalReached(true);
     }
-  }, [currentUserLocation, selectedGoToCache])
-
-  useEffect(() => {
-    const selectedCache = allCaches.find((cache) => cache.id === selectedGoToCacheId);
-    setSelectedGoToCache(selectedCache || null);
-    
-  }, [selectedGoToCacheId])
+  }, [currentUserLocation, selectedGoToCache, setDistanceToGoal, setGoalReached]);
 
   /**
-   * Toggle a cache as favorite or remove it from favorites.
+   * Update "selectedGoToCache" whenever "selectedGoToCacheId" changes.
+   */
+  useEffect(() => {
+    const found = allCaches.find((cache) => cache.id === selectedGoToCacheId);
+    setSelectedGoToCache(found || null);
+  }, [selectedGoToCacheId, allCaches]);
+
+  /** 
+   * Callback to handle toggling favorites. 
    */
   const toggleFavorite = (cacheId: string) => {
     setFavorites((prevFavorites) =>
@@ -341,117 +379,136 @@ const MapScreen: React.FC<MapScreenProps> = ({
     );
   };
 
+  /** 
+   * Returns distance from user to a given coordinate, or null if unknown. 
+   */
   const getDistanceFromUser = (coord: LatLng) => {
-    if(!currentUserLocation)
-      return null
-    return getDistance(
-      currentUserLocation,
-      coord
-    )
-  }
+    if (!currentUserLocation) return null;
+    return getDistance(currentUserLocation, coord);
+  };
 
   /**
-   * Called when the user finishes dragging the new marker (if adding a cache).
+   * Handle user dragging a new marker (for adding cache).
    */
   const handleMarkerDragEnd = (e: any) => {
     const { latitude, longitude } = e.nativeEvent.coordinate;
     setNewMarkerPosition({ latitude, longitude });
   };
 
-  /**
-   * Filter caches that should be visible on the map.
+  /** 
+   * Pass newMarkerPosition to the parent whenever it changes.
+   */
+  useEffect(() => {
+    getNewCacheCoord(newMarkerPosition);
+  }, [newMarkerPosition, getNewCacheCoord]);
+
+  /** 
+   * Filter caches to display.
    */
   const cachesToDisplay = allCaches?.filter((cache) =>
     displayCaches.includes(cache.id)
   );
 
   /**
-   * Handle user pressing on an existing cache marker.
+   * Handle user pressing on an existing cache marker to open the modal.
    */
   const handleMarkerPress = (cache: Cache) => {
     setSelectedCache(cache);
     setModalVisible(true);
   };
 
-  /**
-   * Close the cache detail modal.
+  /** 
+   * Close the modal, reset selected cache.
    */
   const handleCloseModal = () => {
     setModalVisible(false);
     setSelectedCache(null);
   };
 
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#4285F4" />
-        <Text>Loading map data...</Text>
-      </View>
-    );
-  }
+  /**
+   * Decide whether to show loading overlay.
+   */
+  const showLoadingOverlay = !mapReady || !dataLoaded || loadingMapRegion || !region;
 
+  /** ---------- Render ---------- **/
   return (
     <View style={styles.container}>
-      {locationPermissionGranted && !loading && <MapView
-        toolbarEnabled={false}
-        provider={PROVIDER_GOOGLE}
-        style={styles.map}
-        initialRegion={initialRegion}
-        customMapStyle={isDarkColorScheme ? darkModeMap : []}
-        showsUserLocation
-        onUserLocationChange={handleUserLocationChange}
-      >
-        {!addingCache ? (
-          cachesToDisplay?.map((cache) => {
-            const isSelected = selectedGoToCacheId === cache.id;
-            return (
-              <Marker
-                stopPropagation={true}
-                key={cache.id}
-                coordinate={cache.coordinates}
-                pinColor={favorites.includes(cache.id) ? '#FFD700' : '#00FF00'}
-                style={{
-                  opacity:
-                    selectedGoToCacheId !== ''
-                      ? isSelected
-                        ? 1
-                        : 0.2
-                      : 1,
-                  transform: [
-                    {
-                      scale:
+      {/** Only render map if we have region and permission */}
+      {locationPermissionGranted && region && (
+        <MapView
+          toolbarEnabled={false}
+          provider={PROVIDER_GOOGLE}
+          style={styles.map}
+          region={region}
+          onRegionChangeComplete={handleRegionChangeComplete}
+          customMapStyle={isDarkColorScheme ? darkModeMap : []}
+          showsUserLocation
+          onUserLocationChange={handleUserLocationChange}
+          onMapReady={() => setMapReady(true)}
+        >
+          {mapReady &&
+            dataLoaded &&
+            (!addingCache ? (
+              cachesToDisplay?.map((cache) => {
+                const isSelected = selectedGoToCacheId === cache.id;
+                return (
+                  <Marker
+                    stopPropagation
+                    key={cache.id}
+                    coordinate={cache.coordinates}
+                    pinColor={favorites.includes(cache.id) ? '#FFD700' : '#00FF00'}
+                    style={{
+                      opacity:
                         selectedGoToCacheId !== ''
                           ? isSelected
-                            ? 1.5
-                            : 0.8
+                            ? 1
+                            : 0.2
                           : 1,
-                    },
-                  ],
-                }}
-                onPress={
-                  selectedGoToCacheId === '' || isSelected
-                    ? () => handleMarkerPress(cache)
-                    : () => {}
-                }
+                      transform: [
+                        {
+                          scale:
+                            selectedGoToCacheId !== ''
+                              ? isSelected
+                                ? 1.5
+                                : 0.8
+                              : 1,
+                        },
+                      ],
+                    }}
+                    onPress={
+                      selectedGoToCacheId === '' || isSelected
+                        ? () => handleMarkerPress(cache)
+                        : () => {}
+                    }
+                  />
+                );
+              })
+            ) : (
+              <Marker
+                stopPropagation
+                coordinate={newMarkerPosition}
+                draggable
+                onDragEnd={handleMarkerDragEnd}
               />
-            );
-          })
-        ) : (
-          <Marker
-            stopPropagation={true}
-            coordinate={newMarkerPosition}
-            draggable
-            onDragEnd={handleMarkerDragEnd}
-          />
-        )}
-      </MapView>}
+            ))}
+        </MapView>
+      )}
 
+      {/** Loading Overlay */}
+      {showLoadingOverlay && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color="#4285F4" />
+          <Text>Loading map data...</Text>
+        </View>
+      )}
+
+      {/** Cache Info Modal */}
       {selectedCache && (
         <CacheInfoModal
           modalVisible={modalVisible}
           selectedCacheData={{
             ...selectedCache.data,
-            cacheId: selectedCache.id
+            cacheId: selectedCache.id,
           }}
           distance={getDistanceFromUser(selectedCache.coordinates)}
           closeModal={handleCloseModal}
@@ -463,8 +520,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
   );
 };
 
-export default MapScreen;
-
+/** ---------- Styles ---------- **/
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
@@ -473,9 +529,13 @@ const styles = StyleSheet.create({
   map: {
     flex: 1,
   },
-  loadingContainer: {
-    flex: 1,
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'white',
+    opacity: 0.8,
     justifyContent: 'center',
     alignItems: 'center',
   },
 });
+
+export default MapScreen;

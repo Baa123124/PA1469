@@ -31,7 +31,7 @@
     const { user } = useAuth()
 
     const [selectedCacheId, setSelectedCacheId] = useState<string>("")
-    const [goalReached, setGoalReached] = useState<boolean>(true)
+    const [goalReached, setGoalReached] = useState<boolean>(false)
     const [distanceToGoal, setDistanceToGoal] = useState<number | null>(null)
 
     // ----- State for the overlay UI -----
