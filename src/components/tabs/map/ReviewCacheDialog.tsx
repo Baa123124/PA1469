@@ -65,12 +65,6 @@ const ReviewCacheDialog = React.forwardRef<DialogRef, ReviewCacheDialogProps>(
         }}
         {...props}
       >
-        <DialogTrigger asChild>
-          <Button className="flex-row gap-2">
-            <Star size={16} strokeWidth={1.25} className="text-primary-foreground" />
-            <Text>Review cache</Text>
-          </Button>
-        </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>

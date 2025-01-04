@@ -26,6 +26,7 @@ import Share from "react-native-share"
 
 type CacheReachedDialogProps = DialogProps & {
   open: boolean
+  cacheReached: boolean
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
   setSaveOpen: React.Dispatch<React.SetStateAction<boolean>>
   setReviewOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -33,7 +34,7 @@ type CacheReachedDialogProps = DialogProps & {
   streak: number
 }
 const CacheReachedDialog = React.forwardRef<DialogRef, CacheReachedDialogProps>(
-  ({ open, setOpen, setSaveOpen, setReviewOpen, cacheId, streak, ...props }, ref) => {
+  ({ open, cacheReached, setOpen, setSaveOpen, setReviewOpen, cacheId, streak, ...props }, ref) => {
     const cacheName = "Cache 1" // TODO: Get cache name from cacheId
 
     return (
@@ -45,12 +46,12 @@ const CacheReachedDialog = React.forwardRef<DialogRef, CacheReachedDialogProps>(
         }}
         {...props}
       >
-        <DialogTrigger asChild>
+        {cacheReached && (<DialogTrigger asChild>
           <Button className="flex-row gap-2">
             <MapPin size={16} strokeWidth={1.25} className="text-primary-foreground" />
             <Text>Cache reached</Text>
           </Button>
-        </DialogTrigger>
+        </DialogTrigger>)}
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle className="max-w-[250px]">
