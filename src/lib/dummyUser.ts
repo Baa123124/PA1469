@@ -91,7 +91,7 @@ const dummyCachePhoto3 =
   "https://images.pexels.com/photos/247599/pexels-photo-247599.jpeg?auto=compress&cs=tinysrgb&w=600"
 
 const dummyReview: Review = {
-  id: "13",
+  id: "13243",
   rating: 4,
   comment: "This is a very interesting comment.",
   createdAt: new Date("2023-01-01T00:00:00.000Z"),
@@ -100,7 +100,7 @@ const dummyReview: Review = {
 }
 
 const dummyReview2: Review = {
-  id: "1",
+  id: "2321",
   rating: 4,
   comment: "This is a very interesting comment.",
   createdAt: new Date("2023-01-01T00:00:00.000Z"),
@@ -127,7 +127,7 @@ const dummyReview4: Review = {
 }
 
 const dummyCache: Cache = {
-  id: "14",
+  id: "1423",
   coordinates: { latitude: 51.507351, longitude: -0.127758 },
   data: {
     creatorId: "user123",
@@ -142,7 +142,7 @@ const dummyCache: Cache = {
 }
 
 const dummyCache2: Cache = {
-  id: "15",
+  id: "125",
   coordinates: { latitude: 56.1592993, longitude: 14.8792046 },
   data: {
     creatorId: "user123",
@@ -157,7 +157,7 @@ const dummyCache2: Cache = {
 }
 
 const dummyCache3: Cache = {
-  id: "16",
+  id: "106",
   coordinates: { latitude: 62.918161, longitude: 18.643501 },
   data: {
     creatorId: "user1234",
@@ -173,7 +173,7 @@ const dummyCache3: Cache = {
 
 const dummyLists: List[] = [
   {
-    id: "200",
+    id: "200s",
     name: "History",
     caches: [
       dummyCache,
@@ -192,7 +192,7 @@ const dummyLists: List[] = [
     locked: true,
   },
   {
-    id: "201",
+    id: "20s1",
     name: "Reviews",
     caches: [
       dummyCache,
@@ -208,25 +208,25 @@ const dummyLists: List[] = [
     locked: true,
   },
   {
-    id: "202",
+    id: "2as02",
     name: "My caches",
     caches: [dummyCache, dummyCache2, dummyCache3, dummyCache, dummyCache2, dummyCache3],
     locked: true,
   },
   {
-    id: "300",
+    id: "30ss0",
     name: "Favorites",
     caches: [dummyCache, dummyCache2, dummyCache3, dummyCache, dummyCache2, dummyCache3],
   },
   {
-    id: "301",
+    id: "30j1",
     name: "Bookmarked",
     caches: [dummyCache, dummyCache2, dummyCache3],
   },
 ]
 
 const dummyUser: User = {
-  id: "123", // Firebase user id
+  id: "123k", // Firebase user id
   email: "john.doe@example.com",
   createdAt: new Date("2023-01-01T00:00:00.000Z"),
   displayName: "John Doe",

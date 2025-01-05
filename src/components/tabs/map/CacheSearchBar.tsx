@@ -14,7 +14,8 @@
   import { Link } from "expo-router"
   import { ChevronRight } from "lucide-react-native"
   import React, { useState, useEffect } from "react";
-  import { TextInputProps, LayoutChangeEvent, View } from "react-native"
+  import { Keyboard, TextInputProps, LayoutChangeEvent, View } from "react-native"
+  import {Cache} from "@/lib/dummyUser"
 
   // TODO: Link dropdown item to cache details
   // ? Make X button take precedence over dropdown menu closing (not sure how to do this)
@@ -22,11 +23,12 @@
 
   type CacheSearchBarProps = TextInputProps & {
     onUpdate: (searchInput: string) => void
-    data: { label: string; value: string; distance: number }[]
+    setSelectedCache: React.Dispatch<React.SetStateAction<Cache | null>>
+    caches: Cache[]
   }
 
   const CacheSearchBar = React.forwardRef<InputRef, CacheSearchBarProps>(
-    ({ className, onUpdate, data, ...props }, ref) => {
+    ({ className, onUpdate, setSelectedCache, caches, ...props }, ref) => {
       const [inputWidth, setInputWidth] = React.useState<number | undefined>(undefined)
       const [value, setValue] = React.useState<string>("")
 
@@ -72,21 +74,22 @@
             )}
           </View>
           <DropdownMenuContent style={{ width: inputWidth }}>
-            {data
-              .filter((item) => item.label.toLowerCase().includes(value.toLowerCase()))
-              .map((item, index) => (
-                <Link href="/" asChild key={index}>
-                  <DropdownMenuItem>
-                    <View className="items-center gap-1">
-                      <MapPin size={16} strokeWidth={1.25} />
-                      <Text className="!text-xs">{formatDistance(item.distance)}</Text>
-                    </View>
-                    <Text className="pl-4">{item.label}</Text>
-                    <ChevronRight size={16} strokeWidth={1.25} style={{ marginLeft: "auto" }} />
-                  </DropdownMenuItem>
-                </Link>
-              ))}
-          </DropdownMenuContent>
+          {caches
+            .filter((item) => item.data.name.toLowerCase().includes(value.toLowerCase()))
+            .map((item) => (
+              <DropdownMenuItem
+                key={item.id}
+                  onPress={() => {
+                  setSelectedCache(item);
+                  setValue(item.data.name);
+                  Keyboard.dismiss();
+                }}
+              >
+                <Text className="pl-4">{item.data.name}</Text>
+                <ChevronRight size={16} strokeWidth={1.25} style={{ marginLeft: "auto" }} />
+              </DropdownMenuItem>
+            ))}
+        </DropdownMenuContent>
         </DropdownMenu>
       )
     },

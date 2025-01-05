@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { View, Text, StyleSheet, ActivityIndicator, Platform } from "react-native"
 
 import MapView, {
@@ -51,6 +51,8 @@ interface Cache {
 interface MapScreenProps {
   allCaches: Cache[]
   displayCaches: string[]
+  selectedCache: Cache | null
+  setSelectedCache: React.Dispatch<React.SetStateAction<Cache | null>>
   selectedGoToCacheId: string
   setSelectedGoToCacheId: React.Dispatch<React.SetStateAction<string>>
   goalReached: boolean
@@ -191,6 +193,8 @@ const STORAGE_KEY = "mapRegion"
 const MapScreen: React.FC<MapScreenProps> = ({
   allCaches,
   displayCaches,
+  selectedCache,
+  setSelectedCache,
   selectedGoToCacheId,
   setSelectedGoToCacheId,
   goalReached,
@@ -216,13 +220,16 @@ const MapScreen: React.FC<MapScreenProps> = ({
   const [selectedGoToCache, setSelectedGoToCache] = useState<Cache | null>(null)
   const [favorites, setFavorites] = useState<string[]>([])
   const [modalVisible, setModalVisible] = useState(false)
-  const [selectedCache, setSelectedCache] = useState<Cache | null>(null)
 
   /** ---------- Permissions State ---------- **/
   const [locationPermissionGranted, setLocationPermissionGranted] = useState(false)
 
   /** ---------- Dark Mode ---------- **/
   const { isDarkColorScheme } = useColorScheme()
+
+  useEffect(() => {
+
+  })
 
   /**
    * Load region from AsyncStorage or set default.
@@ -408,18 +415,21 @@ const MapScreen: React.FC<MapScreenProps> = ({
   /**
    * Handle user pressing on an existing cache marker to open the modal.
    */
-  const handleMarkerPress = (cache: Cache) => {
-    setSelectedCache(cache)
-    setModalVisible(true)
-  }
+  const handleMarkerPress = useCallback((cache: Cache) => {
+    setSelectedCache(cache);
+  }, []);
 
   /**
    * Close the modal, reset selected cache.
    */
-  const handleCloseModal = () => {
-    setModalVisible(false)
-    setSelectedCache(null)
-  }
+  const handleCloseModal = useCallback(() => {
+    setSelectedCache(null);
+    console.log("closed")
+  }, []);
+
+  useEffect(() => {
+    setModalVisible(true)
+  }, [selectedCache])
 
   /**
    * Decide whether to show loading overlay.

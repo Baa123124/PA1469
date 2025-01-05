@@ -60,6 +60,7 @@ const CacheInfoModal: React.FC<CacheInfoModalProps> = ({
 
   useEffect(() => {
     if (modalVisible) {
+      console.log("ggg")
       modalizeRef.current?.open()
     } else {
       modalizeRef.current?.close()
@@ -140,7 +141,7 @@ const CacheInfoModal: React.FC<CacheInfoModalProps> = ({
   return (
     <Modalize
       ref={modalizeRef}
-      onClosed={closeModal}
+      onClosed={() => closeModal()}
       adjustToContentHeight
       modalStyle={{
         backgroundColor: colors.background,

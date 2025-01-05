@@ -47,6 +47,7 @@
     const [allCaches, setAllCaches] = useState<Cache[]>([dummyCache, dummyCache2, dummyCache3])
     const [displayCaches, setDisplayCaches] = useState<string[]>([])
     const [searchInput, setSearchInput] = useState<string>("");
+    const [selectedCache, setSelectedCache] = useState<Cache | null>(null)
 
     useEffect(() => {
       AsyncStorage.getItem("selectedCacheId").then((cacheId) => {
@@ -63,12 +64,6 @@
      */
 
 
-    const cachesForSearch = [dummyCache, dummyCache2, dummyCache3]
-    const data = cachesForSearch.map((c) => ({
-      label: c.data.name,
-      value: c.id,
-      distance: 12000,
-    }))
 
     const newMarkerCoord = (coord: LatLng) => {
       setNewCacheCoord(coord)
@@ -100,6 +95,8 @@
           <MapScreen
             allCaches={allCaches}
             displayCaches={displayCaches}
+            selectedCache={selectedCache}
+            setSelectedCache={setSelectedCache}
             selectedGoToCacheId={selectedCacheId}
             setSelectedGoToCacheId={setSelectedCacheId}
             goalReached={goalReached}
@@ -119,7 +116,7 @@
           {/* Top Nav + Settings Button + Search */}
           {!addingCache && (
             <TopNav className="absolute gap-2" style={{ top: insets.top }}>
-              <CacheSearchBar data={data} onUpdate={filterDisplayCaches} />
+              <CacheSearchBar caches={allCaches} setSelectedCache={setSelectedCache} onUpdate={filterDisplayCaches} />
               <TopNavSettingsButton variant="outline" className="static" />
             </TopNav>
           )}
