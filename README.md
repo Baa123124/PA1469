@@ -48,6 +48,8 @@ root
 │   │   └── icons (lucide)
 │   ├── models
 │   ├── services
+│   │   ├── firebase
+│   │   └── pocketbase
 │   └── utils
 ├── test
 │   ├── __snapshots__
@@ -121,6 +123,8 @@ This is a great place to put miscellaneous helpers and utilities. Things like da
 - Set system **dark mode** on android: `adb shell "cmd uimode night yes"`
 - Set sytem **light mode** on android: `adb shell "cmd uimode night no"`
 - Simulate a deep link on android: `adb shell am start -W -a android.intent.action.VIEW -d "xplorify://map" com.xplorify`
+- Get UNIX timestamp on windows: `[math]::Round((Get-Date -UFormat %s))`
+- Get UNIX timestamp on linux: `date +%s`
 
 <br/>
 

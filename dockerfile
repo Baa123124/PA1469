@@ -13,6 +13,8 @@ RUN chmod +x ./pocketbase
 
 RUN mkdir -p /app/pb_data
 
+COPY src/services/pocketbase/pb_migrations /app/pb_migrations
+
 RUN ./pocketbase serve --http=0.0.0.0:8090 & \
     echo "Waiting for PocketBase to start..." && \
     timeout=60; \
@@ -38,6 +40,7 @@ RUN apk add --no-cache bash
 
 COPY --from=builder /app/pocketbase /app/
 COPY --from=builder /app/pb_data /app/pb_data
+COPY --from=builder /app/pb_migrations /app/pb_migrations
 
 COPY entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
