@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { newCacheSchema } from "./mapSchemas"
 
 /**
  * Schema for validating the creation of a new list.
@@ -30,6 +31,9 @@ const editListSchema = z.object({
     .max(20, { message: "Name must be at most 20 characters long" }),
 })
 
-export { newListSchema, editListSchema }
+const editCacheSchema = newCacheSchema
+
+export { newListSchema, editListSchema, editCacheSchema }
 export type NewListSchema = z.infer<typeof newListSchema>
 export type EditListSchema = z.infer<typeof editListSchema>
+export type EditCacheSchema = z.infer<typeof editCacheSchema>
