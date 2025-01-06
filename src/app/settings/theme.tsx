@@ -1,10 +1,10 @@
-import { TopNav, TopNavRoute } from "@/components/TopNav"
+import { TopNav, TopNavBackButton, TopNavRoute } from "@/components/TopNav"
 import { Text } from "@/components/ui/text"
 import { useSafeAreaInsetsStyle } from "@/utils/useSafeAreaInsetsStyle"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import { Platform, View } from "react-native"
-import { ThemeSchema, themeSchema } from "./(data)/schemas"
+import { ThemeSchema, themeSchema } from "@/lib/settingsSchema"
 import { Label } from "@/components/ui/label"
 import { goBack } from "@/utils/goBack"
 import { Form, FormField, FormFieldError, FormSubmit } from "@/components/Form"
@@ -25,7 +25,7 @@ export default function ThemeSettingsScreen() {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(themeSchema),
-    defaultValues: { theme: dummyUser.theme },
+    defaultValues: { theme: dummyUser.settings.theme },
   })
 
   function onSubmit(formData: ThemeSchema) {
@@ -35,12 +35,12 @@ export default function ThemeSettingsScreen() {
     setColorScheme(formData.theme)
     setAndroidNavigationBar(colorTheme)
     // TODO: Update user settings
-    // TODO: Add success toast
   }
 
   return (
-    <View className="flex-1 gap-8 bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
+    <View className="flex-1 gap-4 bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
       <TopNav>
+        <TopNavBackButton />
         <TopNavRoute>Theme</TopNavRoute>
       </TopNav>
 

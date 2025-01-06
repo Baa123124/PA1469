@@ -6,6 +6,12 @@ import { useColorScheme } from "@/lib/useColorScheme"
 import { Button, ButtonProps, ButtonRef } from "./ui/button"
 import * as React from "react"
 
+/**
+ * A button component that toggles between light and dark themes.
+ * Used for testing.
+ *
+ * @param {ButtonProps} props - Props passed to a `Button` component.
+ */
 const ThemeToggle = React.forwardRef<ButtonRef, ButtonProps>(({ ...props }, ref) => {
   const { isDarkColorScheme, setColorScheme } = useColorScheme()
   return (
@@ -17,7 +23,8 @@ const ThemeToggle = React.forwardRef<ButtonRef, ButtonProps>(({ ...props }, ref)
         const newTheme = isDarkColorScheme ? "light" : "dark"
         setColorScheme(newTheme)
         setAndroidNavigationBar(newTheme)
-        AsyncStorage.setItem("theme", newTheme)
+        // AsyncStorage.setItem("theme", newTheme)
+        // TODO: Update user.settings.theme in database
       }}
       {...props}
     >

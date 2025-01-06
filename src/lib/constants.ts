@@ -1,6 +1,6 @@
 import { DarkTheme, DefaultTheme } from "@react-navigation/native"
 
-export const theme = {
+const theme = {
   light: {
     background: "hsl(0 0% 100%)",
     foreground: "hsl(240 10% 3.9%)",
@@ -47,7 +47,7 @@ export const theme = {
   },
 }
 
-export const navTheme = {
+const navTheme = {
   light: {
     background: theme.light.background,
     border: theme.light.border,
@@ -66,7 +66,7 @@ export const navTheme = {
   },
 }
 
-export const lightTheme = {
+const lightTheme = {
   ...DefaultTheme,
   colors: {
     ...navTheme.light,
@@ -74,7 +74,7 @@ export const lightTheme = {
   },
 }
 
-export const darkTheme = {
+const darkTheme = {
   ...DarkTheme,
   colors: {
     ...navTheme.dark,
@@ -82,4 +82,8 @@ export const darkTheme = {
   },
 }
 
+export { theme, lightTheme, darkTheme, navTheme }
 export type Theme = typeof lightTheme & typeof darkTheme
+export type LightTheme = typeof lightTheme
+export type DarkTheme = typeof darkTheme
+export type NavTheme = typeof navTheme
