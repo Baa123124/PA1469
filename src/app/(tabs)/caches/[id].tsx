@@ -20,12 +20,18 @@ import { Trash2 } from "@/lib/icons/Trash2"
 import { MapPin } from "@/lib/icons/MapPin"
 import { showToast } from "@/components/ui/toast"
 import Share from "react-native-share"
+import { SquarePen } from "@/lib/icons/SquarePen"
+import { useState } from "react"
+import { EditCacheDialog } from "@/components/tabs/caches/EditCacheDialog"
 
 // TODO: Link caches to map view
 
 export default function CacheDetailsScreen() {
   const params = useLocalSearchParams<{ id: string }>()
   const list = dummyUser.lists.find((list) => list.id === params.id)
+
+  const [editDialogOpen, setEditDialogOpen] = useState(false)
+  const [selectedCacheId, setSelectedCacheId] = useState("")
 
   return (
     <View className="flex-1 bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
@@ -62,6 +68,17 @@ export default function CacheDetailsScreen() {
                           <Text>Visit cache</Text>
                         </DropdownMenuItem>
                       </Link>
+                      {list.name === "My caches" && (
+                        <DropdownMenuItem
+                          onPress={() => {
+                            setSelectedCacheId(cache.id)
+                            setEditDialogOpen(true)
+                          }}
+                        >
+                          <SquarePen size={16} strokeWidth={1.25} />
+                          <Text>Edit</Text>
+                        </DropdownMenuItem>
+                      )}
                       <DropdownMenuItem
                         onPress={async () => {
                           // ? Possibly use android "App Links" instead of deep links to link to play store if app isn't installed
@@ -108,6 +125,12 @@ export default function CacheDetailsScreen() {
             })}
         </View>
       </ScrollView>
+
+      <EditCacheDialog
+        open={editDialogOpen}
+        setOpen={setEditDialogOpen}
+        cacheId={selectedCacheId}
+      />
     </View>
   )
 }
