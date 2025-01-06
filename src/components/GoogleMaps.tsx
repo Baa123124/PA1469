@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 import { View, Text, StyleSheet, ActivityIndicator, Platform } from "react-native"
 
 import MapView, {
@@ -210,6 +210,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
 
   /** ---------- Map Behavior / Data State ---------- **/
   const [mapKey, setMapKey] = useState(0)
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [mapReady, setMapReady] = useState<boolean>(false)
 
   /** ---------- Cache States ---------- **/
@@ -399,13 +400,23 @@ const MapScreen: React.FC<MapScreenProps> = ({
    */
   useEffect(() => {
     if (!mapReady) {
-      setTimeout(() => {
+      console.log("mapReady is false, setting timeout...");
+      timeoutRef.current = setTimeout(() => {
         if (!mapReady) {
-          setMapKey(mapKey + 1)
+          console.log("Timeout triggered, updating mapKey...");
+          setMapKey((prevKey) => prevKey + 1);
         }
-      }, 3000)
+      }, 3000);
     }
-  }, [mapReady])
+
+    // Cleanup timeout if mapReady becomes true or on unmount
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+    };
+  }, [mapReady]);
 
   /**
    * Filter caches to display.
@@ -424,7 +435,6 @@ const MapScreen: React.FC<MapScreenProps> = ({
    */
   const handleCloseModal = useCallback(() => {
     setSelectedCache(null);
-    console.log("closed")
   }, []);
 
   useEffect(() => {

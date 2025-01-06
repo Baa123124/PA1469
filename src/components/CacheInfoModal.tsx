@@ -60,7 +60,6 @@ const CacheInfoModal: React.FC<CacheInfoModalProps> = ({
 
   useEffect(() => {
     if (modalVisible) {
-      console.log("ggg")
       modalizeRef.current?.open()
     } else {
       modalizeRef.current?.close()
