@@ -74,6 +74,7 @@ const Button = React.forwardRef<React.ElementRef<typeof Pressable>, ButtonProps>
           ref={ref}
           role="button"
           {...props}
+          style={Object.assign({}, size === "icon" && { height: 40, width: 40 }, props.style)}
         />
       </TextClassContext.Provider>
     )

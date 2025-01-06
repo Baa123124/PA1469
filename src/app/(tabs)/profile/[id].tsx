@@ -65,7 +65,7 @@ export default function ProfileScreen() {
 
             <View className="flex-row flex-wrap items-center gap-4">
               <View className="flex-row items-center gap-1">
-                <MapPin size={16} strokeWidth={1.15} className="text-primary" />
+                <MapPin size={16} strokeWidth={1.25} className="text-primary" />
                 <Text className="gap-2 text-sm font-medium text-muted-foreground">
                   {dummyUser.cachesVisited} Caches
                 </Text>
@@ -95,13 +95,13 @@ export default function ProfileScreen() {
 
           <Caches>
             <CacheGroup name="Recently visited">
-              {dummyCache.photos.map((photo, index) => {
+              {dummyCache.data.photos.map((photo, index) => {
                 return (
                   <CacheImage
                     key={index}
                     source={{ uri: photo }}
-                    aria-labelledby={dummyCache.name}
-                    name={dummyCache.name}
+                    aria-labelledby={dummyCache.data.name}
+                    name={dummyCache.data.name}
                     href="/"
                     maxHeight={128}
                   />
@@ -109,13 +109,13 @@ export default function ProfileScreen() {
               })}
             </CacheGroup>
             <CacheGroup name="Favorites">
-              {dummyCache.photos.map((photo, index) => {
+              {dummyCache.data.photos.map((photo, index) => {
                 return (
                   <CacheImage
                     key={index}
                     source={{ uri: photo }}
-                    aria-labelledby={dummyCache.name}
-                    name={dummyCache.name}
+                    aria-labelledby={dummyCache.data.name}
+                    name={dummyCache.data.name}
                     href="/"
                     maxHeight={128}
                   />
@@ -123,13 +123,13 @@ export default function ProfileScreen() {
               })}
             </CacheGroup>
             <CacheGroup name="Recently reviewed">
-              {dummyCache.photos.map((photo, index) => {
+              {dummyCache.data.photos.map((photo, index) => {
                 return (
                   <CacheImage
                     key={index}
                     source={{ uri: photo }}
-                    aria-labelledby={dummyCache.name}
-                    name={dummyCache.name}
+                    aria-labelledby={dummyCache.data.name}
+                    name={dummyCache.data.name}
                     href="/"
                     maxHeight={128}
                   />

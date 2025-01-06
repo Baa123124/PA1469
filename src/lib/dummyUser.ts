@@ -1,5 +1,3 @@
-import * as Crypto from "expo-crypto"
-
 type Settings = {
   notifications: boolean
   theme: "light" | "dark" | "system"
@@ -21,18 +19,24 @@ type User = {
   settings: Settings
   reviews: Review[]
   lists: List[]
+  coordinates: { latitude: number; longitude: number }
 }
 
-type Cache = {
-  id: string
+type CacheData = {
+  creatorId: string
   name: string
   description: string
   photos: string[]
-  tags: string[]
-  coordinates: { latitude: number; longitude: number }
+  tags: string[] // exclude
   rating: number
   views: number
   reviews: Review[]
+}
+
+interface Cache {
+  id: string
+  coordinates: { latitude: number; longitude: number }
+  data: CacheData
 }
 
 type Review = {
@@ -41,6 +45,7 @@ type Review = {
   comment: string
   createdAt: Date
   photo: string
+  userName: string
 }
 
 type List = {
@@ -86,52 +91,89 @@ const dummyCachePhoto3 =
   "https://images.pexels.com/photos/247599/pexels-photo-247599.jpeg?auto=compress&cs=tinysrgb&w=600"
 
 const dummyReview: Review = {
-  id: Crypto.randomUUID(),
+  id: "13243",
   rating: 4,
   comment: "This is a very interesting comment.",
   createdAt: new Date("2023-01-01T00:00:00.000Z"),
   photo: dummyCachePhoto1,
+  userName: "Stefan"
+}
+
+const dummyReview2: Review = {
+  id: "2321",
+  rating: 4,
+  comment: "This is a very interesting comment.",
+  createdAt: new Date("2023-01-01T00:00:00.000Z"),
+  photo: dummyCachePhoto1,
+  userName: "Karl"
+}
+
+const dummyReview3: Review = {
+  id: "1300013",
+  rating: 2,
+  comment: "This is a very interesting comment. This is a very interesting comment. This is a very interesting comment. This is a very interesting comment. This is a very interesting comment. This is a very interesting comment. This is a very interesting comment. This is a very interesting comment.",
+  createdAt: new Date("2024-01-01T00:00:00.000Z"),
+  photo: dummyCachePhoto2,
+  userName: "Karl"
+}
+
+const dummyReview4: Review = {
+  id: "1304019",
+  rating: 2,
+  comment: "This is a very interesting comment. This is a very interesting comment. This is a very interesting comment. This is a very interesting comment. This is a very interesting comment. This is a very interesting comment. This is a very interesting comment. This is a very interesting comment.",
+  createdAt: new Date("2024-01-01T00:00:00.000Z"),
+  photo: dummyCachePhoto2,
+  userName: "King kong"
 }
 
 const dummyCache: Cache = {
-  id: Crypto.randomUUID(),
-  name: "Cache 1",
-  description: "This is a very interesting description of the cache.",
-  photos: [dummyCachePhoto1, dummyCachePhoto2, dummyCachePhoto3],
-  tags: ["Landscape", "Nature", "Scenic view"],
+  id: "1423",
   coordinates: { latitude: 51.507351, longitude: -0.127758 },
-  rating: 4,
-  views: 10,
-  reviews: [dummyReview, dummyReview, dummyReview],
+  data: {
+    creatorId: "user123",
+    name: "Cache 1",
+    description: "This is a very interesting description of the cache.",
+    photos: [dummyCachePhoto1, dummyCachePhoto2, dummyCachePhoto3],
+    rating: 4,
+    views: 10,
+    reviews: [dummyReview4],
+    tags: ["WELLDONE"]
+  },
 }
 
 const dummyCache2: Cache = {
-  id: Crypto.randomUUID(),
-  name: "Cache 2",
-  description: "This is a very interesting description of the cache.",
-  photos: [dummyCachePhoto2, dummyCachePhoto1, dummyCachePhoto3],
-  tags: ["City"],
-  coordinates: { latitude: 40.712776, longitude: -74.005974 },
-  rating: 4,
-  views: 100,
-  reviews: [dummyReview, dummyReview, dummyReview],
+  id: "125",
+  coordinates: { latitude: 56.1592993, longitude: 14.8792046 },
+  data: {
+    creatorId: "user123",
+    name: "Cache 2",
+    description: "Yes, this is very interesting",
+    photos: [dummyCachePhoto1, dummyCachePhoto2, dummyCachePhoto3],
+    rating: 4,
+    views: 10,
+    reviews: [],
+    tags: ["Cinematic"]
+  },
 }
 
 const dummyCache3: Cache = {
-  id: Crypto.randomUUID(),
-  name: "Cache 3",
-  description: "This is a very interesting description of the cache.",
-  photos: [dummyCachePhoto3, dummyCachePhoto2, dummyCachePhoto1],
-  tags: ["Park", "Nature", "Scenic view"],
-  coordinates: { latitude: 35.689487, longitude: 139.691711 },
-  rating: 3,
-  views: 72,
-  reviews: [dummyReview, dummyReview, dummyReview],
+  id: "106",
+  coordinates: { latitude: 62.918161, longitude: 18.643501 },
+  data: {
+    creatorId: "user1234",
+    name: "Cache 3",
+    description: "This is a very interesting description of the cache.",
+    photos: [dummyCachePhoto1, dummyCachePhoto2, dummyCachePhoto3],
+    rating: 4,
+    views: 10,
+    reviews: [dummyReview, dummyReview3, dummyReview2],
+    tags: ["WELLDONE"]
+  },
 }
 
 const dummyLists: List[] = [
   {
-    id: Crypto.randomUUID(),
+    id: "200s",
     name: "History",
     caches: [
       dummyCache,
@@ -150,7 +192,7 @@ const dummyLists: List[] = [
     locked: true,
   },
   {
-    id: Crypto.randomUUID(),
+    id: "20s1",
     name: "Reviews",
     caches: [
       dummyCache,
@@ -166,25 +208,25 @@ const dummyLists: List[] = [
     locked: true,
   },
   {
-    id: Crypto.randomUUID(),
+    id: "2as02",
     name: "My caches",
     caches: [dummyCache, dummyCache2, dummyCache3, dummyCache, dummyCache2, dummyCache3],
     locked: true,
   },
   {
-    id: Crypto.randomUUID(),
+    id: "30ss0",
     name: "Favorites",
     caches: [dummyCache, dummyCache2, dummyCache3, dummyCache, dummyCache2, dummyCache3],
   },
   {
-    id: Crypto.randomUUID(),
+    id: "30j1",
     name: "Bookmarked",
     caches: [dummyCache, dummyCache2, dummyCache3],
   },
 ]
 
 const dummyUser: User = {
-  id: "123", // Firebase user id
+  id: "123k", // Firebase user id
   email: "john.doe@example.com",
   createdAt: new Date("2023-01-01T00:00:00.000Z"),
   displayName: "John Doe",
@@ -197,12 +239,13 @@ const dummyUser: User = {
     theme: "system",
     minCacheRange: 0,
     maxCacheRange: 10,
-    discoveryMode: false,
+    discoveryMode: true,
   },
   cachesVisited: 56,
   streak: 3,
   reviews: [dummyReview, dummyReview, dummyReview],
   lists: dummyLists,
+  coordinates: { latitude: 62.918161, longitude: 18.643501 },
 }
 
 export {
@@ -210,6 +253,8 @@ export {
   dummyAvatar,
   dummyBanner,
   dummyCache,
+  dummyCache2,
+  dummyCache3,
   dummyReview,
   dummyLists,
   dummyAvatarRaw,

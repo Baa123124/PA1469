@@ -1,291 +1,162 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Modal,
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  Button,
-  Animated,
-  Pressable,
-  StyleSheet
-} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import { MapPin } from "@/lib/icons/MapPin"
-import { Eye } from "@/lib/icons/ViewsIcon"
-import { Star } from "@/lib/icons/RaitingIcon"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import React, { useRef, useEffect } from "react"
+import { View, ScrollView, StyleSheet, SafeAreaView } from "react-native"
+import { Modalize } from "react-native-modalize"
+import DynamicImageGrid from "@/components/DynamicImageGrid"
+import CommentSectionView from "./CommentSectionView"
 
-interface CacheData {
-  id: string;
-  name: string;
-  views: number;
-  rating: number;
-  info: {
-    description: string;
-  };
+import { formatDistance } from "@/utils/formatDistance"
+import { MapPin } from "@/lib/icons/MapPin"
+import { Eye } from "@/lib/icons/Eye"
+import { Star } from "@/lib/icons/RaitingIcon"
+import { Text } from "./ui/text"
+import { Button } from "./ui/button"
+import { useColorScheme } from "@/lib/useColorScheme"
+import { darkTheme, lightTheme } from "@/lib/constants"
+
+
+type Review = {
+  id: string
+  rating: 1 | 2 | 3 | 4 | 5
+  comment: string
+  createdAt: Date
+  photo: string
+  userName: string
+}
+
+type CacheData = {
+  cacheId: string
+  creatorId: string
+  name: string
+  description: string
+  photos: string[]
+  tags: string[] // exclude
+  rating: number
+  views: number
+  reviews: Review[]
 }
 
 interface CacheInfoModalProps {
-  modalVisible: boolean;
-  selectedCacheData: CacheData;
-  closeModal: () => void;
-  selectedGoToCache: string;
-  setSelectedGoToCache: (cacheId: string) => void;
+  modalVisible: boolean
+  selectedCacheData: CacheData
+  distance: number | null
+  closeModal: () => void
+  selectedGoToCache: string
+  setSelectedGoToCache: (cacheId: string) => void
 }
 
 const CacheInfoModal: React.FC<CacheInfoModalProps> = ({
   modalVisible,
   selectedCacheData,
+  distance,
   closeModal,
   selectedGoToCache,
   setSelectedGoToCache,
 }) => {
-  const [contentHeight, setContentHeight] = useState(0);
-  const [containerHeight, setContainerHeight] = useState(0);
-  const [scrollIndicatorVisible, setScrollIndicatorVisible] = useState(false);
-  const [arrowOpacity] = useState(new Animated.Value(1));
-  const [opacity] = useState(new Animated.Value(0));
+  const { isDarkColorScheme } = useColorScheme()
+  const theme = isDarkColorScheme ? darkTheme : lightTheme
+  const { colors } = theme
+  const modalizeRef = useRef<Modalize>(null)
 
   useEffect(() => {
     if (modalVisible) {
-      Animated.timing(opacity, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
+      console.log("ggg")
+      modalizeRef.current?.open()
     } else {
-      opacity.setValue(0);
+      modalizeRef.current?.close()
     }
-  }, [modalVisible, opacity]);
+  }, [modalVisible])
 
-  return (
-    <Modal
-      visible={modalVisible}
-      animationType="slide"
-      transparent={true}
-      onRequestClose={closeModal}
-    >
-      <View style={{ flex: 1, position: 'relative' }}>
-        {/* Full-screen background pressable layer */}
-        <Pressable style={StyleSheet.absoluteFill} onPress={closeModal} />
-        <View style={styles.modalContainer} pointerEvents="box-none">
-          {/* Actual modal content wrapper for the use of proper pointerEvents="auto"
-              ensures these elements receive touches */}
-          <Animated.View style={[styles.modalContent, { opacity }]} pointerEvents="auto">
+  const renderContent = () => {
+    return (
+      <View className="gap-2 p-4">
+        {/* Title */}
+        <Text className="text-2xl font-bold">{selectedCacheData?.name}</Text>
+
+        {/* Stats (Pin, Eye, Star) */}
+        <View className="flex-row items-center gap-4">
+          <View className="flex-row items-center gap-1">
+            <MapPin size={16} strokeWidth={1.25} className="h-6 w-6 text-primary" />
+            <Text className="gap-2 font-medium text-muted-foreground">{distance ? formatDistance(distance) : "N/A"}</Text>
+          </View>
+          <View className="flex-row items-center gap-1">
+            <Eye size={16} strokeWidth={1.25} className="h-6 w-6 text-foreground" />
+            <Text className="gap-2 font-medium text-muted-foreground">
+              {selectedCacheData?.views}
+            </Text>
+          </View>
+          <View className="flex-row items-center gap-1">
+            <Star
+              size={16}
+              strokeWidth={1.25}
+              className="h-6 w-6 fill-yellow-400 text-yellow-400 dark:fill-yellow-500 dark:text-yellow-500"
+            />
+            <Text className="gap-2 font-medium text-muted-foreground">
+              {selectedCacheData?.rating}
+            </Text>
+          </View>
+        </View>
+
+        <View className="gap-4">
+          
+          <Text>{selectedCacheData?.description}</Text>
+          <ScrollView style={{ maxHeight: 500 }} showsVerticalScrollIndicator={false}>
             
-            <Text style={styles.modalTitle}>{selectedCacheData?.name}</Text>
+            {selectedCacheData?.photos && (
+              <SafeAreaView>
+                <DynamicImageGrid images={selectedCacheData?.photos} />
+              </SafeAreaView>
+            )}
+            <CommentSectionView comments={selectedCacheData?.reviews} />
+          </ScrollView>
 
-            <View style={styles.cacheStatsContainer}>
-              <View style={styles.statsElement}>
-                <MapPin size={24} className="w-6 h-6 text-foreground" />
-                <Text>1km</Text>
-              </View>
-              <View style={styles.statsElement}>
-                <Eye size={24} className="w-6 h-6 text-foreground" />
-                <Text>{selectedCacheData?.views}</Text>
-              </View>
-              <View style={styles.statsElement}>
-                <Star size={24} color="#ffcd3c" fill="#ffcd3c" className="w-6 h-6 text-foreground" />
-                <Text>{selectedCacheData?.rating}</Text>
-              </View>
-            </View>
-
-            {/* Scrollable Section */}
-            <View
-              style={styles.scrollContainerWrapper}
-              onLayout={(event) => {
-                setContainerHeight(event.nativeEvent.layout.height);
-              }}
-            >
-              {contentHeight > containerHeight && (
-                <LinearGradient
-                  colors={['rgba(0, 0, 0, 0.2)', 'transparent']}
-                  style={styles.gradientTop}
-                />
-              )}
-
-              <ScrollView
-                contentContainerStyle={styles.scrollContainer}
-                onContentSizeChange={(_contentWidth, newContentHeight) => {
-                  setContentHeight(newContentHeight);
-                  if (newContentHeight > containerHeight) {
-                    setScrollIndicatorVisible(true);
-                  }
+          {/* Action Buttons */}
+          <View className="w-full">
+            {selectedGoToCache !== selectedCacheData?.cacheId ? (
+              <Button
+                onPress={() => {
+                  setSelectedGoToCache(selectedCacheData.cacheId)
+                  AsyncStorage.setItem("selectedCacheId", selectedCacheData.cacheId)
                 }}
-                onScrollBeginDrag={() => setScrollIndicatorVisible(false)}
               >
-                <Text style={styles.modalDescription}>
-                  {selectedCacheData?.info?.description}
-                </Text>
-              </ScrollView>
-
-              {contentHeight > containerHeight && (
-                <LinearGradient
-                  colors={['transparent', 'rgba(0, 0, 0, 0.2)']}
-                  style={styles.gradientBottom}
-                />
-              )}
-
-              {contentHeight > containerHeight && scrollIndicatorVisible && (
-                <View style={styles.scrollIndicatorContainer}>
-                  <Animated.Text style={[styles.scrollIndicatorText, { opacity: arrowOpacity }]}>
-                    ↓ Scroll for more ↓
-                  </Animated.Text>
-                </View>
-              )}
-            </View>
-
-            {/* Buttons Section */}
-            <View style={styles.buttonContainer}>
-              <View style={styles.fullWidthButton}>
-                {selectedGoToCache !== selectedCacheData?.id ? (
-                  <Button
-                    title="Select cache as destination"
-                    onPress={() => {
-                      closeModal();
-                      setSelectedGoToCache(selectedCacheData.id);
-                    }}
-                    color="#4285F4"
-                  />
-                ) : (
-                  <Button
-                    title="Cancel"
-                    onPress={() => {
-                      closeModal();
-                      setSelectedGoToCache('');
-                    }}
-                    color="#CC5555"
-                  />
-                )}
-              </View>
-
-              <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
-                <Text style={styles.closeButtonText}>Close</Text>
-              </TouchableOpacity>
-            </View>
-          </Animated.View>
+                <Text>Select cache as destination</Text>
+              </Button>
+            ) : (
+              <Button
+                variant="destructive"
+                onPress={() => {
+                  setSelectedGoToCache("")
+                  AsyncStorage.setItem("selectedCacheId", "")
+                }}
+              >
+                <Text>Cancel</Text>
+              </Button>
+            )}
+          </View>
         </View>
       </View>
-    </Modal>
-  );
-};
+    )
+  }
 
-export const styles = StyleSheet.create({
-  modalContainer: {
-    position: 'absolute',
-    height: '70%',
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
-    bottom: 49,
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    width: '100%',
-    height: '100%',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    padding: 10,
-  },  
-  scrollContainerWrapper: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 10,
-    overflow: 'hidden',
-    position: 'relative',
-    paddingLeft: 5,
-    paddingRight: 5,
-    marginLeft: -10,
-    marginRight: -10,
-    marginBottom: 75,
-  },
-  scrollContainer: {},
-  modalTitle: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  modalDescription: {
-    fontSize: 16,
-    marginBottom: 5,
-    paddingBottom: 10
-  },
-  buttonContainer: {
-    marginTop: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-    bottom: 10,
-    left: 0,
-    right: 0,
-  },
-  fullWidthButton: {
-    width: '80%',
-    marginBottom: 10,
-    borderRadius: 10,
-    overflow: 'hidden',
-  },
-  closeButton: {
-    width: '80%',
-    paddingVertical: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'transparent',
-    borderRadius: 5,
-  },
-  closeButtonText: {
-    color: '#4285F4',
-    fontSize: 16,
-    textAlign: 'center',
-  },
-  gradientTop: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 20,
-    zIndex: 1,
-  },
-  gradientBottom: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 20,
-    zIndex: 1,
-  },
-  scrollIndicatorContainer: {
-    marginTop: 5,
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 5,
-    alignItems: 'center',
-    zIndex: 1000,
-  },
-  scrollIndicatorText: {
-    fontSize: 14,
-    color: '#4285F4',
-    fontWeight: 'bold',
-    zIndex: 10,
-    backgroundColor: 'white',
-    padding: 5
-  },
-  cacheStatsContainer: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  statsElement: {
-    marginBottom: 5,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 2,
-  },
-});
+  return (
+    <Modalize
+      ref={modalizeRef}
+      onClosed={() => closeModal()}
+      adjustToContentHeight
+      modalStyle={{
+        backgroundColor: colors.background,
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
+      }}
+      handleStyle={styles.handleStyle}
+    >
+      {renderContent()}
+    </Modalize>
+  )
+}
 
-export default CacheInfoModal;
+export default CacheInfoModal
+
+const styles = StyleSheet.create({
+  handleStyle: {},
+})
