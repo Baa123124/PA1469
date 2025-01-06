@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import React, { useRef, useEffect } from "react"
+import React, { useRef, useEffect, useMemo } from "react"
 import { View, ScrollView, StyleSheet, SafeAreaView } from "react-native"
 import { Modalize } from "react-native-modalize"
 import DynamicImageGrid from "@/components/DynamicImageGrid"
@@ -31,7 +31,6 @@ type CacheData = {
   description: string
   photos: string[]
   tags: string[] // exclude
-  rating: number
   views: number
   reviews: Review[]
 }
@@ -66,6 +65,14 @@ const CacheInfoModal: React.FC<CacheInfoModalProps> = ({
     }
   }, [modalVisible])
 
+  const averageRating = useMemo(() => {
+    if (!selectedCacheData?.reviews || selectedCacheData.reviews.length === 0) {
+      return 0;
+    }
+    const totalRating = selectedCacheData.reviews.reduce((sum, review) => sum + review.rating, 0);
+    return Number((totalRating / selectedCacheData.reviews.length).toFixed(1));
+  }, [selectedCacheData?.reviews]);
+
   const renderContent = () => {
     return (
       <View className="gap-2 p-4">
@@ -91,7 +98,7 @@ const CacheInfoModal: React.FC<CacheInfoModalProps> = ({
               className="h-6 w-6 fill-yellow-400 text-yellow-400 dark:fill-yellow-500 dark:text-yellow-500"
             />
             <Text className="gap-2 font-medium text-muted-foreground">
-              {selectedCacheData?.rating}
+              {averageRating}
             </Text>
           </View>
         </View>
