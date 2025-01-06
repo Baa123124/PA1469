@@ -1,0 +1,17 @@
+version: "1.0"
+
+services:
+  pocketbase:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: database
+    ports:
+      - "8090:8090"
+    volumes:
+      - data:/app/pb_data
+    entrypoint: ["/app/entrypoint.sh"]
+    restart: unless-stopped
+
+volumes:
+  data:
