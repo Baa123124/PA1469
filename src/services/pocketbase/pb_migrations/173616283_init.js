@@ -1,5 +1,5 @@
 /// <reference path="../pb_data/types.d.ts" />
-const firebase_id = "0l2ZPfQiFoYC0q2XKHEBHvO1tZx1"
+const firebaseId = "0l2ZPfQiFoYC0q2XKHEBHvO1tZx1"
 const dummyAvatar = "https://i.pinimg.com/originals/ef/a2/8d/efa28d18a04e7fa40ed49eeb0ab660db.jpg"
 const dummyBanner =
   "https://images.unsplash.com/photo-1636690424408-4330adc3e583?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -22,6 +22,11 @@ migrate(
       name: "reviews",
       type: "base",
       fields: [
+        {
+          name: "creatorId",
+          type: "text",
+          required: true,
+        },
         {
           name: "rating",
           type: "number",
@@ -51,6 +56,7 @@ migrate(
     })
     app.save(reviewCollection)
     const reviewRecord1 = new Record(reviewCollection)
+    reviewRecord1.set("creatorId", firebaseId)
     reviewRecord1.set("rating", 5)
     reviewRecord1.set("comment", "This is a very interesting comment.")
     reviewRecord1.set("createdAt", new Date("2023-01-01T00:00:00.000Z"))
@@ -58,6 +64,7 @@ migrate(
     reviewRecord1.set("displayName", "Stefan")
     app.save(reviewRecord1)
     const reviewRecord2 = new Record(reviewCollection)
+    reviewRecord2.set("creatorId", firebaseId)
     reviewRecord2.set("rating", 4)
     reviewRecord2.set("comment", "This is a very interesting comment.")
     reviewRecord2.set("createdAt", new Date("2023-01-01T00:00:00.000Z"))
@@ -65,6 +72,7 @@ migrate(
     reviewRecord2.set("displayName", "Stefan")
     app.save(reviewRecord2)
     const reviewRecord3 = new Record(reviewCollection)
+    reviewRecord3.set("creatorId", firebaseId)
     reviewRecord3.set("rating", 3)
     reviewRecord3.set(
       "comment",
@@ -75,6 +83,7 @@ migrate(
     reviewRecord3.set("displayName", "Stefan")
     app.save(reviewRecord3)
     const reviewRecord4 = new Record(reviewCollection)
+    reviewRecord4.set("creatorId", firebaseId)
     reviewRecord4.set("rating", 2)
     reviewRecord4.set(
       "comment",
@@ -111,10 +120,10 @@ migrate(
     })
     app.save(cacheCollection)
     const cacheRecord1 = new Record(cacheCollection)
-    cacheRecord1.set("creatorId", firebase_id)
+    cacheRecord1.set("creatorId", firebaseId)
     cacheRecord1.set("coordinates", { latitude: 51.507351, longitude: -0.127758 })
     cacheRecord1.set("data", {
-      creatorId: firebase_id,
+      creatorId: firebaseId,
       name: "Cache 1",
       description: "This is a very interesting description of the cache.",
       photos: [dummyCachePhoto1, dummyCachePhoto2, dummyCachePhoto3],
@@ -124,10 +133,10 @@ migrate(
     })
     app.save(cacheRecord1)
     const cacheRecord2 = new Record(cacheCollection)
-    cacheRecord2.set("creatorId", firebase_id)
+    cacheRecord2.set("creatorId", firebaseId)
     cacheRecord2.set("coordinates", { latitude: 56.1592993, longitude: 14.8792046 })
     cacheRecord2.set("data", {
-      creatorId: firebase_id,
+      creatorId: firebaseId,
       name: "Cache 2",
       description: "Yes, this is very interesting",
       photos: [dummyCachePhoto1, dummyCachePhoto2, dummyCachePhoto3],
@@ -137,10 +146,10 @@ migrate(
     })
     app.save(cacheRecord2)
     const cacheRecord3 = new Record(cacheCollection)
-    cacheRecord3.set("creatorId", firebase_id)
+    cacheRecord3.set("creatorId", firebaseId)
     cacheRecord3.set("coordinates", { latitude: 62.918161, longitude: 18.643501 })
     cacheRecord3.set("data", {
-      creatorId: firebase_id,
+      creatorId: firebaseId,
       name: "Cache 3",
       description: "This is a very interesting description of the cache.",
       photos: [dummyCachePhoto1, dummyCachePhoto2, dummyCachePhoto3],
@@ -175,13 +184,12 @@ migrate(
         {
           name: "locked",
           type: "bool",
-          required: true,
         },
       ],
     })
     app.save(listCollection)
     const listRecord1 = new Record(listCollection)
-    listRecord1.set("userId", firebase_id)
+    listRecord1.set("userId", firebaseId)
     listRecord1.set("name", "History")
     listRecord1.set("caches", [
       cacheRecord1.id,
@@ -200,7 +208,7 @@ migrate(
     listRecord1.set("locked", true)
     app.save(listRecord1)
     const listRecord2 = new Record(listCollection)
-    listRecord2.set("userId", firebase_id)
+    listRecord2.set("userId", firebaseId)
     listRecord2.set("name", "Reviews")
     listRecord2.set("caches", [
       cacheRecord1.id,
@@ -216,7 +224,7 @@ migrate(
     listRecord2.set("locked", true)
     app.save(listRecord2)
     const listRecord3 = new Record(listCollection)
-    listRecord3.set("userId", firebase_id)
+    listRecord3.set("userId", firebaseId)
     listRecord3.set("name", "My caches")
     listRecord3.set("caches", [
       cacheRecord1.id,
@@ -229,7 +237,7 @@ migrate(
     listRecord3.set("locked", true)
     app.save(listRecord3)
     const listRecord4 = new Record(listCollection)
-    listRecord4.set("userId", firebase_id)
+    listRecord4.set("userId", firebaseId)
     listRecord4.set("name", "Favorites")
     listRecord4.set("caches", [
       cacheRecord1.id,
@@ -242,56 +250,9 @@ migrate(
     listRecord4.set("locked", true)
     app.save(listRecord4)
     const listRecord5 = new Record(listCollection)
-    listRecord5.set("userId", firebase_id)
+    listRecord5.set("userId", firebaseId)
     listRecord5.set("name", "Bookmarked")
     listRecord5.set("caches", [cacheRecord1.id, cacheRecord2.id, cacheRecord3.id])
-
-    // --------------------------
-    // * --- Settings collection ---
-    // --------------------------
-    const settingsCollection = new Collection({
-      name: "settings",
-      type: "base",
-      fields: [
-        {
-          name: "userId",
-          type: "text",
-          required: true,
-        },
-        {
-          name: "notifications",
-          type: "bool",
-          required: true,
-        },
-        {
-          name: "theme",
-          type: "text",
-          required: true,
-        },
-        {
-          name: "minCacheRange",
-          type: "number",
-        },
-        {
-          name: "maxCacheRange",
-          type: "number",
-        },
-        {
-          name: "discoveryMode",
-          type: "bool",
-          required: true,
-        },
-      ],
-    })
-    app.save(settingsCollection)
-    const settingsRecord = new Record(settingsCollection)
-    settingsRecord.set("userId", firebase_id)
-    settingsRecord.set("notifications", true)
-    settingsRecord.set("theme", "system")
-    settingsRecord.set("minCacheRange", 0)
-    settingsRecord.set("maxCacheRange", 10)
-    settingsRecord.set("discoveryMode", true)
-    app.save(settingsRecord)
 
     // --------------------------
     // * --- User collection ---
@@ -301,7 +262,7 @@ migrate(
       type: "base",
       fields: [
         {
-          name: "firebase_id",
+          name: "firebaseId",
           type: "text",
           required: true,
         },
@@ -321,13 +282,8 @@ migrate(
           required: true,
         },
         {
-          name: "streak",
-          type: "number",
-          required: true,
-        },
-        {
           name: "settings",
-          type: "text",
+          type: "json",
           required: true,
         },
         {
@@ -340,19 +296,40 @@ migrate(
           type: "json",
           required: true,
         },
+        {
+          name: "recentlyVisited",
+          type: "json",
+          required: true,
+        },
+        {
+          name: "favorites",
+          type: "json",
+          required: true,
+        },
+        {
+          name: "recentlyReviewed",
+          type: "relation",
+          type: "json",
+          required: true,
+        },
       ],
     })
     app.save(userCollection)
     const userRecord = new Record(userCollection)
-    userRecord.set("firebase_id", firebase_id)
+    userRecord.set("firebaseId", firebaseId)
     userRecord.set(
       "description",
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse non mattis lorem. Nam ornare scelerisque imperdiet.",
     )
     userRecord.set("banner", dummyBanner)
     userRecord.set("cachesVisited", 56)
-    userRecord.set("streak", 3)
-    userRecord.set("settings", settingsRecord.id)
+    userRecord.set("settings", {
+      notifications: true,
+      theme: "system",
+      minCacheRange: 0,
+      maxCacheRange: 10,
+      discoveryMode: true,
+    })
     userRecord.set("reviews", [reviewRecord1.id, reviewRecord2.id])
     userRecord.set("lists", [
       listRecord1.id,
@@ -361,6 +338,26 @@ migrate(
       listRecord4.id,
       listRecord5.id,
     ])
+    userRecord.set("recentlyVisited", [
+      cacheRecord1.id,
+      cacheRecord2.id,
+      cacheRecord3.id,
+      cacheRecord1.id,
+      cacheRecord2.id,
+      cacheRecord3.id,
+      cacheRecord1.id,
+      cacheRecord2.id,
+      cacheRecord3.id,
+    ])
+    userRecord.set("favorites", [
+      cacheRecord1.id,
+      cacheRecord2.id,
+      cacheRecord3.id,
+      cacheRecord1.id,
+      cacheRecord2.id,
+      cacheRecord3.id,
+    ])
+    userRecord.set("recentlyReviewed", [cacheRecord1.id, cacheRecord2.id, cacheRecord3.id])
     app.save(userRecord)
   },
   (app) => {
@@ -370,7 +367,7 @@ migrate(
 )
 
 function deleteCollections(app) {
-  const collectionNames = ["reviews", "users", "caches", "lists", "settings"]
+  const collectionNames = ["reviews", "users", "caches", "lists"]
 
   for (const name of collectionNames) {
     try {
