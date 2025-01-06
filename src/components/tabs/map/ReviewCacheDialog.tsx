@@ -148,18 +148,7 @@ const ReviewCacheDialog = React.forwardRef<DialogRef, ReviewCacheDialogProps>(
                     )
                   } else {
                     return (
-                      <View className="gap-2">
-                        <Label nativeID="photo">Photo</Label>
-                        <ImagePicker
-                          variant="outline"
-                          className="flex-row gap-2"
-                          image={value}
-                          setImage={onChange}
-                        >
-                          <Upload size={16} strokeWidth={1.25} />
-                          <Text>Upload photo</Text>
-                        </ImagePicker>
-                      </View>
+                      <></>
                     )
                   }
                 }}
