@@ -17,7 +17,8 @@ Includes:
 - [Jest](https://jestjs.io/) (unit testing)
 - [Maestro](https://maestro.mobile.dev/) (e2e testing)
 - [Reactotron](https://github.com/infinitered/reactotron) (react native debug tool)
-- [React Native Firebase](https://rnfirebase.io/) (Backend as a service used for authentication purposes)
+- [React Native Firebase](https://rnfirebase.io/) (backend as a service used for authentication purposes)
+- [Pocketbase](https://pocketbase.io/) (database)
 
 > See references in [NOTICE.md](https://github.com/Baa123124/PA1469/blob/master/NOTICE.md)
 
@@ -134,7 +135,7 @@ This is a great place to put miscellaneous helpers and utilities. Things like da
 <br/>
 
 ### Firebase Authentication Setup for Android
----
+
 1. Go to the [Firebase Console](https://console.firebase.google.com/) and **create a new Firebase project**.
 2. Register an Android app with the following:
    - **Android package name**: `com.xplorify`
@@ -160,10 +161,11 @@ This is a great place to put miscellaneous helpers and utilities. Things like da
 <br/>
 
 ### Pocketbase setup
----
+
 <Strong>Prerequisites</strong>
 
 1. **Docker Installed**
+
    - Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) for macOS/Windows.
    - On Linux, follow [Docker’s installation guide](https://docs.docker.com/engine/install/).
 
@@ -174,15 +176,20 @@ This is a great place to put miscellaneous helpers and utilities. Things like da
 <Strong>Running the PocketBase Image</Strong>
 
 Force new build and run in detached mode (really only used if changes has been made to the image)
+
 ```bash
 docker-compose up -d --build
 ```
+
 or if you want to run normally in detached mode
+
 ```bash
 docker-compose up -d
 ```
 
 The build script sets up a superuser with the following credentials: `admin@xplorify.com` with pass `xplorify123`. You can change this in the dashboard as you'd like. All data is persisted between restarts.
+
+<br/>
 
 ### Build apk
 
@@ -206,10 +213,3 @@ The build script sets up a superuser with the following credentials: `admin@xplo
 8. `npm run adb`
 9. `npm run android`
 10. Test starting the emulator manually: `C:\Users\<user>\AppData\Local\Android\Sdk/emulator/emulator -avd Medium_Phone_API_3`
-
-<br/>
-
-## TODO
-
-- Add database
-- Add Github workflow
