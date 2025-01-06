@@ -31,6 +31,7 @@ export default function CacheDetailsScreen() {
   const list = dummyUser.lists.find((list) => list.id === params.id)
 
   const [editDialogOpen, setEditDialogOpen] = useState(false)
+  const [selectedCacheId, setSelectedCacheId] = useState("")
 
   return (
     <View className="flex-1 bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
@@ -70,6 +71,7 @@ export default function CacheDetailsScreen() {
                       {list.name === "My caches" && (
                         <DropdownMenuItem
                           onPress={() => {
+                            setSelectedCacheId(cache.id)
                             setEditDialogOpen(true)
                           }}
                         >
@@ -124,7 +126,11 @@ export default function CacheDetailsScreen() {
         </View>
       </ScrollView>
 
-      <EditCacheDialog open={editDialogOpen} setOpen={setEditDialogOpen} />
+      <EditCacheDialog
+        open={editDialogOpen}
+        setOpen={setEditDialogOpen}
+        cacheId={selectedCacheId}
+      />
     </View>
   )
 }
