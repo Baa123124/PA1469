@@ -1,11 +1,8 @@
-#flow: Log in
+#flow: Stay logged in after closing the app
 #intent:
 # Open up our app and use the dummy user credentials to login
+# Upon restarting the app, user should be logged in.
 
-appId: com.xplorify # the app id of the app we want to test
-# You can find the appId of an Ignite app in the `app.json` file
-# as the "package" under the "android" section and "bundleIdentifier" under the "ios" section
----
 appId: com.xplorify
 ---
 - clearState # clears the state of our app (navigation and authentication)
@@ -30,6 +27,11 @@ appId: com.xplorify
     optional: true
 - tapOn:
     text: "Log in"
+- assertVisible:
+    text: "Search caches..."
+    optional: true
+- stopApp
+- launchApp
 - assertVisible:
     text: "Search caches..."
     optional: true

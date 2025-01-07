@@ -1,0 +1,35 @@
+#flow: Sign up
+#intent:
+# Open up and sign up a new account for the app as a first time user
+
+appId: com.xplorify
+
+---
+- clearState # Clears the state of our app (navigation and authentication)
+- launchApp # Launches the app
+- assertVisible:
+    text: "Welcome back!"
+    optional: true
+- assertVisible:
+    text: "Sign up"
+    optional: true
+- tapOn:
+    text: "Sign up"
+- assertVisible:
+    text: "Create an account"
+    optional: true
+- tapOn:
+    text: "Enter your name"
+- inputText: "John Doe"
+- tapOn:
+    text: "Enter your email"
+- inputText: "john.doe@example.com"
+- tapOn:
+    text: "Enter your password"
+- inputText: "Test12345!"
+- tapOn:
+    point: "92%,91%" # Taps on checkmark after entering password
+- tapOn: "Get started"
+- assertVisible:
+    text: "John Doe"
+    optional: true
