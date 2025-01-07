@@ -11,47 +11,50 @@ import {
   DialogProps,
   DialogRef,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog"
 import { ImagePicker } from "@/components/ui/image-picker"
+import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Text } from "@/components/ui/text"
 import { Textarea } from "@/components/ui/textarea"
-import { Star } from "@/lib/icons/Star"
+import { editCacheSchema } from "@/lib/cachesSchema"
+import { dummyCache } from "@/lib/dummyUser"
+import { SquarePen } from "@/lib/icons/SquarePen"
 import { Upload } from "@/lib/icons/Upload"
-import { reviewCacheSchema } from "@/lib/mapSchemas"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as React from "react"
 import { Controller, useForm } from "react-hook-form"
 import { View } from "react-native"
-import { RatingSelect } from "./RatingSelect"
 
-type ReviewCacheDialogProps = DialogProps & {
+type EditCacheDialogProps = DialogProps & {
   open: boolean
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
   cacheId: string
 }
-const ReviewCacheDialog = React.forwardRef<DialogRef, ReviewCacheDialogProps>(
+const EditCacheDialog = React.forwardRef<DialogRef, EditCacheDialogProps>(
   ({ open, setOpen, cacheId, ...props }, ref) => {
-    const cacheName = "Cache 1" // TODO: Get cache name from cacheId
+    // TODO: Get cache from cacheId
+    const cache = dummyCache
 
     const {
-      control: reviewControl,
-      handleSubmit: reviewHandleSubmit,
-      reset: reviewReset,
-      formState: { errors: reviewErrors },
+      control: editCacheControl,
+      handleSubmit: editCacheHandleSubmit,
+      reset: editCacheReset,
+      formState: { errors: editCacheErrors },
     } = useForm({
-      resolver: zodResolver(reviewCacheSchema),
+      resolver: zodResolver(editCacheSchema),
       defaultValues: {
-        rating: 0,
-        comment: "",
+        name: cache.data.name,
+        description: cache.data.description,
         photo: {
-          uri: "",
-          mimeType: "",
+          // TODO: Change this
+          uri: cache.data.photos[0],
+          mimeType: "image/jpeg",
           width: 0,
           height: 0,
-          fileSize: 0,
+          fileSize: 1,
         },
+        // tags: []
       },
     })
 
@@ -61,61 +64,62 @@ const ReviewCacheDialog = React.forwardRef<DialogRef, ReviewCacheDialogProps>(
         open={open}
         onOpenChange={(open) => {
           setOpen(open)
-          reviewReset()
+          editCacheReset()
         }}
         {...props}
       >
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>
-              Review{" "}
-              <Text
-                className="text-primary"
-                style={{ fontSize: 17.5, lineHeight: 24.5, fontWeight: 600 }}
-              >
-                {cacheName}
-              </Text>
-            </DialogTitle>
-            <DialogDescription>Leave a public review of your experience</DialogDescription>
+            <DialogTitle>Edit list</DialogTitle>
+            <DialogDescription>Edit cache details.</DialogDescription>
           </DialogHeader>
 
           <Form>
             <FormField>
-              <Label nativeID="rating">Rating</Label>
+              <Label nativeID="name">Name</Label>
               <Controller
-                control={reviewControl}
-                name="rating"
+                control={editCacheControl}
+                name="name"
                 render={({ field: { onChange, onBlur, value } }) => (
-                  <RatingSelect value={value} setValue={onChange} />
-                )}
-              />
-              <FormFieldError errors={reviewErrors.rating} />
-            </FormField>
-
-            <FormField>
-              <Label nativeID="comment">Comment</Label>
-              <Controller
-                control={reviewControl}
-                name="comment"
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <Textarea
-                    aria-labelledby="comment"
+                  <Input
+                    aria-labelledby="name"
                     onBlur={onBlur}
                     onChangeText={onChange}
                     value={value}
-                    placeholder="Enter comment"
+                    placeholder="Enter cache name"
+                    className="w-full"
+                    inputMode="text"
+                    maxLength={20}
+                  />
+                )}
+              />
+              <FormFieldError errors={editCacheErrors.name} />
+            </FormField>
+
+            <FormField>
+              <Label nativeID="description">Description</Label>
+              <Controller
+                control={editCacheControl}
+                name="description"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Textarea
+                    aria-labelledby="description"
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    value={value}
+                    placeholder="Enter description"
                     className="w-full"
                     inputMode="text"
                     maxLength={200}
                   />
                 )}
               />
-              <FormFieldError errors={reviewErrors.comment} />
+              <FormFieldError errors={editCacheErrors.description} />
             </FormField>
 
             <FormField>
               <Controller
-                control={reviewControl}
+                control={editCacheControl}
                 name="photo"
                 render={({ field: { onChange, value } }) => {
                   if (value.fileSize > 0) {
@@ -148,12 +152,23 @@ const ReviewCacheDialog = React.forwardRef<DialogRef, ReviewCacheDialogProps>(
                     )
                   } else {
                     return (
-                      <></>
+                      <View className="gap-2">
+                        <Label nativeID="photo">Photo</Label>
+                        <ImagePicker
+                          variant="outline"
+                          className="flex-row gap-2"
+                          image={value}
+                          setImage={onChange}
+                        >
+                          <Upload size={16} strokeWidth={1.25} />
+                          <Text>Upload photo</Text>
+                        </ImagePicker>
+                      </View>
                     )
                   }
                 }}
               />
-              <FormFieldError errors={reviewErrors.photo} />
+              <FormFieldError errors={editCacheErrors.photo} />
             </FormField>
           </Form>
 
@@ -165,15 +180,15 @@ const ReviewCacheDialog = React.forwardRef<DialogRef, ReviewCacheDialogProps>(
             </DialogClose>
             <FormSubmit
               className="w-auto flex-row gap-2"
-              onPress={reviewHandleSubmit((formData) => {
-                // TODO: Save review
+              onPress={editCacheHandleSubmit((formData) => {
+                // TODO: Edit cache
                 console.log(formData)
                 setOpen(false)
-                reviewReset()
+                editCacheReset()
               })}
             >
-              <Upload size={16} strokeWidth={1.25} className="text-primary-foreground" />
-              <Text>Publish</Text>
+              <SquarePen size={16} strokeWidth={1.25} className="text-primary-foreground" />
+              <Text>Edit</Text>
             </FormSubmit>
           </DialogFooter>
         </DialogContent>
@@ -181,6 +196,6 @@ const ReviewCacheDialog = React.forwardRef<DialogRef, ReviewCacheDialogProps>(
     )
   },
 )
-ReviewCacheDialog.displayName = "ReviewCacheDialog"
+EditCacheDialog.displayName = "EditCacheDialog"
 
-export { ReviewCacheDialog }
+export { EditCacheDialog }

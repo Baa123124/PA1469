@@ -22,7 +22,6 @@ import { useAuth } from "@/lib/auth/AuthContext"
 export default function SettingsScreen() {
   const { user, logout } = useAuth()
   const [discoveryMode, setDiscoveryMode] = useState(dummyUser.settings.discoveryMode)
-  const [notifications, setNotifications] = useState(dummyUser.settings.notifications)
 
   return (
     <View className="flex-1 gap-8 bg-secondary/30" style={useSafeAreaInsetsStyle(["top"])}>
@@ -75,17 +74,7 @@ export default function SettingsScreen() {
         </SettingsGroup>
 
         <SettingsGroup name="Preferences">
-          <SettingsField
-            icon={Bell}
-            name="Notifications"
-            type="switch"
-            checked={notifications}
-            onCheckedChange={(checked) => {
-              setNotifications(checked)
-              // TODO: Update user settings
-              // ? Could potentially have a separate page to toggle individual notifications
-            }}
-          />
+        
           <SettingsField
             icon={Palette}
             name="Theme"
@@ -94,23 +83,6 @@ export default function SettingsScreen() {
               dummyUser.settings.theme.charAt(0).toUpperCase() + dummyUser.settings.theme.slice(1)
             }
             href="/settings/theme"
-          />
-        </SettingsGroup>
-
-        <SettingsGroup name="Account">
-          <SettingsField
-            icon={Mail}
-            name="Email"
-            type="link"
-            value={user?.email as string | undefined}
-            href="/settings/email"
-          />
-          <SettingsField
-            icon={LockKeyhole}
-            name="Password"
-            type="link"
-            value=""
-            href="/settings/password"
           />
         </SettingsGroup>
       </Settings>

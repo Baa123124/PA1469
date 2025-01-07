@@ -141,10 +141,22 @@
                     {
                       /* Selects random cache within specified distance */
                     }
-                    if (dummyUser.settings.discoveryMode) {
-                      AsyncStorage.setItem("selectedCacheId", dummyCache.id)
-                      setSelectedCacheId(dummyCache.id)
+                    if (dummyUser.settings.discoveryMode && !selectedCacheId) {
+                      if (displayCaches.length > 0) {
+                        // Get a random index from the displayCaches array
+                        const randomIndex = Math.floor(Math.random() * displayCaches.length);
+                        const randomCache = displayCaches[randomIndex];
+                    
+                        // Ensure the random cache exists before proceeding
+                        if (randomCache) {
+                          AsyncStorage.setItem("selectedCacheId", randomCache);
+                          setSelectedCacheId(randomCache);
+                        }
+                      } else {
+                        console.warn("No caches available in displayCaches for random selection.");
+                      }
                     }
+                    
                     setWalkActive(true)
                   }
                 }}
@@ -214,7 +226,7 @@
             <NewCacheDialog newCacheCoord={newCacheCoord} open={newCacheOpen} setOpen={setNewCacheOpen} />
           }
           <View className="absolute inset-0 items-center justify-center gap-2" style={{ top: "74%" }}>
-            <CacheReachedDialog
+            {walkActive && <CacheReachedDialog
                 open={cacheReachedOpen}
                 cacheReached={goalReached}
                 setOpen={setCacheReachedOpen}
@@ -222,7 +234,7 @@
                 setReviewOpen={setReviewCacheOpen}
                 cacheId={selectedCacheId}
                 streak={dummyUser.streak}
-              />
+              />}
           </View>
         </View>
         <ReviewCacheDialog

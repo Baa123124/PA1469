@@ -252,6 +252,18 @@ const MapScreen: React.FC<MapScreenProps> = ({
       } finally {
         setLoadingMapRegion(false)
       }
+      try {
+        // ✅ Load Selected Cache
+        const selectedCacheId = await AsyncStorage.getItem("selectedCacheId");
+        if (selectedCacheId) {
+          const newSelectedCache = allCaches.find((cache) => cache.id === selectedCacheId);
+          if (newSelectedCache) {
+            setSelectedCache(newSelectedCache);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to load selected cache from storage", error);
+      }
     }
     initMapRegion()
   }, [])
