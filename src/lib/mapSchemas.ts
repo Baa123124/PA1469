@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { any, string, z } from "zod"
 
 const photoSchema = z.object({
   uri: z.string().url({ message: "Invalid URL" }),
@@ -29,6 +29,7 @@ const reviewCacheSchema = z.object({
 })
 
 const newCacheSchema = z.object({
+  creatorId: z.any(),
   name: z
     .string()
     .min(1, { message: "Name must be at least 1 character long" })
@@ -47,7 +48,6 @@ const newCacheSchema = z.object({
       fileSize: z.literal(0),
     }),
   ]),
-  // tags: z.array(z.string()).optional(),
 })
 
 const saveCacheSchema = z.object({

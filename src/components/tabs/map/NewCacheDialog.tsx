@@ -21,6 +21,8 @@ import { Plus } from "@/lib/icons/Plus"
 import { Upload } from "@/lib/icons/Upload"
 import { newCacheSchema } from "@/lib/mapSchemas"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { FirebaseAuthTypes } from "@react-native-firebase/auth"
+import { format } from "date-fns/format"
 import * as React from "react"
 import { Controller, useForm } from "react-hook-form"
 import { View } from "react-native"
@@ -32,9 +34,10 @@ type NewCacheDialogProps = DialogProps & {
   newCacheCoord: LatLng
   open: boolean
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
+  user: FirebaseAuthTypes.User | null
 }
 const NewCacheDialog = React.forwardRef<DialogRef, NewCacheDialogProps>(
-  ({ newCacheCoord, open, setOpen, ...props }, ref) => {
+  ({ newCacheCoord, open, setOpen, user, ...props }, ref) => {
     const {
       control: newControl,
       handleSubmit: newHandleSubmit,
@@ -43,6 +46,7 @@ const NewCacheDialog = React.forwardRef<DialogRef, NewCacheDialogProps>(
     } = useForm({
       resolver: zodResolver(newCacheSchema),
       defaultValues: {
+        creatorId: user?.uid,
         name: "",
         description: "",
         photo: {
@@ -52,7 +56,8 @@ const NewCacheDialog = React.forwardRef<DialogRef, NewCacheDialogProps>(
           height: 0,
           fileSize: 0,
         },
-        // tags: []
+        rating: 1,
+        reviews: [],
       },
     })
 
@@ -182,11 +187,10 @@ const NewCacheDialog = React.forwardRef<DialogRef, NewCacheDialogProps>(
               className="w-auto flex-row gap-2"
               onPress={newHandleSubmit((formData) => {
                 const finalData = {
-                  ...formData,
-                  cacheCoord: newCacheCoord, // Append here directly
+                  coordinates: newCacheCoord,
+                  data: formData,
                 };
                 console.log('Final Form Data:', finalData)
-                console.log('Coordinates:', finalData.cacheCoord)
                 setOpen(false)
                 newReset()
               })}
