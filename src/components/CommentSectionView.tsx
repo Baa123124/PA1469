@@ -1,48 +1,45 @@
-import React, { useState } from "react";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { Star } from "@/lib/icons/Star";
-import { CalendarRange } from "lucide-react-native";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
+import React, { useState } from "react"
+import { Avatar, AvatarImage } from "@/components/ui/avatar"
+import { Star } from "@/lib/icons/Star"
+import { CalendarRange } from "lucide-react-native"
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native"
 import { useColorScheme } from "@/lib/useColorScheme"
 import { darkTheme, lightTheme } from "@/lib/constants"
 
 interface CommentSectionViewProps {
-  comments: Review[]; // Data of the current selected cache
+  comments: Review[] // Data of the current selected cache
 }
 
 type Review = {
-  id: string;
-  rating: 1 | 2 | 3 | 4 | 5;
-  comment: string;
-  createdAt: Date;
-  photo: string;
-  userName: string;
-};
+  id: string
+  rating: 1 | 2 | 3 | 4 | 5
+  comment: string
+  createdAt: Date
+  photo: string
+  userName: string
+}
 
-const CommentSectionView: React.FC<CommentSectionViewProps> = ({
-  comments,
-}) => {
+const CommentSectionView: React.FC<CommentSectionViewProps> = ({ comments }) => {
   const { isDarkColorScheme } = useColorScheme()
-    const theme = isDarkColorScheme ? darkTheme : lightTheme
-    const { colors } = theme
+  const theme = isDarkColorScheme ? darkTheme : lightTheme
+  const { colors } = theme
 
-  const [expandedCommentId, setExpandedCommentId] = useState<string | null>(
-    null
-  );
+  const [expandedCommentId, setExpandedCommentId] = useState<string | null>(null)
 
   const toggleExpand = (id: string) => {
-    setExpandedCommentId((prevId) => (prevId === id ? null : id));
-  };
+    setExpandedCommentId((prevId) => (prevId === id ? null : id))
+  }
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       {comments.map((comment) => (
-        <View key={comment.id} style={[styles.commentCard, { backgroundColor: isDarkColorScheme ? "#1A1A1A": "#F9F9F9"}]}>
+        <View
+          key={comment.id}
+          style={[
+            styles.commentCard,
+            { backgroundColor: isDarkColorScheme ? "#1A1A1A" : "#F9F9F9" },
+          ]}
+        >
           <View style={styles.header}>
             {/* Avatar */}
             <Avatar style={styles.avatar} alt={`Avatar of ${comment.userName}`}>
@@ -51,13 +48,11 @@ const CommentSectionView: React.FC<CommentSectionViewProps> = ({
 
             {/* User Info */}
             <View style={styles.userInfo}>
-              <Text style={[styles.userName, {color: "#ABABAB"}]}>{comment.userName}</Text>
+              <Text style={[styles.userName, { color: "#ABABAB" }]}>{comment.userName}</Text>
               {/* Meta Info (e.g., date) */}
               <View style={styles.metaInfo}>
                 <CalendarRange width={14} height={14} color="#6B7280" />
-                <Text style={styles.metaText}>
-                  {comment.createdAt.toLocaleDateString()}
-                </Text>
+                <Text style={styles.metaText}>{comment.createdAt.toLocaleDateString()}</Text>
               </View>
             </View>
 
@@ -77,18 +72,20 @@ const CommentSectionView: React.FC<CommentSectionViewProps> = ({
           </View>
 
           {/* Comment Text Section */}
-          <View style={[styles.commentContentContainer, {borderTopColor: isDarkColorScheme ? "#ABABAB" : "#E5E7EB"}]}>
+          <View
+            style={[
+              styles.commentContentContainer,
+              { borderTopColor: isDarkColorScheme ? "#ABABAB" : "#E5E7EB" },
+            ]}
+          >
             <Text
               style={[
                 styles.commentText,
-                expandedCommentId === comment.id
-                  ? styles.expanded
-                  : styles.collapsed,
-                  , {color: isDarkColorScheme ? "#ABABAB" :"#374151",}
+                expandedCommentId === comment.id ? styles.expanded : styles.collapsed,
+                ,
+                { color: isDarkColorScheme ? "#ABABAB" : "#374151" },
               ]}
-              numberOfLines={
-                expandedCommentId === comment.id ? undefined : 3
-              }
+              numberOfLines={expandedCommentId === comment.id ? undefined : 3}
             >
               {comment.comment}
             </Text>
@@ -108,10 +105,10 @@ const CommentSectionView: React.FC<CommentSectionViewProps> = ({
         </View>
       ))}
     </View>
-  );
-};
+  )
+}
 
-export default CommentSectionView;
+export default CommentSectionView
 
 const styles = StyleSheet.create({
   container: {
@@ -187,4 +184,4 @@ const styles = StyleSheet.create({
     color: "#3B82F6",
     fontWeight: "bold",
   },
-});
+})

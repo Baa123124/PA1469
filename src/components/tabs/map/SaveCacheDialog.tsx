@@ -57,12 +57,12 @@ const SaveCacheDialog = React.forwardRef<DialogRef, SaveCacheDialogProps>(
         }}
         {...props}
       >
-        <DialogTrigger asChild>
+        {/* <DialogTrigger asChild>
           <Button className="flex-row gap-2">
             <Bookmark size={16} strokeWidth={1.25} className="text-primary-foreground" />
             <Text>Save cache</Text>
           </Button>
-        </DialogTrigger>
+        </DialogTrigger> */}
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>
@@ -95,9 +95,8 @@ const SaveCacheDialog = React.forwardRef<DialogRef, SaveCacheDialogProps>(
                       >
                         <View className="flex-row items-center gap-2">
                           {list.name === "Favorites" && <Heart size={16} strokeWidth={1.25} />}
-                          {list.name === "Future journeys" && (
-                            <MapPin size={16} strokeWidth={1.25} />
-                          )}
+                          {list.name === "Bookmarked" && <Bookmark size={16} strokeWidth={1.25} />}
+                          {list.name === "My caches" && <MapPin size={16} strokeWidth={1.25} />}
                           <Label
                             nativeID={list.id}
                             className="font-normal web:cursor-pointer"
